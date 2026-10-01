@@ -16,14 +16,14 @@
 
 :root {
   color-scheme: dark;
-  --paper: #16181d;
-  --ink: #f2eee5;
-  --muted: #bbb7af;
-  --line: #555963;
-  --accent: #c6a15b;
-  --soft: #2c3038;
-  --white: #22252c;
-  --focus: #e7c784;
+  --paper: #16161d;
+  --ink: #e6e7ed;
+  --muted: #bbc0ce;
+  --line: #5e6270;
+  --accent: #9590f2;
+  --soft: #30313b;
+  --white: #24252f;
+  --focus: #c4b9ff;
   --control-radius: 10px;
   --table-radius: 14px;
   font-family: 'Roboto Flex',Arial,Helvetica,sans-serif;
