@@ -33,7 +33,7 @@ La búsqueda por nombre, los cinco filtros, la ordenación, los nueve campos y l
 Se mantienen el nombre y el logo de cuervo. Por ampliación autorizada, Cinzel sustituye a Georgia en identidad y títulos y Roboto Flex sustituye a Arial en la interfaz y datos. Ajustar su contraste y presentación para el tema oscuro forma parte del tratamiento visual. Se incorporan únicamente las dos familias tipográficas aprobadas, locales y con licencia; no se añaden imágenes, funciones ni animaciones decorativas.
 
 ## Criterios de aceptación
-- Tema oscuro con acentos dorados, texto legible y contraste suficiente sobre los fondos usados.
+- Tema oscuro con acentos púrpura, texto legible y contraste suficiente sobre los fondos usados.
 - Esquinas redondeadas, espaciado equilibrado y menor sensación de cuadrícula rígida, con un acabado moderno que conserve la temática medieval.
 - Ausencia del menú actual y del contador de cabecera situado arriba a la derecha.
 - Cabecera compacta y acceso directo a controles y tabla, sin nuevas secciones intermedias.
@@ -52,16 +52,16 @@ Propuesta solicitada por el usuario: carbón y pizarra como base, blanco hueso p
 
 | Uso | Color |
 | --- | --- |
-| Fondo | `#16181D` |
-| Superficie | `#22252C` |
-| Texto principal | `#F2EEE5` |
-| Texto secundario | `#BBB7AF` |
-| Bordes | `#555963` |
-| Acento: oro envejecido | `#C6A15B` |
-| Enlaces y foco: oro claro | `#E7C784` |
-| Texto sobre acento | `#16181D` |
+| Fondo | `#16161D` |
+| Superficie | `#24252F` |
+| Texto principal | `#E6E7ED` |
+| Texto secundario | `#BBC0CE` |
+| Bordes | `#5E6270` |
+| Acento: púrpura | `#9590F2` |
+| Enlaces y foco: lavanda clara | `#C4B9FF` |
+| Texto sobre acento | `#16161D` |
 
-El dorado envejecido se propone para botones con texto carbón; enlaces y foco usarán oro claro. El usuario ha confirmado la dirección dorada; los valores exactos son una propuesta. Los separadores discretos son decorativos: los límites y estados esenciales de controles deben resultar perceptibles.
+El dorado envejecido se propone para botones con texto carbón; enlaces y foco usarán lavanda clara. El usuario ha confirmado la dirección dorada; los valores exactos son una propuesta. Los separadores discretos son decorativos: los límites y estados esenciales de controles deben resultar perceptibles.
 
 ## Tratamiento visual confirmado
 - Suavizar la apariencia cuadriculada mediante esquinas redondeadas, espaciado equilibrado y separación clara entre áreas.
@@ -77,3 +77,6 @@ El usuario autoriza avanzar al siguiente paso después de definir la dirección 
 
 ## Ampliación autorizada de tipografía
 El usuario solicita tipografía más temática tomando D&D Beyond como ejemplo y aprueba Cinzel para nombre y títulos y Roboto Flex para tabla y controles. Inspección de la portada de D&D Beyond: Majesty en títulos y Roboto Flex en interfaz; Cinzel es una aproximación autorizada, no una copia de Majesty. Ambas familias aprobadas se sirven desde `assets/fonts/`, con licencias OFL 1.1 y procedencia fijada. Mantener el cambio en un commit local separado, sin push.
+
+## Revisión de identidad solicitada
+El usuario aporta `cuervos1.png` y solicita sustituir el logo, preparar fondo exterior transparente y adaptar el tema al púrpura y plata de la imagen. La nueva paleta sustituye la dirección dorada anterior; las preferencias de tipografía, radios, composición y comportamiento se mantienen. Archivo de uso: `assets/logo-cuervo.png`; cuervo, aro índigo violáceo y disco plateado conservados. El logo provisional SVG queda como antecedente, sin uso en la interfaz. El púrpura de controles se aclara para contraste de texto y foco sobre fondos oscuros.

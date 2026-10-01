@@ -3,18 +3,18 @@
 Estado: implementación y validación local completadas. Revisión del usuario pendiente antes de push; no se ha actualizado el Site.
 
 ## Resultado previsto
-Una superficie de consulta oscura y compacta, con acentos de oro envejecido, texto hueso y controles de esquinas suaves. Eliminar menú y contador superior para acercar la consulta a la tabla. Conservar la identidad del cuervo y el comportamiento de los registros.
+Una superficie de consulta oscura y compacta, con acentos de púrpura, texto plateado y controles de esquinas suaves. Eliminar menú y contador superior para acercar la consulta a la tabla. Conservar la identidad del cuervo y el comportamiento de los registros.
 
 ## Composición
 Cabecera compacta con cuervo y nombre → título breve del registro → búsqueda y cinco filtros → estado de resultados y tabla. Reducir espacios verticales y textos repetidos en la introducción, conservando orientación suficiente. Sin nuevos bloques, imágenes ni navegación sustitutiva. Mantener el enlace de salto accesible al registro.
 
 ## Sistema visual
-- Base de trabajo: fondo `#16181D`, superficies `#22252C`, texto `#F2EEE5`, secundario `#BBB7AF`, separadores decorativos `#555963`, acento `#C6A15B` y foco/enlaces `#E7C784`.
+- Base de trabajo: fondo `#16161D`, superficies `#24252F`, texto `#E6E7ED`, secundario `#BBC0CE`, separadores decorativos `#5E6270`, acento `#9590F2` y foco/enlaces `#C4B9FF`.
 - Botones de acento con texto carbón; estados de error identificables por texto y estructura, sin depender solo del color.
 - Radios iniciales: 10 px en controles y botones, 14 px en el contorno de la tabla. Ajustes pequeños permitidos para coherencia y revisión visual.
 - Evitar bordes pesados por celda; separadores horizontales discretos y jerarquía mediante espaciado y superficies. Los límites esenciales de controles deben tener contraste suficiente.
 - Ampliación aprobada: Cinzel para identidad y títulos y Roboto Flex para controles/datos, desde archivos locales de Google Fonts con OFL 1.1. No añadir otras familias ni dependencias.
-- Conservar la silueta del logo. Adaptar su presentación con una superficie hueso detrás para que el cuervo oscuro siga siendo legible, sin redibujarlo.
+- Integrar el logo aportado con fondo exterior transparente, disco plateado y aro violáceo; no añadir una base rectangular detrás. Mantener el original del usuario intacto.
 - Interacciones de foco y hover breves, sin animaciones decorativas; respetar movimiento reducido.
 
 ## Cambios por archivo
@@ -37,3 +37,6 @@ Después de revisar este plan, elaborar `specs/002-diseno-visual/tasks.md`. Impl
 
 ## Verificación de fuentes
 Comprobar carga real de ambas familias locales, ausencia de solicitudes externas, legibilidad de caracteres españoles y distribución a 320, 390 y 1440 px. Usar `font-display: swap` y fuentes de respaldo. Archivos originales y licencias en `assets/fonts/`.
+
+## Revisión de identidad solicitada
+El usuario aporta `cuervos1.png` y solicita sustituir el logo, preparar fondo exterior transparente y adaptar el tema al púrpura y plata de la imagen. La nueva paleta sustituye la dirección dorada anterior; las preferencias de tipografía, radios, composición y comportamiento se mantienen. Archivo de uso: `assets/logo-cuervo.png`; cuervo, aro índigo violáceo y disco plateado conservados. El logo provisional SVG queda como antecedente, sin uso en la interfaz. El púrpura de controles se aclara para contraste de texto y foco sobre fondos oscuros.

@@ -125,9 +125,7 @@ button {
 
 .brand img {
   flex: none;
-  padding: 8px;
-  border-radius: 14px;
-  background: var(--ink);
+  object-fit: contain;
 }
 
 .eyebrow {
