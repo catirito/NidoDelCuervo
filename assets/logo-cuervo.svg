@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Cuervo de Nido del Cuervo — logo provisional</title>
+  <defs>
+    <mask id="detalle" maskUnits="userSpaceOnUse" x="0" y="0" width="128" height="128">
+      <rect width="128" height="128" fill="#fff"/>
+      <path d="M67 52C54 55 43 68 33 84c12-4 23-13 32-24" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="94" cy="32" r="2.5" fill="#000"/>
+    </mask>
+  </defs>
+  <g fill="#18212b" mask="url(#detalle)">
+    <path d="M23 99 9 110l9-24c2-7 6-14 12-20l20-20c5-5 10-8 17-9 2-12 10-20 22-20 12 0 20 8 22 18l14 10-22 4c-4 5-10 7-16 8l-4 18c-3 15-13 24-27 27-12 3-24 0-33-3Z"/>
+    <path d="m53 96-3 15H37v6h22l3-20Zm19-6-2 21H59v6h20l1-26Z"/>
+  </g>
+</svg>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f1e9">
+  <title>Nido del Cuervo · Registro de personajes</title>
+  <link rel="icon" href="assets/logo-cuervo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="vendor/xlsx.full.min.js" defer></script>
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#registro">Saltar al registro</a>
+  <header class="masthead">
+    <div class="brand">
+      <img src="assets/logo-cuervo.svg" width="70" height="70" alt="" aria-hidden="true">
+      <div><p class="eyebrow">Dungeons &amp; Dragons</p><h1>Nido del Cuervo</h1></div>
+    </div>
+    <nav aria-label="Navegación principal"><a href="#registro" aria-current="page">Registro de personajes</a><a href="#filtros">Filtros</a></nav>
+  </header>
+  <main id="registro" tabindex="-1">
+    <section class="intro" aria-labelledby="registry-title">
+      <div><p class="eyebrow">El registro</p><h2 id="registry-title">Personajes del Nido</h2><p class="intro-copy">Encuentra a tu personaje. Explora sus clases, especies y rangos.</p></div>
+      <p class="registry-count"><strong id="total-count">—</strong><span>personajes registrados</span></p>
+    </section>
+    <section id="filtros" class="filters" aria-labelledby="filters-title">
+      <div class="section-line"><h3 id="filters-title">Buscar y filtrar</h3><button id="reset-filters" type="button" disabled>Limpiar filtros <span aria-hidden="true">↗</span></button></div>
+      <form id="filter-form" role="search" aria-label="Buscar personajes">
+        <fieldset id="filter-controls" disabled>
+          <legend class="sr-only">Filtros de personajes</legend>
+          <div class="search-field"><label for="name-search">Nombre del personaje</label><input id="name-search" type="search" placeholder="Escribe parte de un nombre…" autocomplete="off"></div>
+          <div class="category-filters">
+            <div><label for="filter-class">Clase</label><select id="filter-class" data-field="CLASS"><option value="">Todas las clases</option></select></div>
+            <div><label for="filter-subclass">Subclase</label><select id="filter-subclass" data-field="SUBCLASS"><option value="">Todas las subclases</option></select></div>
+            <div><label for="filter-specie">Especie</label><select id="filter-specie" data-field="SPECIE"><option value="">Todas las especies</option></select></div>
+            <div><label for="filter-rank">Rango</label><select id="filter-rank" data-field="RANGO"><option value="">Todos los rangos</option></select></div>
+            <div><label for="filter-owner">Propietario</label><select id="filter-owner" data-field="PROPIETARIO"><option value="">Todos los propietarios</option></select></div>
+          </div>
+        </fieldset>
+      </form>
+    </section>
+    <section class="results" aria-labelledby="results-title" aria-busy="true">
+      <div class="results-bar"><h3 id="results-title">El elenco</h3><p id="result-status" role="status" aria-live="polite" aria-atomic="true">Cargando personajes…</p></div>
+      <p id="table-help" class="table-help">Ordena con los encabezados de clase, subclase, especie, rango y propietario. <span>En pantallas pequeñas, desliza la tabla horizontalmente.</span></p>
+      <div class="table-scroll" role="region" aria-label="Tabla de personajes, desplazamiento horizontal" aria-describedby="table-help" tabindex="0">
+        <table>
+          <caption class="sr-only">Personajes de Nido del Cuervo</caption>
+          <thead><tr>
+            <th scope="col">Personaje</th>
+            <th scope="col" data-sort="CLASS"><button type="button" disabled>Clase <span aria-hidden="true">↕</span></button></th>
+            <th scope="col" data-sort="SUBCLASS"><button type="button" disabled>Subclase <span aria-hidden="true">↕</span></button></th>
+            <th scope="col" data-sort="SPECIE"><button type="button" disabled>Especie <span aria-hidden="true">↕</span></button></th>
+            <th scope="col" id="level-header" aria-sort="descending">Nivel <span aria-hidden="true">↓</span></th>
+            <th scope="col" data-sort="RANGO"><button type="button" disabled>Rango <span aria-hidden="true">↕</span></button></th>
+            <th scope="col">Estado</th>
+            <th scope="col" data-sort="PROPIETARIO"><button type="button" disabled>Propietario <span aria-hidden="true">↕</span></button></th>
+            <th scope="col">Notas</th>
+          </tr></thead>
+          <tbody id="characters-body"></tbody>
+        </table>
+      </div>
+      <div id="empty-state" class="empty-state" hidden><h4>No hay coincidencias</h4><p>Prueba otro nombre o cambia los filtros.</p></div>
+      <div id="error-state" class="error-state" role="alert" hidden><h4>No se pudo cargar el registro</h4><p id="error-message"></p><button id="retry-load" type="button">Volver a intentar</button></div>
+    </section>
+  </main>
+  <footer><span>Nido del Cuervo</span><span>Registro de personajes · Solo consulta</span></footer>
+  <noscript><p>Activa JavaScript para consultar el registro de personajes.</p></noscript>
+</body>
+</html>
