@@ -1,13 +1,32 @@
+@font-face {
+  font-family: 'Cinzel';
+  src: url('assets/fonts/cinzel.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Roboto Flex';
+  src: url('assets/fonts/roboto-flex.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 100 1000;
+  font-display: swap;
+}
+
 :root {
-  color-scheme: light;
-  --paper: #f4f1e9;
-  --ink: #202720;
-  --muted: #646b61;
-  --line: #d6d8cc;
-  --accent: #416347;
-  --soft: #e8ede2;
-  --white: #fcfbf7;
-  font-family: Arial,Helvetica,sans-serif;
+  color-scheme: dark;
+  --paper: #16161d;
+  --ink: #e6e7ed;
+  --muted: #bbc0ce;
+  --line: #5e6270;
+  --accent: #9590f2;
+  --soft: #30313b;
+  --white: #24252f;
+  --focus: #c4b9ff;
+  --control-radius: 10px;
+  --table-radius: 14px;
+  font-family: 'Roboto Flex',Arial,Helvetica,sans-serif;
   color: var(--ink);
   background: var(--paper);
 }
@@ -46,7 +65,7 @@ a {
 }
 
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,.table-scroll:focus-visible,main:focus-visible {
-  outline: 3px solid var(--accent);
+  outline: 3px solid var(--focus);
   outline-offset: 4px;
 }
 
@@ -74,7 +93,7 @@ button {
   top: 12px;
   left: 12px;
   background: var(--ink);
-  color: white;
+  color: var(--paper);
   padding: 14px;
   z-index: 10;
   transform: translateY(-180%);
@@ -90,18 +109,23 @@ button {
 }
 
 .masthead {
-  padding-top: 38px;
+  padding-top: 24px;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding-bottom: 28px;
+  gap: 16px;
+  padding-bottom: 16px;
+}
+
+.brand>div {
+  min-width: 0;
 }
 
 .brand img {
   flex: none;
+  object-fit: contain;
 }
 
 .eyebrow {
@@ -114,7 +138,7 @@ button {
 }
 
 h1,h2 {
-  font-family: Georgia,'Times New Roman',serif;
+  font-family: 'Cinzel',Georgia,serif;
   font-weight: 400;
 }
 
@@ -124,80 +148,24 @@ h1 {
   letter-spacing: -.04em;
 }
 
-nav {
-  display: flex;
-  gap: 30px;
-  border-block: 1px solid var(--line);
-}
-
-nav a {
-  padding: 16px 0;
-  font-size: 12px;
-  text-decoration: none;
-  color: var(--muted);
-  transition: color .15s;
-}
-
-nav a[aria-current] {
-  color: var(--ink);
-  border-bottom: 2px solid var(--accent);
-  margin-bottom: -1px;
-}
-
-nav a:hover {
-  color: var(--accent);
-}
-
 main {
-  padding-block: 48px 64px;
+  padding-block: 20px 48px;
 }
 
 .intro {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 32px;
-  margin-bottom: 38px;
+  margin-bottom: 20px;
 }
 
 h2 {
-  font-size: clamp(32px,3.5vw,48px);
+  font-size: clamp(24px,2.4vw,32px);
   line-height: 1.1;
   letter-spacing: -.045em;
-  margin: 0 0 15px;
-}
-
-.intro-copy {
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.6;
   margin: 0;
-}
-
-.registry-count {
-  margin: 0;
-  text-align: right;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.registry-count strong {
-  font-family: Georgia,serif;
-  font-weight: 400;
-  font-size: 46px;
-  line-height: 1;
-}
-
-.registry-count span {
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: .03em;
 }
 
 .filters {
   border-block: 1px solid var(--line);
-  padding-block: 22px 26px;
+  padding-block: 18px 20px;
   scroll-margin-top: 20px;
 }
 
@@ -221,10 +189,17 @@ h3 {
 
 #reset-filters {
   border: 0;
-  background: none;
-  font-size: 11px;
-  color: var(--accent);
-  padding: 8px 0;
+  background: var(--accent);
+  font-size: 12px;
+  color: var(--paper);
+  border-radius: var(--control-radius);
+  min-height: 44px;
+  padding: 10px 14px;
+  transition: background .15s;
+}
+
+#reset-filters:not(:disabled):hover,.error-state button:hover {
+  background: var(--focus);
 }
 
 #reset-filters span {
@@ -240,22 +215,22 @@ fieldset {
 
 label {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   margin-bottom: 10px;
 }
 
 .search-field {
   max-width: 500px;
-  margin-bottom: 23px;
+  margin-bottom: 18px;
 }
 
 input,select {
   width: 100%;
   height: 44px;
   padding: 10px 12px;
-  border: 1px solid #b6bcae;
-  border-radius: 3px;
+  border: 1px solid var(--accent);
+  border-radius: var(--control-radius);
   background: var(--white);
   color: var(--ink);
   font-size: 12px;
@@ -263,7 +238,7 @@ input,select {
 }
 
 input::placeholder {
-  color: #747970;
+  color: var(--muted);
 }
 
 input:hover,select:hover {
@@ -282,7 +257,7 @@ select {
 }
 
 .results {
-  margin-top: 30px;
+  margin-top: 24px;
 }
 
 .results-bar {
@@ -310,7 +285,7 @@ select {
   position: relative;
   overflow: auto;
   max-width: 100%;
-  border-block: 1px solid var(--line);
+  border-radius: var(--table-radius);
   background: var(--white);
 }
 
@@ -328,7 +303,7 @@ thead {
 }
 
 th {
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: .035em;
   font-weight: 700;
   padding: 16px 12px;
@@ -364,7 +339,7 @@ th:first-child {
 
 td {
   padding: 17px 12px;
-  border-bottom: 1px solid #e8e9e1;
+  border-bottom: 1px solid var(--line);
   vertical-align: top;
 }
 
@@ -373,11 +348,11 @@ tbody tr:last-child td {
 }
 
 tbody tr:hover {
-  background: #f0f3eb;
+  background: var(--soft);
 }
 
 td:first-child {
-  font-family: Georgia,serif;
+  font-family: 'Roboto Flex',Arial,Helvetica,sans-serif;
   font-size: 15px;
   padding-left: 20px;
   min-width: 190px;
@@ -419,7 +394,7 @@ td:last-child {
 }
 
 .missing {
-  color: #858b7d;
+  color: var(--muted);
 }
 
 .empty-state,.error-state {
@@ -429,7 +404,7 @@ td:last-child {
 }
 
 h4 {
-  font-family: Georgia,serif;
+  font-family: 'Cinzel',Georgia,serif;
   font-size: 24px;
   font-weight: 400;
   margin: 0 0 12px;
@@ -443,9 +418,10 @@ h4 {
 
 .error-state button {
   border: 1px solid var(--accent);
-  border-radius: 3px;
+  border-radius: var(--control-radius);
   padding: 12px 18px;
-  background: var(--soft);
+  background: var(--accent);
+  color: var(--paper);
   font-size: 12px;
 }
 
@@ -484,38 +460,26 @@ noscript p {
   }
   .brand {
     gap: 13px;
-    padding-bottom: 22px;
+    padding-bottom: 12px;
   }
   .brand img {
     width: 54px;
     height: 54px;
   }
   h1 {
-    font-size: 28px;
+    font-size: 24px;
   }
   .eyebrow {
     font-size: 9px;
-  }
-  nav {
-    gap: 24px;
   }
   nav a {
     font-size: 11px;
   }
   main {
-    padding-top: 34px;
+    padding-top: 16px;
   }
   .intro {
-    gap: 16px;
-    align-items: flex-start;
-    margin-bottom: 28px;
-  }
-  .intro-copy {
-    font-size: 12px;
-    max-width: 270px;
-  }
-  .registry-count strong {
-    font-size: 36px;
+    margin-bottom: 18px;
   }
   .registry-count span {
     max-width: 90px;

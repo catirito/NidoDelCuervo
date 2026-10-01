@@ -27,7 +27,13 @@
 - Comprobar el comportamiento afectado con una verificación proporcional al cambio. Informar qué se comprobó y las limitaciones.
 - No inventar comandos de ejecución o pruebas; usar los que se hayan establecido en el proyecto.
 
+## Flujo de Git por especificación
+- Cada nueva especificación debe tener su propia rama de Git, creada antes de escribir o modificar sus documentos. Usar un nombre vinculado a su número y propósito, como `codex/002-diseno-visual`.
+- Trabajar en esa rama durante especificación, clarificación, planificación, tareas, implementación y validación; comprobar la rama activa al retomar la especificación.
+- Crear también la rama correspondiente en GitHub y mantener el trabajo de la especificación separado de `main`. No integrar en `main` sin autorización del usuario.
+
 ## Documentación
+- Organizar cada funcionalidad dentro de `specs/` en una carpeta con número de tres cifras y nombre descriptivo, como `001-registro-personajes/`. Cada carpeta contiene `spec.md`, `plan.md` y `tasks.md`; las rutas citadas parten de la raíz del proyecto.
 - Mantener en `AGENTS.md` las reglas estables del proyecto.
 - Consultar `Memories.md` al retomar el trabajo o iniciar una tarea que dependa de decisiones del proyecto.
 - Actualizar `Memories.md` cuando se confirme o cambie una decisión relevante, distinguiendo decisiones confirmadas de pendientes. Evitar un diario de acciones y no duplicar las reglas de `AGENTS.md`.

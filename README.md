@@ -26,7 +26,7 @@ La web y el Excel deben permanecer juntos. Cada recarga vuelve a solicitar el fi
 
 ## Archivos
 
-`index.html` define la estructura; `styles.css` la presentación; `app.js` conecta los controles y la carga; `records.js` contiene lectura y operaciones de datos. El logo temporal está en `assets/logo-cuervo.svg`. SheetJS CE 0.20.3 se sirve desde `vendor/`, con licencia y procedencia en `vendor/README.md`; no hay CDN en ejecución.
+`index.html` define la estructura; `styles.css` la presentación; `app.js` conecta los controles y la carga; `records.js` contiene lectura y operaciones de datos. El logo está en `assets/logo-cuervo.png`, preparado desde la imagen aportada por el usuario; procedencia y prompt en `assets/logo-cuervo-README.md`. SheetJS CE 0.20.3 se sirve desde `vendor/`, con licencia y procedencia en `vendor/README.md`; no hay CDN en ejecución.
 
 ## Comprobaciones
 
@@ -40,4 +40,12 @@ La prueba usa la biblioteca local y el Excel real: nueve campos, conteo, vacíos
 
 También se ha validado en Chrome: búsqueda por inicio/medio/final, mayúsculas, combinación de filtros, ordenación con teclado, recarga, errores HTTP y recuperación, tabla desplazable en móvil y foco visible. La revisión visual se realizó a 1440 × 1000 y 390 × 844. No se ha realizado una prueba con lector de pantalla real ni una revisión de todos los navegadores.
 
-Las reglas están en `AGENTS.md`, las decisiones en `Memories.md`, los requisitos en `SPEC.md`, el plan en `PLAN.md` y las tareas en `TASKS.md`. No se ha publicado en hosting.
+Las reglas están en `AGENTS.md`, las decisiones en `Memories.md`, los requisitos en `specs/001-registro-personajes/spec.md`, el plan en `specs/001-registro-personajes/plan.md` y las tareas en `specs/001-registro-personajes/tasks.md`. La versión inicial está publicada en Sites; el rediseño 002 está disponible únicamente para revisión local, sin push ni actualización del Site.
+
+## Diseño visual 002 — revisión local
+Tema oscuro con carbón, pizarra, texto plateado y acentos púrpura; controles con radio de 10 px y tabla con radio de 14 px. Cabecera compacta, sin menú ni contador superior. El estado de resultados junto a la tabla se conserva. Requisitos, plan y tareas en `specs/002-diseno-visual/`.
+
+La implementación está guardada en commits locales separados en `codex/002-diseno-visual`, pendiente de revisión del usuario antes de push. La prueba de datos y la revisión en Chrome pasan; se comprobaron ausencia de menú/contador, radios, acceso a la tabla, contraste de texto sobre fondo y superficies, teclado, móvil y recuperación ante errores. El Site mantiene la versión inicial.
+
+### Tipografía
+Cinzel en nombre y títulos, Roboto Flex en controles y tabla. Ambas fuentes se sirven localmente con `font-display: swap` y respaldo; archivos, licencias OFL 1.1, fuentes y hashes en `assets/fonts/README.md`. Carga real y ausencia de solicitudes externas verificadas en Chrome; revisión a 320, 390 y 1440 px sin desbordamiento de página.

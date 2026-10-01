@@ -8,7 +8,6 @@ const elements = {
   categories: [...document.querySelectorAll('select[data-field]')],
   reset: document.querySelector('#reset-filters'),
   body: document.querySelector('#characters-body'),
-  total: document.querySelector('#total-count'),
   status: document.querySelector('#result-status'),
   empty: document.querySelector('#empty-state'),
   error: document.querySelector('#error-state'),
@@ -85,7 +84,6 @@ async function loadCharacters() {
   elements.empty.hidden = true;
   elements.body.replaceChildren();
   elements.status.textContent = 'Cargando personajes…';
-  elements.total.textContent = '—';
   setControlsEnabled(false);
   try {
     const response = await fetch(new URL('./Registro de personajes.xlsx', import.meta.url), { cache: 'no-store' });
@@ -97,7 +95,6 @@ async function loadCharacters() {
     sort = { field: 'NIVEL', direction: 'descending' };
     populateFilters();
     updateSortHeaders();
-    elements.total.textContent = String(characters.length);
     setControlsEnabled(true);
     updateView();
   } catch (error) {
