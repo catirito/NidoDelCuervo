@@ -156,26 +156,8 @@ h2 {
   margin: 0;
 }
 
-.registry-count {
-  margin: 0;
-  text-align: right;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
 
-.registry-count strong {
-  font-family: Georgia,serif;
-  font-weight: 400;
-  font-size: 46px;
-  line-height: 1;
-}
 
-.registry-count span {
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: .03em;
-}
 
 .filters {
   border-block: 1px solid var(--line);
@@ -493,9 +475,6 @@ noscript p {
   .intro-copy {
     font-size: 12px;
     max-width: 270px;
-  }
-  .registry-count strong {
-    font-size: 36px;
   }
   .registry-count span {
     max-width: 90px;
