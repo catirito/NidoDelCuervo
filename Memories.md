@@ -4,9 +4,7 @@
 Recoger decisiones confirmadas y sus motivos para retomar el trabajo con contexto. Las reglas estables están en `AGENTS.md`; este archivo no las sustituye ni las duplica. `Memories.md` es una convención de este proyecto, no un mecanismo automático ni un estándar universal.
 
 ## Etapa actual
-Nueva especificación `specs/002-diseno-visual/spec.md` en clarificación: el usuario quiere mejorar el diseño y el aspecto de la web y repetir las etapas una a una. El usuario autoriza avanzar a clarificación y exige rama nueva. El trabajo continúa en `codex/002-diseno-visual`, creada localmente y en GitHub; la documentación modificada todavía no está comprometida. No se han iniciado planificación, tareas o implementación del rediseño.
-
-Validación completada. El usuario autorizó implementar la web y hacer commit y push a `main`. Las nueve tareas están verificadas. El usuario autorizó crear y publicar un Site para ver la web online; la publicación está completada.
+La especificación 002 está implementada y validada localmente en `codex/002-diseno-visual`, con commits separados para paleta, menú, contador, cabecera y bordes suaves. El usuario exige revisar en local antes de push: no publicar esta rama ni actualizar el Site sin nueva autorización. Documentos en `specs/002-diseno-visual/`; prueba de datos y revisión funcional, visual y de contraste completadas. La web inicial publicada en GitHub y Sites mantiene su diseño anterior.
 
 ## Decisiones confirmadas
 - El objetivo pedagógico es aprender desarrollo con IA paso a paso mediante una web simple; se avanza en etapas pequeñas para comprender cada decisión.
@@ -72,3 +70,5 @@ Etapa actual de la especificación 002: planificación autorizada y elaborada en
 Etapa actual de la especificación 002: tareas desglosadas por autorización del usuario en `specs/002-diseno-visual/tasks.md`. Siete tareas pendientes abarcan paleta, retirada conjunta de menú/contador y referencias, composición compacta, bordes suaves, validación funcional, revisión visual y entrega en la rama de diseño. Implementación todavía no iniciada.
 
 Implementación de la especificación 002 autorizada: hacer commits locales separados por cambio y no hacer push. El usuario revisará primero la web en local. No actualizar el Site durante esta revisión.
+
+Validación final de diseño 002: prueba de datos existente y Chrome pasan, Excel intacto, nueve campos conservados, sin menú ni contador de cabecera, contraste comprobado, teclado y móvil operables. Los cambios se han separado en commits locales. Revisión local en http://127.0.0.1:8765; sin push ni despliegue.

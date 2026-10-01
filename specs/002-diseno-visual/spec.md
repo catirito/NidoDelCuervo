@@ -1,6 +1,6 @@
 # Nido del Cuervo — mejora del diseño visual
 
-Estado: clarificación recogida y planificación elaborada por autorización del usuario. Dirección visual confirmada: fantasía medieval oscura, acentos dorados y tratamiento moderno y suave. Tareas desglosadas; implementación todavía no iniciada.
+Estado: implementación y validación local completadas. Revisión del usuario pendiente antes de push; no se ha actualizado el Site.
 
 ## Objetivo confirmado
 Mejorar el diseño y el aspecto de la web existente. Repetir el proceso paso a paso: especificación → clarificación → planificación → tareas → implementación → validación.

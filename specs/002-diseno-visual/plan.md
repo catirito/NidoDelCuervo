@@ -1,6 +1,6 @@
 # Nido del Cuervo — plan de diseño visual
 
-Estado: planificación elaborada por autorización del usuario. Tareas desglosadas en `specs/002-diseno-visual/tasks.md`; implementación pendiente. Requisitos: `specs/002-diseno-visual/spec.md`. Rama de trabajo: `codex/002-diseno-visual`.
+Estado: implementación y validación local completadas. Revisión del usuario pendiente antes de push; no se ha actualizado el Site.
 
 ## Resultado previsto
 Una superficie de consulta oscura y compacta, con acentos de oro envejecido, texto hueso y controles de esquinas suaves. Eliminar menú y contador superior para acercar la consulta a la tabla. Conservar la identidad del cuervo y el comportamiento de los registros.
