@@ -1,6 +1,6 @@
 # Nido del Cuervo — arquitectura implementada
 
-Plan completado mediante `TASKS.md`, con implementación y validación autorizadas por el usuario. Requisitos en `SPEC.md` y reglas en `AGENTS.md`.
+Plan completado mediante `specs/001-registro-personajes/tasks.md`, con implementación y validación autorizadas por el usuario. Requisitos en `specs/001-registro-personajes/spec.md` y reglas en `AGENTS.md`.
 
 ## Estructura
 - `index.html`: cabecera con logo provisional sobre el menú, filtros y tabla semántica de nueve campos.

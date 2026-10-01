@@ -40,4 +40,4 @@ La prueba usa la biblioteca local y el Excel real: nueve campos, conteo, vacíos
 
 También se ha validado en Chrome: búsqueda por inicio/medio/final, mayúsculas, combinación de filtros, ordenación con teclado, recarga, errores HTTP y recuperación, tabla desplazable en móvil y foco visible. La revisión visual se realizó a 1440 × 1000 y 390 × 844. No se ha realizado una prueba con lector de pantalla real ni una revisión de todos los navegadores.
 
-Las reglas están en `AGENTS.md`, las decisiones en `Memories.md`, los requisitos en `SPEC.md`, el plan en `PLAN.md` y las tareas en `TASKS.md`. No se ha publicado en hosting.
+Las reglas están en `AGENTS.md`, las decisiones en `Memories.md`, los requisitos en `specs/001-registro-personajes/spec.md`, el plan en `specs/001-registro-personajes/plan.md` y las tareas en `specs/001-registro-personajes/tasks.md`. No se ha publicado en hosting.
