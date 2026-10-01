@@ -8,6 +8,8 @@
   --soft: #2c3038;
   --white: #22252c;
   --focus: #e7c784;
+  --control-radius: 10px;
+  --table-radius: 14px;
   font-family: Arial,Helvetica,sans-serif;
   color: var(--ink);
   background: var(--paper);
@@ -169,10 +171,17 @@ h3 {
 
 #reset-filters {
   border: 0;
-  background: none;
-  font-size: 11px;
-  color: var(--accent);
-  padding: 8px 0;
+  background: var(--accent);
+  font-size: 12px;
+  color: var(--paper);
+  border-radius: var(--control-radius);
+  min-height: 44px;
+  padding: 10px 14px;
+  transition: background .15s;
+}
+
+#reset-filters:not(:disabled):hover,.error-state button:hover {
+  background: var(--focus);
 }
 
 #reset-filters span {
@@ -188,7 +197,7 @@ fieldset {
 
 label {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   margin-bottom: 10px;
 }
@@ -203,7 +212,7 @@ input,select {
   height: 44px;
   padding: 10px 12px;
   border: 1px solid var(--accent);
-  border-radius: 3px;
+  border-radius: var(--control-radius);
   background: var(--white);
   color: var(--ink);
   font-size: 12px;
@@ -258,7 +267,7 @@ select {
   position: relative;
   overflow: auto;
   max-width: 100%;
-  border-block: 1px solid var(--line);
+  border-radius: var(--table-radius);
   background: var(--white);
 }
 
@@ -276,7 +285,7 @@ thead {
 }
 
 th {
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: .035em;
   font-weight: 700;
   padding: 16px 12px;
@@ -391,7 +400,7 @@ h4 {
 
 .error-state button {
   border: 1px solid var(--accent);
-  border-radius: 3px;
+  border-radius: var(--control-radius);
   padding: 12px 18px;
   background: var(--accent);
   color: var(--paper);
