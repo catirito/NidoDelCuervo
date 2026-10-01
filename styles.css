@@ -1,3 +1,19 @@
+@font-face {
+  font-family: 'Cinzel';
+  src: url('assets/fonts/cinzel.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Roboto Flex';
+  src: url('assets/fonts/roboto-flex.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 100 1000;
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
   --paper: #16181d;
@@ -10,7 +26,7 @@
   --focus: #e7c784;
   --control-radius: 10px;
   --table-radius: 14px;
-  font-family: Arial,Helvetica,sans-serif;
+  font-family: 'Roboto Flex',Arial,Helvetica,sans-serif;
   color: var(--ink);
   background: var(--paper);
 }
@@ -103,6 +119,10 @@ button {
   padding-bottom: 16px;
 }
 
+.brand>div {
+  min-width: 0;
+}
+
 .brand img {
   flex: none;
   padding: 8px;
@@ -120,7 +140,7 @@ button {
 }
 
 h1,h2 {
-  font-family: Georgia,'Times New Roman',serif;
+  font-family: 'Cinzel',Georgia,serif;
   font-weight: 400;
 }
 
@@ -334,7 +354,7 @@ tbody tr:hover {
 }
 
 td:first-child {
-  font-family: Georgia,serif;
+  font-family: 'Roboto Flex',Arial,Helvetica,sans-serif;
   font-size: 15px;
   padding-left: 20px;
   min-width: 190px;
@@ -386,7 +406,7 @@ td:last-child {
 }
 
 h4 {
-  font-family: Georgia,serif;
+  font-family: 'Cinzel',Georgia,serif;
   font-size: 24px;
   font-weight: 400;
   margin: 0 0 12px;
@@ -449,7 +469,7 @@ noscript p {
     height: 54px;
   }
   h1 {
-    font-size: 28px;
+    font-size: 24px;
   }
   .eyebrow {
     font-size: 9px;

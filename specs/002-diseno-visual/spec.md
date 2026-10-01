@@ -30,7 +30,7 @@ La web es una superficie de consulta de personajes: cabecera con logo de cuervo,
 ## Alcance conservado
 La búsqueda por nombre, los cinco filtros, la ordenación, los nueve campos y los estados de carga, error y ausencia de coincidencias mantienen su comportamiento. La petición de mostrar directamente la tabla no implica eliminar los controles de consulta. El estado de resultados junto a la tabla es distinto del total de cabecera solicitado para retirar y se conserva por utilidad y accesibilidad.
 
-Se mantienen el nombre, el logo de cuervo y las familias tipográficas actuales como base. Ajustar su contraste y presentación para el tema oscuro forma parte del tratamiento visual. No se añaden imágenes, nuevas fuentes, funciones ni animaciones decorativas en esta especificación.
+Se mantienen el nombre y el logo de cuervo. Por ampliación autorizada, Cinzel sustituye a Georgia en identidad y títulos y Roboto Flex sustituye a Arial en la interfaz y datos. Ajustar su contraste y presentación para el tema oscuro forma parte del tratamiento visual. Se incorporan únicamente las dos familias tipográficas aprobadas, locales y con licencia; no se añaden imágenes, funciones ni animaciones decorativas.
 
 ## Criterios de aceptación
 - Tema oscuro con acentos dorados, texto legible y contraste suficiente sobre los fondos usados.
@@ -67,10 +67,13 @@ El dorado envejecido se propone para botones con texto carbón; enlaces y foco u
 - Suavizar la apariencia cuadriculada mediante esquinas redondeadas, espaciado equilibrado y separación clara entre áreas.
 - Dar un aspecto más moderno sin perder la identidad de fantasía medieval.
 - Mantener legibles filtros y tabla en escritorio y móvil.
-- Radios, sombras discretas y espaciado se concretarán en planificación; logo y tipografías se conservan como base. Todavía no se modifica la web.
+- Radios, sombras discretas y espaciado se concretarán en planificación; se conserva el logo y se aplican las tipografías aprobadas. Todavía no se modifica la web.
 
 ## Muestra para clarificación
 Se prepara una muestra de paleta y superficie de consulta con tres personajes reales del Excel. Es una vista parcial para decidir colores y tratamiento de bordes; no sustituye los nueve campos de la web ni constituye implementación. Los colores y radios pueden explorarse en la muestra antes de aprobar el diseño.
 
 ## Clarificación
 El usuario autoriza avanzar al siguiente paso después de definir la dirección visual y solicita trabajar en una rama nueva de GitHub. La rama `codex/002-diseno-visual` está creada localmente y en GitHub. El usuario concretó retirar el menú y el total de cabecera, y dar acceso más directo a la tabla; no solicita otras reorganizaciones por ahora. Los cambios actuales son de documentación, no de implementación ni publicación del rediseño.
+
+## Ampliación autorizada de tipografía
+El usuario solicita tipografía más temática tomando D&D Beyond como ejemplo y aprueba Cinzel para nombre y títulos y Roboto Flex para tabla y controles. Inspección de la portada de D&D Beyond: Majesty en títulos y Roboto Flex en interfaz; Cinzel es una aproximación autorizada, no una copia de Majesty. Ambas familias aprobadas se sirven desde `assets/fonts/`, con licencias OFL 1.1 y procedencia fijada. Mantener el cambio en un commit local separado, sin push.

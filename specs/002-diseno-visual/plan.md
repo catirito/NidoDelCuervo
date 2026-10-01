@@ -13,7 +13,7 @@ Cabecera compacta con cuervo y nombre → título breve del registro → búsque
 - Botones de acento con texto carbón; estados de error identificables por texto y estructura, sin depender solo del color.
 - Radios iniciales: 10 px en controles y botones, 14 px en el contorno de la tabla. Ajustes pequeños permitidos para coherencia y revisión visual.
 - Evitar bordes pesados por celda; separadores horizontales discretos y jerarquía mediante espaciado y superficies. Los límites esenciales de controles deben tener contraste suficiente.
-- Mantener Georgia para identidad y títulos y Arial para controles/datos. No añadir fuentes o dependencias.
+- Ampliación aprobada: Cinzel para identidad y títulos y Roboto Flex para controles/datos, desde archivos locales de Google Fonts con OFL 1.1. No añadir otras familias ni dependencias.
 - Conservar la silueta del logo. Adaptar su presentación con una superficie hueso detrás para que el cuervo oscuro siga siendo legible, sin redibujarlo.
 - Interacciones de foco y hover breves, sin animaciones decorativas; respetar movimiento reducido.
 
@@ -34,3 +34,6 @@ Cabecera compacta con cuervo y nombre → título breve del registro → búsque
 
 ## Secuencia y entrega
 Después de revisar este plan, elaborar `specs/002-diseno-visual/tasks.md`. Implementar solo al avanzar a esa etapa. Mantener los cambios en la rama de diseño; no integrar en `main` sin autorización. La web online permanece con su diseño actual durante especificación y planificación; decidir su actualización al preparar la entrega de la implementación.
+
+## Verificación de fuentes
+Comprobar carga real de ambas familias locales, ausencia de solicitudes externas, legibilidad de caracteres españoles y distribución a 320, 390 y 1440 px. Usar `font-display: swap` y fuentes de respaldo. Archivos originales y licencias en `assets/fonts/`.

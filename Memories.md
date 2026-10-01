@@ -72,3 +72,5 @@ Etapa actual de la especificación 002: tareas desglosadas por autorización del
 Implementación de la especificación 002 autorizada: hacer commits locales separados por cambio y no hacer push. El usuario revisará primero la web en local. No actualizar el Site durante esta revisión.
 
 Validación final de diseño 002: prueba de datos existente y Chrome pasan, Excel intacto, nueve campos conservados, sin menú ni contador de cabecera, contraste comprobado, teclado y móvil operables. Los cambios se han separado en commits locales. Revisión local en http://127.0.0.1:8765; sin push ni despliegue.
+
+Ampliación tipográfica 002 autorizada e implementada: Cinzel para nombre/títulos y Roboto Flex para tabla/controles. D&D Beyond usa Majesty y Roboto Flex en su portada inspeccionada; Cinzel se aprueba como aproximación temática. Copias originales de Google Fonts con licencias OFL 1.1 y procedencia en `assets/fonts/README.md`. Ambas cargan localmente sin solicitudes externas; Chrome verifica comportamiento y ajuste a 320, 390 y 1440 px. Cambio en commit separado; continúa la prohibición de push y despliegue hasta revisión del usuario.

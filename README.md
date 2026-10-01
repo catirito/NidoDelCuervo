@@ -46,3 +46,6 @@ Las reglas están en `AGENTS.md`, las decisiones en `Memories.md`, los requisito
 Tema oscuro con carbón, pizarra, texto hueso y acentos dorados; controles con radio de 10 px y tabla con radio de 14 px. Cabecera compacta, sin menú ni contador superior. El estado de resultados junto a la tabla se conserva. Requisitos, plan y tareas en `specs/002-diseno-visual/`.
 
 La implementación está guardada en commits locales separados en `codex/002-diseno-visual`, pendiente de revisión del usuario antes de push. La prueba de datos y la revisión en Chrome pasan; se comprobaron ausencia de menú/contador, radios, acceso a la tabla, contraste de texto sobre fondo y superficies, teclado, móvil y recuperación ante errores. El Site mantiene la versión inicial.
+
+### Tipografía
+Cinzel en nombre y títulos, Roboto Flex en controles y tabla. Ambas fuentes se sirven localmente con `font-display: swap` y respaldo; archivos, licencias OFL 1.1, fuentes y hashes en `assets/fonts/README.md`. Carga real y ausencia de solicitudes externas verificadas en Chrome; revisión a 320, 390 y 1440 px sin desbordamiento de página.
