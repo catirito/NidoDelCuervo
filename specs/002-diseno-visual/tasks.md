@@ -1,6 +1,6 @@
 # Nido del Cuervo — tareas de diseño visual
 
-Estado: implementación y validación local completadas. Commits separados; revisión del usuario pendiente antes de push. Requisitos y plan: `specs/002-diseno-visual/spec.md` y `specs/002-diseno-visual/plan.md`. Rama: `codex/002-diseno-visual`.
+Estado: implementación y validación completadas; revisión del usuario aprobada, PR integrado y rediseño publicado en Sites.
 
 - [x] **1. Aplicar la paleta oscura, púrpura y plateada.** Actualizar los tokens y colores fijos de `styles.css`, los controles nativos y el color de navegador en `index.html`. Mantener texto plateado, secundarios legibles, botones dorados con texto carbón y foco claro. **Fin:** todas las superficies, textos y estados usan la nueva paleta; textos normales alcanzan 4,5:1 y límites/estados esenciales de controles 3:1. No añadir dependencias.
 - [x] **2. Retirar menú y contador superior de forma coherente.** Eliminar la navegación y `registry-count` de `index.html`, sus reglas específicas de escritorio/móvil y el selector y escrituras del contador en `app.js`, en el mismo cambio. Conservar enlace de salto y estado accesible de resultados. **Fin:** no existen menú, contador superior ni referencias a nodos retirados; carga normal y fallida no producen errores JavaScript.
@@ -26,3 +26,6 @@ Prueba existente de datos: 203 registros y nueve campos fieles, fórmulas guarda
 El usuario aporta `cuervos1.png` y solicita sustituir el logo, preparar fondo exterior transparente y adaptar el tema al púrpura y plata de la imagen. La nueva paleta sustituye la dirección dorada anterior; las preferencias de tipografía, radios, composición y comportamiento se mantienen. Archivo de uso: `assets/logo-cuervo.png`; cuervo, aro índigo violáceo y disco plateado conservados. El logo provisional SVG queda como antecedente, sin uso en la interfaz. El púrpura de controles se aclara para contraste de texto y foco sobre fondos oscuros.
 
 - [x] **9. Adaptar identidad al logo aportado.** Sustituir el tema dorado por púrpura y plata, integrar logo PNG y favicon con transparencia exterior, conservar tipografía y comportamiento. **Fin verificado:** PNG con canal alfa real y exterior transparente, revisión visual desktop/móvil, contraste y comportamiento comprobados, fuentes locales y ajuste a tres anchuras. Dos commits locales separan paleta y logo; sin push.
+
+## Publicación completada
+El usuario autorizó push, revisión/integración del PR y actualización del Site tras revisar en local. PR integrado: https://github.com/catirito/NidoDelCuervo/pull/1. Publicación confirmada: https://nido-del-cuervo.catirito.chatgpt.site, acceso privado. Las menciones anteriores a no hacer push o conservar el Site previo corresponden a la etapa de revisión ya completada. La rama de trabajo se conserva.

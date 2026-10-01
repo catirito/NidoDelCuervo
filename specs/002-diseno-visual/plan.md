@@ -1,6 +1,6 @@
 # Nido del Cuervo — plan de diseño visual
 
-Estado: implementación y validación local completadas. Revisión del usuario pendiente antes de push; no se ha actualizado el Site.
+Estado: implementación y validación completadas; revisión del usuario aprobada, PR integrado y rediseño publicado en Sites.
 
 ## Resultado previsto
 Una superficie de consulta oscura y compacta, con acentos de púrpura, texto plateado y controles de esquinas suaves. Eliminar menú y contador superior para acercar la consulta a la tabla. Conservar la identidad del cuervo y el comportamiento de los registros.
@@ -40,3 +40,6 @@ Comprobar carga real de ambas familias locales, ausencia de solicitudes externas
 
 ## Revisión de identidad solicitada
 El usuario aporta `cuervos1.png` y solicita sustituir el logo, preparar fondo exterior transparente y adaptar el tema al púrpura y plata de la imagen. La nueva paleta sustituye la dirección dorada anterior; las preferencias de tipografía, radios, composición y comportamiento se mantienen. Archivo de uso: `assets/logo-cuervo.png`; cuervo, aro índigo violáceo y disco plateado conservados. El logo provisional SVG queda como antecedente, sin uso en la interfaz. El púrpura de controles se aclara para contraste de texto y foco sobre fondos oscuros.
+
+## Publicación completada
+El usuario autorizó push, revisión/integración del PR y actualización del Site tras revisar en local. PR integrado: https://github.com/catirito/NidoDelCuervo/pull/1. Publicación confirmada: https://nido-del-cuervo.catirito.chatgpt.site, acceso privado. Las menciones anteriores a no hacer push o conservar el Site previo corresponden a la etapa de revisión ya completada. La rama de trabajo se conserva.
