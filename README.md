@@ -26,7 +26,7 @@ La web y el Excel deben permanecer juntos. Cada recarga vuelve a solicitar el fi
 
 ## Archivos
 
-`index.html` define la estructura; `styles.css` la presentación; `app.js` conecta los controles y la carga; `records.js` contiene lectura y operaciones de datos. El logo está en `assets/logo-cuervo.png`, preparado desde la imagen aportada por el usuario; procedencia y prompt en `assets/logo-cuervo-README.md`. SheetJS CE 0.20.3 se sirve desde `vendor/`, con licencia y procedencia en `vendor/README.md`; no hay CDN en ejecución.
+`index.html` define la estructura; `styles.css` la presentación; `app.js` conecta los controles y la carga; `theme.js` gestiona el tema sin modificar la consulta; `records.js` contiene lectura y operaciones de datos. El logo está en `assets/logo-cuervo.png`, preparado desde la imagen aportada por el usuario; procedencia y prompt en `assets/logo-cuervo-README.md`. SheetJS CE 0.20.3 se sirve desde `vendor/`, con licencia y procedencia en `vendor/README.md`; no hay CDN en ejecución.
 
 ## Comprobaciones
 
@@ -49,3 +49,15 @@ El usuario revisó y aprobó la implementación; los once commits se integraron 
 
 ### Tipografía
 Cinzel en nombre y títulos, Roboto Flex en controles y tabla. Ambas fuentes se sirven localmente con `font-display: swap` y respaldo; archivos, licencias OFL 1.1, fuentes y hashes en `assets/fonts/README.md`. Carga real y ausencia de solicitudes externas verificadas en Chrome; revisión a 320, 390 y 1440 px sin desbordamiento de página.
+
+## Selector de tema 003 — revisión local
+
+El botón arriba a la derecha muestra solo el icono del tema activo: luna en oscuro y sol en claro. El texto «Tema claro» o «Tema oscuro» permanece visualmente oculto como nombre accesible dinámico. El tema claro usa gris muy claro, texto oscuro y acentos púrpura/plateados; conserva logo y fuentes.
+
+Sin elección manual válida, la web utiliza el tema del sistema y sigue sus cambios mientras está abierta. Elegir manualmente tiene prioridad y se recuerda en el mismo navegador y origen mediante `localStorage` (clave `nido-del-cuervo-theme`). Si el almacenamiento está bloqueado, el botón funciona y la elección manda durante la sesión, pero no puede persistir entre visitas. No hay control para volver al modo automático.
+
+Chrome headless verifica ambos temas, seguimiento del sistema emulado, persistencia, valor inválido/almacenamiento bloqueado, iconos y nombre accesible, teclado/foco, consulta y estados, sin errores de página. Vistas de 1440, 390 y 320 px revisadas en ambos temas; contraste activo mínimo de 5,24:1 en claro y 4,64:1 en oscuro. La prueba de datos pasa y el Excel conserva su hash. Evidencia detallada y límites en `specs/003-selector-tema/tasks.md`; sin prueba de lector de pantalla real ni todos los navegadores. Revisión local pendiente; el Site conserva la versión 002.
+
+Presentación final confirmada: icono discreto de 16 px, sin borde permanente, fondo marcado ni contenedor decorativo; área invisible de interacción de 44 × 44 px. Hover mediante cambio de color y foco visible al teclado.
+
+Entrega 003 autorizada: el usuario aprobó el resultado final y autorizó commit, push de `codex/003-selector-tema` y despliegue al Site privado existente. No autorizó integración en `main`. Esta decisión supera las referencias anteriores a revisión pendiente y prohibición de publicación. Despliegue en preparación; todavía no se afirma éxito.

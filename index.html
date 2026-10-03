@@ -7,6 +7,7 @@
   <title>Nido del Cuervo · Registro de personajes</title>
   <link rel="icon" href="assets/logo-cuervo.png" type="image/png">
   <link rel="stylesheet" href="styles.css">
+  <script src="theme.js"></script>
   <script src="vendor/xlsx.full.min.js" defer></script>
   <script type="module" src="app.js"></script>
 </head>
@@ -17,6 +18,11 @@
       <img src="assets/logo-cuervo.png" width="70" height="70" alt="" aria-hidden="true">
       <div><p class="eyebrow">Dungeons &amp; Dragons</p><h1>Nido del Cuervo</h1></div>
     </div>
+    <button id="theme-toggle" type="button" hidden>
+      <svg data-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"></path></svg>
+      <svg data-theme-icon="dark" viewBox="0 0 24 24" aria-hidden="true" focusable="false" hidden><path d="M20 14a8.5 8.5 0 0 1-10-10 8.5 8.5 0 1 0 10 10Z"></path></svg>
+      <span class="sr-only" data-theme-label>Tema claro</span>
+    </button>
   </header>
   <main id="registro" tabindex="-1">
     <section class="intro" aria-labelledby="registry-title">
