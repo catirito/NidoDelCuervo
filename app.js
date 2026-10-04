@@ -1,4 +1,4 @@
-import { setCharacters, visibleCharacters, onEditingChange, isEditing, isPending, isSaving, levelControl } from './editing.js';
+import { setCharacters, visibleCharacters, onEditingChange, isEditing, isPending, isSaving, levelControl, textControl, selectorControl, filterSource, isFieldPending } from './editing.js';
 import { fields, filterCharacters, sortCharacters, categoryValues, isMissing } from './records.js';
 
 const labels = { CLASS: 'clase', SUBCLASS: 'subclase', SPECIE: 'especie', RANGO: 'rango', PROPIETARIO: 'propietario', NIVEL: 'nivel' };
@@ -39,11 +39,16 @@ function renderCharacters(visible) {
   for (const character of visible) {
     const row = document.createElement('tr');
     row.dataset.sourceRow = character.sourceRow;
+    row.dataset.characterId = character.id;
     row.classList.toggle('pending', isPending(character.id));
     for (const field of fields) {
       const cell = renderCell(character[field]);
+      cell.dataset.field = field;
+      cell.classList.toggle('field-pending', isFieldPending(character.id, field));
+      if (isEditing() && ['PERSONAJE', 'NOTAS'].includes(field)) cell.replaceChildren(textControl(character, field));
+      if (isEditing() && ['ESTADO', 'PROPIETARIO'].includes(field)) cell.replaceChildren(selectorControl(character, field));
       if (field === 'NIVEL' && isEditing()) cell.replaceChildren(levelControl(character));
-      if (field === 'RANGO' && isPending(character.id)) {
+      if (field === 'RANGO' && isFieldPending(character.id, 'NIVEL')) {
         const label = document.createElement('span');
         label.className = 'pending-label';
         label.textContent = 'Pendiente de guardar';
@@ -61,7 +66,8 @@ function renderCharacters(visible) {
 function updateView() {
   characters = visibleCharacters();
   const categories = Object.fromEntries(elements.categories.map(select => [select.dataset.field, select.value]));
-  renderCharacters(sortCharacters(filterCharacters(characters, elements.name.value, categories), sort.field, sort.direction));
+  const matching = new Set(filterCharacters(filterSource(), elements.name.value, categories).map(character => character.id));
+  renderCharacters(sortCharacters(characters.filter(character => matching.has(character.id)), sort.field, sort.direction));
   elements.reset.disabled = isSaving() || (!elements.name.value && elements.categories.every(select => !select.value));
 }
 
@@ -133,7 +139,15 @@ elements.headers.forEach(header => header.querySelector('button').addEventListen
   updateView();
 }));
 document.querySelector('#retry-load').addEventListener('click', loadCharacters);
-onEditingChange(() => {
+onEditingChange(change => {
+  if (change) {
+    const row = [...elements.body.rows].find(row => row.dataset.characterId === change.id);
+    if (row) {
+      row.classList.toggle('pending', isPending(change.id));
+      for (const cell of row.cells) cell.classList.toggle('field-pending', isFieldPending(change.id, cell.dataset.field));
+    }
+    return;
+  }
   characters = visibleCharacters();
   populateFilters();
   setControlsEnabled(!isSaving());

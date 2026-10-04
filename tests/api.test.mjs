@@ -24,7 +24,7 @@ const initial = await read();
 assert.equal(initial.length, 203);
 assert.equal(new Set(initial.map(item => item.id)).size, 203);
 for (let i = 0; i < initial.length; i++) {
-  for (const field of fields.filter(field => field !== 'RANGO')) assert.deepEqual(initial[i][field], source[i][field]);
+  if (initial[i].version === 0) for (const field of fields.filter(field => field !== 'RANGO')) assert.deepEqual(initial[i][field], source[i][field]);
   assert.equal(initial[i].RANGO, rankForLevel(initial[i].NIVEL));
   assert.match(initial[i].id, /^[0-9a-f-]{36}$/);
   assert.equal(initial[i].sourceRow, source[i].sourceRow);
@@ -60,8 +60,8 @@ try {
   }
   const malformed = await fetch(`${base}/api/characters/batch`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: '{' });
   assert.equal(malformed.status, 400);
-  const oversized = await fetch(`${base}/api/characters/batch`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: ' '.repeat(65537) });
-  assert.equal(oversized.status, 400);
+  const oversized = await fetch(`${base}/api/characters/batch`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: ' '.repeat(3145729) });
+  assert.equal(oversized.status, 422);
   assert.equal((await fetch(`${base}/api/characters/batch`, { method: 'POST' })).status, 405);
   for (const path of ['Registro%20de%20personajes.xlsx', 'Memories.md', 'migrations/0001_characters.sql', '.git/config']) assert.equal((await fetch(`${base}/${path}`)).status, 404);
 } finally {

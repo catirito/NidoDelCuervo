@@ -613,3 +613,15 @@ noscript p {
 tr.pending td { background: #a17ac51a; }
 .pending-label { display: block; color: var(--accent); font-size: 12px; margin-top: 4px; }
 @media (max-width: 600px) { .edit-actions { margin-left: 0; } }
+
+td[data-field="PERSONAJE"] { min-width: 180px; }
+td[data-field="ESTADO"] { min-width: 165px; }
+td[data-field="PROPIETARIO"] { min-width: 155px; }
+td[data-field="NOTAS"] { min-width: 200px; }
+td input, td select, td textarea { width: 100%; padding: 6px 8px; border-radius: 6px; font-family: inherit; font-size: 13px; }
+td textarea { min-height: 64px; resize: vertical; background: var(--white); color: var(--ink); border: 1px solid var(--accent); }
+td textarea::placeholder { color: var(--muted); }
+td textarea:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+.new-option { margin-top: 6px; }
+.field-pending input, .field-pending select, .field-pending textarea { border-color: var(--focus); }
+[aria-invalid="true"] { outline: 2px solid var(--focus); }

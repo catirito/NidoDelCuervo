@@ -1,6 +1,6 @@
 # NidoDelCuervo
 
-Web de personajes con HTML, CSS y JavaScript sin frameworks. La especificación 004 añade edición de niveles, rango automático y guardado atómico por lotes mediante Pages Functions y D1. El Excel original es histórico de solo lectura y fuente de importación inicial; D1 es la fuente activa tras importar.
+Web de personajes con HTML, CSS y JavaScript sin frameworks. La especificación 004 añade edición de niveles y rango automático; 005 amplía a nombre, notas, estado y propietario. El guardado por lotes es atómico mediante Pages Functions y D1. El Excel original es histórico de solo lectura y fuente de importación inicial; D1 es la fuente activa tras importar.
 
 ## Ejecutar la versión 004 en local
 
@@ -22,7 +22,7 @@ El servidor HTTP estático de versiones anteriores ya no ejecuta la API. Servir 
 
 Editar habilita controles compactos de más y menos a la derecha del nivel, con paso de uno y límites 1–20. Los cambios son locales hasta Guardar; volver al nivel original retira el cambio. El rango se previsualiza según umbrales 1, 3, 5, 9, 13 y 17 y el servidor lo calcula de nuevo al guardar. Guardar envía solo personajes modificados en una petición. Sin cambios, vuelve a consulta sin escribir.
 
-`GET /api/characters` consulta los nueve campos, UUID v4 estable, fila de origen y versión. `PATCH /api/characters/batch` recibe `{changes: [{id, expectedVersion, fields: {NIVEL}}]}`. Solo permite nivel; no admite nombre, notas, estado, clase, subclase, especie, propietario ni rango manual. El guardado es atómico: si una versión está obsoleta o algún dato falla, no escribe ningún cambio del lote. No hay contraseña ni sesiones, según la decisión del usuario.
+`GET /api/characters` consulta los nueve campos, UUID v4 estable, fila de origen y versión. `PATCH /api/characters/batch` recibe `{changes: [{id, expectedVersion, fields: {NIVEL}}]}`. En 005 admite NIVEL, PERSONAJE, NOTAS, ESTADO y PROPIETARIO. No admite clase, subclase, especie ni rango manual. Propietario y estado siguen como texto en characters; no hay tablas relacionadas. El guardado es atómico: si una versión está obsoleta o algún dato falla, no escribe ningún cambio del lote. No hay contraseña ni sesiones, según la decisión del usuario.
 
 Un conflicto conserva el borrador. Actualizar y revisar consulta el estado guardado, muestra nivel actual y propuesta y permite volver a Guardar tras revisión. Una respuesta perdida también exige actualizar antes de repetir; si el nivel deseado ya está guardado, se retira del borrador. No hay reintentos automáticos. Recargar antes de guardar pierde el borrador; el navegador avisa cuando hay cambios pendientes.
 
@@ -33,10 +33,12 @@ Con la aplicación local en ejecución:
 ```sh
 node tests/records.test.mjs
 node tests/api.test.mjs http://127.0.0.1:8788
+node tests/character-editing.test.mjs http://127.0.0.1:8788
 node tests/ui.test.cjs http://127.0.0.1:8788
+node tests/character-editing-ui.test.cjs http://127.0.0.1:8788
 ```
 
-La prueba de UI usa Playwright y Chrome existentes; si Playwright está fuera de la resolución habitual, indicar su ruta mediante `PLAYWRIGHT_MODULE`. No se añade una dependencia al proyecto. API y UI rechazan destinos que no sean localhost. Las pruebas escriben en D1 local y restauran los niveles de partida; las versiones avanzan. La prueba API compara con los niveles del Excel, por lo que debe ejecutarse con la importación inicial restaurada, antes de editar datos de revisión. Las pruebas comprueban importación, rangos, errores, concurrencia, atomicidad, borrador, recuperación de conflictos/respuesta perdida, filtros, temas y móvil. No ejecutar tests en producción.
+La prueba de UI usa Playwright y Chrome existentes; si Playwright está fuera de la resolución habitual, indicar su ruta mediante `PLAYWRIGHT_MODULE`. No se añade una dependencia al proyecto. API y UI rechazan destinos que no sean localhost. Las pruebas escriben en D1 local y restauran los niveles de partida; las versiones avanzan. La prueba API compara con el Excel los registros cuya versión sigue a cero; respeta como estado de partida las ediciones locales existentes y las restaura al terminar. Las pruebas comprueban importación, rangos, errores, concurrencia, atomicidad, borrador, recuperación de conflictos/respuesta perdida, filtros, temas y móvil. No ejecutar tests en producción.
 
 ## Histórico, recuperación y publicación pendiente
 
@@ -93,3 +95,10 @@ Chrome headless verifica ambos temas, seguimiento del sistema emulado, persisten
 Presentación final confirmada: icono discreto de 16 px, sin borde permanente, fondo marcado ni contenedor decorativo; área invisible de interacción de 44 × 44 px. Hover mediante cambio de color y foco visible al teclado.
 
 Entrega 003 autorizada: el usuario aprobó el resultado final y autorizó commit, push de `codex/003-selector-tema` y despliegue al Site privado existente. No autorizó integración en `main`. Esta decisión supera las referencias anteriores a revisión pendiente y prohibición de publicación. Entrega confirmada el 3 de octubre de 2026: rama publicada con commit `ea3048995809c43b9afb7819adc8416c714bc3ef`, sin integrar en `main`. Sites confirmó `succeeded` en https://nido-del-cuervo.catirito.chatgpt.site, conservando acceso privado. Despliegue `appgdep_6ac1587b638c8191b742aaa414717f92`, versión `appgprj_6abe80aea354819180edc5e0c3f12bab~appgver_17ea56251e288191808f785ce13a1b18`, fuente de Sites `1d3026eda0b04ca25bec80831800b3d773a0b9dd`. Excel intacto. Las notas previas de revisión pendiente describen etapas ya superadas.
+
+## Edición de textos — 005 local
+Nombre obligatorio, máximo 50 caracteres. Notas opcionales, máximo 2.000 caracteres y saltos de línea preservados. Estado y propietario opcionales, máximo 50 caracteres, con selector existente y opción de introducir texto nuevo. Los límites cuentan puntos de código Unicode de forma consistente en cliente y servidor. Estado/propietario eliminan espacios exteriores y reutilizan la grafía existente al coincidir sin distinguir mayúsculas; no fusionan otras filas ni ignoran acentos. Los valores nuevos del mismo lote comparten la primera grafía normalizada. Las opciones se derivan de personajes: si nadie usa un valor, desaparece al actualizar.
+
+Los campos omitidos se conservan y los vacíos opcionales se guardan como null. Rango solo se recalcula al cambiar nivel. La API admite hasta 203 personajes y 3 MiB por petición, suficiente para los límites acordados incluso con caracteres escapados. La búsqueda/filtros de edición se aplican sobre el snapshot guardado: editar nombre/propietario no oculta la fila hasta Guardar. Cambiar filtros explícitamente conserva el borrador de filas ocultas.
+
+Un conflicto muestra valores guardados y propuestos de los campos pendientes; actualizar no descarta cambios locales diferentes. Tras una respuesta perdida se retiran los campos que ya coinciden con lo guardado antes de reenviar. La normalización reutiliza las opciones leídas en la petición y las nuevas del lote; sin catálogo independiente no impone unicidad global a altas simultáneas en personajes distintos. No hay migración, reimportación ni creación de recursos remotos de 005. Commit local autorizado; sin push ni publicación.

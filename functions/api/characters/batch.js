@@ -1,5 +1,5 @@
 import { jsonResponse, failure, readJson } from '../../../server/http.js';
-import { validateChanges, updateBatchSql } from '../../../server/characters.js';
+import { validateChanges, updateBatchSql, normalizeOptions } from '../../../server/characters.js';
 export async function onRequest(context) {
   const request = context.request;
   if (request.method !== 'PATCH') return failure(405, 'METHOD', 'Método no permitido.');
@@ -8,6 +8,10 @@ export async function onRequest(context) {
   try { changes = validateChanges(await readJson(request)); }
   catch (error) { return failure(error instanceof RangeError ? 422 : 400, 'VALIDATION', error instanceof RangeError ? error.message : 'Petición inválida.'); }
   try {
+    if (changes.some(change => Object.hasOwn(change.fields, 'ESTADO') || Object.hasOwn(change.fields, 'PROPIETARIO'))) {
+      const { results: options } = await context.env.DB.prepare('SELECT ESTADO, PROPIETARIO FROM characters ORDER BY sourceRow').all();
+      changes = normalizeOptions(changes, options);
+    }
     const { results } = await context.env.DB.prepare(updateBatchSql).bind(JSON.stringify(changes)).all();
     if (results.length === changes.length) return jsonResponse({ characters: results });
     const { results: current } = await context.env.DB.prepare('SELECT id, version FROM characters WHERE id IN (SELECT json_extract(value, \'$.id\') FROM json_each(?))').bind(JSON.stringify(changes)).all();

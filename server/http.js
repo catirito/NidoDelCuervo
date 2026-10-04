@@ -15,7 +15,7 @@ export async function readJson(request) {
       const { value, done } = await reader.read();
       if (done) break;
       length += value.byteLength;
-      if (length > 65536) { await reader.cancel(); throw new Error('Petición demasiado grande.'); }
+      if (length > 3145728) { await reader.cancel(); throw new RangeError('El lote supera 3 MiB; guarda menos personajes a la vez.'); }
       chunks.push(value);
     }
   } finally { reader.releaseLock(); }
