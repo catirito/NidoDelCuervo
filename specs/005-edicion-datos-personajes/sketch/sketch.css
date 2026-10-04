@@ -1,0 +1,25 @@
+.intro p { color: var(--muted); font-size: 13px; }
+.results-bar { flex-wrap: wrap; }
+.edit-actions { display: flex; align-items: center; gap: 14px; margin-left: auto; }
+#edit-button { min-height: 32px; padding: 5px 14px; background: var(--white); color: var(--ink); border: 1px solid #806c99; border-radius: 7px; font-size: 13px; }
+#edit-button:hover:not(:disabled) { background: #b59bd8; color: #17131e; }
+#draft-status { font-size: 13px; }
+table { min-width: 1400px; }
+td { padding: 14px 12px; vertical-align: top; }
+td input, td select, td textarea { width: 100%; min-height: 34px; padding: 6px 8px; border-radius: 6px; font-size: 13px; }
+td:first-child { min-width: 180px; }
+td:nth-child(7) { min-width: 170px; }
+td:nth-child(8) { min-width: 155px; }
+td:last-child { min-width: 200px; }
+td textarea { min-height: 64px; resize: vertical; }
+.new-option { margin-top: 6px; }
+.level-control { display: flex; align-items: center; gap: 6px; }
+.level-control output { min-width: 22px; text-align: center; font-weight: 650; }
+.level-buttons { display: flex; flex-direction: column; gap: 2px; }
+.level-control button { width: 25px; height: 24px; min-height: 0; padding: 0; border: 1px solid #806c99; border-radius: 4px; color: var(--ink); background: var(--white); font-size: 16px; line-height: 1; }
+.level-control button:disabled { opacity: .4; }
+tr.pending td { background: #a17ac51a; }
+@media (max-width: 600px) { .edit-actions { width: 100%; justify-content: space-between; margin-left: 0; } }
+td textarea { font-family: inherit; background: var(--white); color: var(--ink); border: 1px solid var(--accent); }
+td textarea::placeholder { color: var(--muted); }
+td textarea:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }

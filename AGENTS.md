@@ -7,7 +7,7 @@
 - Consultar `.agents/skills/frontend-skill/SKILL.md` cuando la tarea requiera diseño visual, adaptando su orientación a las tecnologías y límites acordados.
 
 ## Fuente de datos y límites
-- `Registro de personajes.xlsx`, situado en la raíz, es la única fuente de datos y es exclusivamente de lectura. No modificarlo.
+- `Registro de personajes.xlsx`, situado en la raíz, es la fuente de importación inicial y el histórico de solo lectura. No modificarlo ni publicarlo. Para la especificación 004, D1 es la fuente activa de consulta y edición después de importar; no reimportar en cada despliegue.
 - No inventar datos ausentes ni asumir nombres de columnas o estructuras sin comprobar el fichero.
 
 ## Colaboración orientada al aprendizaje

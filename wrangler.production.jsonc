@@ -1,0 +1,14 @@
+{
+  "name": "nido-del-cuervo",
+  "pages_build_output_dir": "./.local/public",
+  "compatibility_date": "2026-10-04",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "nido-personajes",
+      "database_id": "3107c487-41dd-4cb0-a4e6-6e46027d9c40",
+      "migrations_dir": "migrations",
+      "remote": false
+    }
+  ]
+}

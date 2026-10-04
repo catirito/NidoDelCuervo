@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="es">
 <head>
+  <base href="../../../">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#16161d">
@@ -8,7 +9,9 @@
   <link rel="icon" href="assets/logo-cuervo.png" type="image/png">
   <link rel="stylesheet" href="styles.css">
   <script src="theme.js"></script>
-  <script type="module" src="app.js"></script>
+
+  <link rel="stylesheet" href="specs/005-edicion-datos-personajes/sketch/sketch.css">
+  <script type="module" src="specs/005-edicion-datos-personajes/sketch/sketch.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#registro">Saltar al registro</a>
@@ -25,7 +28,7 @@
   </header>
   <main id="registro" tabindex="-1">
     <section class="intro" aria-labelledby="registry-title">
-      <h2 id="registry-title">Registro de personajes</h2>
+      <h2 id="registry-title">Registro de personajes</h2><p>Boceto de edición · Nombre, notas, estado y propietario · Sin guardado real.</p>
     </section>
     <section id="filtros" class="filters" aria-labelledby="filters-title">
       <div class="section-line"><h3 id="filters-title">Buscar y filtrar</h3><button id="reset-filters" type="button" disabled>Limpiar filtros <span aria-hidden="true">↗</span></button></div>
@@ -44,8 +47,7 @@
       </form>
     </section>
     <section class="results" aria-labelledby="results-title" aria-busy="true">
-      <div class="results-bar"><h3 id="results-title">El elenco</h3><div class="edit-actions"><button id="edit-button" type="button" disabled>Editar</button><button id="refresh-draft" type="button" hidden>Actualizar y revisar</button></div><p id="result-status" role="status" aria-live="polite" aria-atomic="true">Cargando personajes…</p></div>
-      <p id="draft-status" role="status" aria-live="polite" aria-atomic="true"></p>
+      <div class="results-bar"><h3 id="results-title">El elenco</h3><div class="edit-actions"><span id="draft-status" role="status"></span><button id="edit-button" type="button">Editar</button></div><p id="result-status" role="status" aria-live="polite" aria-atomic="true">Cargando personajes…</p></div>
       <p id="table-help" class="table-help">Ordena con los encabezados de clase, subclase, especie, rango y propietario. <span>En pantallas pequeñas, desliza la tabla horizontalmente.</span></p>
       <div class="table-scroll" role="region" aria-label="Tabla de personajes, desplazamiento horizontal" aria-describedby="table-help" tabindex="0">
         <table>
@@ -68,7 +70,7 @@
       <div id="error-state" class="error-state" role="alert" hidden><h4>No se pudo cargar el registro</h4><p id="error-message"></p><button id="retry-load" type="button">Volver a intentar</button></div>
     </section>
   </main>
-  <footer><span>Nido del Cuervo</span><span>Registro de personajes</span></footer>
+  <footer><span>Nido del Cuervo</span><span>Registro de personajes · Solo consulta</span></footer>
   <noscript><p>Activa JavaScript para consultar el registro de personajes.</p></noscript>
 </body>
 </html>

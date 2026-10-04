@@ -24,11 +24,40 @@
   --soft: #30313b;
   --white: #24252f;
   --focus: #c4b9ff;
+  --on-accent: #16161d;
   --control-radius: 10px;
   --table-radius: 14px;
   font-family: 'Roboto Flex',Arial,Helvetica,sans-serif;
   color: var(--ink);
   background: var(--paper);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --paper: #f3f4f7;
+  --ink: #20212b;
+  --muted: #555967;
+  --line: #7a7e8c;
+  --accent: #5d51a6;
+  --soft: #e4e5ee;
+  --white: #ffffff;
+  --focus: #51448f;
+  --on-accent: #ffffff;
+}
+
+@media(prefers-color-scheme:light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --paper: #f3f4f7;
+    --ink: #20212b;
+    --muted: #555967;
+    --line: #7a7e8c;
+    --accent: #5d51a6;
+    --soft: #e4e5ee;
+    --white: #ffffff;
+    --focus: #51448f;
+    --on-accent: #ffffff;
+  }
 }
 
 * {
@@ -110,6 +139,37 @@ button {
 
 .masthead {
   padding-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+#theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+}
+
+#theme-toggle:hover {
+  color: var(--ink);
+}
+
+#theme-toggle svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .brand {
@@ -191,7 +251,7 @@ h3 {
   border: 0;
   background: var(--accent);
   font-size: 12px;
-  color: var(--paper);
+  color: var(--on-accent);
   border-radius: var(--control-radius);
   min-height: 44px;
   padding: 10px 14px;
@@ -421,7 +481,7 @@ h4 {
   border-radius: var(--control-radius);
   padding: 12px 18px;
   background: var(--accent);
-  color: var(--paper);
+  color: var(--on-accent);
   font-size: 12px;
 }
 
@@ -457,6 +517,11 @@ noscript p {
   }
   .masthead {
     padding-top: 24px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  #theme-toggle {
+    margin-left: auto;
   }
   .brand {
     gap: 13px;
@@ -533,3 +598,31 @@ noscript p {
     transition: none!important;
   }
 }
+
+.results-bar { flex-wrap: wrap; }
+.edit-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+#edit-button, #refresh-draft { min-height: 32px; padding: 5px 14px; background: var(--white); color: var(--ink); border: 1px solid #806c99; border-radius: 7px; font-size: 13px; }
+#edit-button:hover:not(:disabled), #refresh-draft:hover:not(:disabled), .level-control button:hover:not(:disabled) { background: #b59bd8; color: #17131e; }
+#draft-status { font-size: 13px; color: var(--ink); }
+#draft-status:empty { display: none; }
+.level-control { display: flex; align-items: center; gap: 6px; }
+.level-control output { min-width: 22px; text-align: center; font-weight: 650; }
+.level-buttons { display: flex; flex-direction: column; gap: 2px; }
+.level-control button { width: 25px; height: 24px; min-height: 0; padding: 0; border: 1px solid #806c99; border-radius: 4px; color: var(--ink); background: var(--white); font-size: 16px; line-height: 1; }
+.level-control button:disabled { opacity: .4; }
+tr.pending td { background: #a17ac51a; }
+.pending-label { display: block; color: var(--accent); font-size: 12px; margin-top: 4px; }
+@media (max-width: 600px) { .edit-actions { margin-left: 0; } }
+
+td[data-field="PERSONAJE"] { min-width: 180px; }
+td[data-field="ESTADO"] { min-width: 165px; }
+td[data-field="PROPIETARIO"] { min-width: 155px; }
+td[data-field="NOTAS"] { min-width: 200px; }
+td input, td select, td textarea { width: 100%; padding: 6px 8px; border-radius: 6px; font-family: inherit; font-size: 13px; }
+td textarea { min-height: 64px; resize: vertical; background: var(--white); color: var(--ink); border: 1px solid var(--accent); }
+td textarea::placeholder { color: var(--muted); }
+td textarea:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+.new-option { margin-top: 6px; }
+.field-pending input, .field-pending select, .field-pending textarea { border-color: var(--focus); }
+[aria-invalid="true"] { outline: 2px solid var(--focus); }
+td[data-field="CLASS"], td[data-field="SUBCLASS"], td[data-field="SPECIE"] { min-width: 170px; }
