@@ -40,3 +40,7 @@ Desglose e implementación autorizados; completados y validados localmente. Comp
 - Comandos utilizados: node tests/records.test.mjs, tests/api.test.mjs, tests/character-editing.test.mjs, tests/catalogs.test.mjs, tests/character-editing-ui.test.cjs, tests/catalogs-ui.test.cjs, tests/search-initialization.test.mjs, tests/pagination.test.mjs, tests/pagination-ui.test.cjs y tests/pagination-recovery-ui.test.cjs. Miniflare/Playwright existentes mediante MINIFLARE_MODULE/PLAYWRIGHT_MODULE; sin nuevas dependencias.
 - Excel de solo lectura intacto. No hay tests ni cambios en producción. No se han verificado todos los navegadores ni un lector de pantalla real.
 - Resultado servido en http://127.0.0.1:8788. Capturas local-paginador.png y local-paginador-movil.png. Commit final, push de implementación, merge y publicación pendientes de autorización.
+
+## Entrega publicada
+
+Usuario autoriza commit, push y publicación. Commit 6fac87a en codex/007-paginacion; despliegue de producción confirmado por Wrangler en https://03273114.nido-del-cuervo.pages.dev, accesible en https://nido-del-cuervo.pages.dev. Migración 0004 y backfill protegido de 203 nombres completados en D1 remoto; UUID, versiones y campos de personajes conservados. Sin reimportación, tests en producción ni integración en main. Estas decisiones sustituyen las notas anteriores de entrega pendiente.

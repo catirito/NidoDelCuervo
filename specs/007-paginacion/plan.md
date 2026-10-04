@@ -85,3 +85,7 @@ El generador rechaza sobrescribir su salida. La carga verifica cantidad, UUID, n
 
 ### Despliegue futuro (pendiente de autorización)
 Mantener wrangler.jsonc local y wrangler.production.jsonc remoto separados. No ejecutar los comandos locales contra producción. Al autorizar publicación: aplicar únicamente la nueva migración, desplegar la versión que mantiene name_search en cada edición y después exportar nombres/versiones actuales e inicializar claves con el script y la transacción protegida. GET puede mostrar indisponibilidad durante esa inicialización; no anunciar publicación final hasta completarla. Ese orden evita que un backend antiguo cambie nombres sin mantener la clave después de inicializarla. Si el snapshot cambia entretanto, reexportar/reintentar; no restaurar ni reimportar personajes. Solo recuperación ante fallos de migración, sin tests en producción. El empaquetado conserva su lista explícita de archivos y excluye Excel y SQL.
+
+## Entrega publicada
+
+Usuario autoriza commit, push y publicación. Commit 6fac87a en codex/007-paginacion; despliegue de producción confirmado por Wrangler en https://03273114.nido-del-cuervo.pages.dev, accesible en https://nido-del-cuervo.pages.dev. Migración 0004 y backfill protegido de 203 nombres completados en D1 remoto; UUID, versiones y campos de personajes conservados. Sin reimportación, tests en producción ni integración en main. Estas decisiones sustituyen las notas anteriores de entrega pendiente.

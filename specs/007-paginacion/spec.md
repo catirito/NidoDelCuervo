@@ -36,3 +36,7 @@ Paginar la tabla mediante consultas a la API, sin cargar todos los personajes pa
 
 ## Etapa
 Plan, tareas e implementación autorizados. Implementación completada y validada en local. Commit final, push, merge y publicación pendientes de autorización.
+
+## Entrega publicada
+
+Usuario autoriza commit, push y publicación. Commit 6fac87a en codex/007-paginacion; despliegue de producción confirmado por Wrangler en https://03273114.nido-del-cuervo.pages.dev, accesible en https://nido-del-cuervo.pages.dev. Migración 0004 y backfill protegido de 203 nombres completados en D1 remoto; UUID, versiones y campos de personajes conservados. Sin reimportación, tests en producción ni integración en main. Estas decisiones sustituyen las notas anteriores de entrega pendiente.
