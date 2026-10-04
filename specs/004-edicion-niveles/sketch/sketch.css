@@ -1,0 +1,20 @@
+.intro p { color: var(--muted); font-size: 14px; }
+.results-bar { flex-wrap: wrap; }
+.edit-actions { display: flex; align-items: center; gap: 16px; margin-left: auto; }
+#edit-button { min-height: 44px; padding: 10px 24px; background: #b59bd8; color: #17131e; border: 0; border-radius: 10px; font-weight: 650; }
+#draft-status { font-size: 13px; }
+.level-control { display: flex; align-items: center; gap: 8px; }
+.level-control button { width: 44px; height: 44px; border: 1px solid #806c99; border-radius: 8px; color: inherit; background: transparent; font-size: 22px; }
+.level-control button:disabled { opacity: .3; }
+.level-control output { min-width: 22px; text-align: center; font-weight: 650; }
+tr.pending td { background: #a17ac51a; }
+.pending-label { display: block; color: #b59bd8; font-size: 12px; margin-top: 4px; }
+#edit-button:disabled { opacity: .65; }
+@media (max-width: 600px) { .edit-actions { width: 100%; justify-content: space-between; margin-left: 0; } }
+
+#edit-button { min-height: 32px; padding: 5px 14px; background: #24242e; color: #dedbe5; border: 1px solid #806c99; border-radius: 7px; font-size: 13px; }
+#edit-button:hover:not(:disabled) { background: #b59bd8; color: #17131e; }
+.level-control { gap: 6px; }
+.level-buttons { display: flex; flex-direction: column; gap: 2px; }
+.level-control button { width: 25px; height: 22px; min-height: 0; padding: 0; border-radius: 4px; font-size: 16px; line-height: 1; }
+.level-control button:hover:not(:disabled) { background: #b59bd8; color: #17131e; }

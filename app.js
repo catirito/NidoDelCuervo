@@ -1,4 +1,5 @@
-import { fields, readCharacters, filterCharacters, sortCharacters, categoryValues, isMissing } from './records.js';
+import { setCharacters, visibleCharacters, onEditingChange, isEditing, isPending, isSaving, levelControl } from './editing.js';
+import { fields, filterCharacters, sortCharacters, categoryValues, isMissing } from './records.js';
 
 const labels = { CLASS: 'clase', SUBCLASS: 'subclase', SPECIE: 'especie', RANGO: 'rango', PROPIETARIO: 'propietario', NIVEL: 'nivel' };
 const elements = {
@@ -38,7 +39,18 @@ function renderCharacters(visible) {
   for (const character of visible) {
     const row = document.createElement('tr');
     row.dataset.sourceRow = character.sourceRow;
-    row.append(...fields.map(field => renderCell(character[field])));
+    row.classList.toggle('pending', isPending(character.id));
+    for (const field of fields) {
+      const cell = renderCell(character[field]);
+      if (field === 'NIVEL' && isEditing()) cell.replaceChildren(levelControl(character));
+      if (field === 'RANGO' && isPending(character.id)) {
+        const label = document.createElement('span');
+        label.className = 'pending-label';
+        label.textContent = 'Pendiente de guardar';
+        cell.append(label);
+      }
+      row.append(cell);
+    }
     fragment.append(row);
   }
   elements.body.replaceChildren(fragment);
@@ -47,9 +59,10 @@ function renderCharacters(visible) {
 }
 
 function updateView() {
+  characters = visibleCharacters();
   const categories = Object.fromEntries(elements.categories.map(select => [select.dataset.field, select.value]));
   renderCharacters(sortCharacters(filterCharacters(characters, elements.name.value, categories), sort.field, sort.direction));
-  elements.reset.disabled = !elements.name.value && elements.categories.every(select => !select.value);
+  elements.reset.disabled = isSaving() || (!elements.name.value && elements.categories.every(select => !select.value));
 }
 
 function updateSortHeaders() {
@@ -65,10 +78,13 @@ function updateSortHeaders() {
 
 function populateFilters() {
   for (const select of elements.categories) {
+    const selected = select.value;
     select.replaceChildren(select.options[0]);
     for (const value of categoryValues(characters, select.dataset.field)) {
       select.append(new Option(value, value));
     }
+    if (selected && ![...select.options].some(option => option.value === selected)) select.append(new Option(selected, selected));
+    select.value = selected;
   }
 }
 
@@ -86,11 +102,10 @@ async function loadCharacters() {
   elements.status.textContent = 'Cargando personajes…';
   setControlsEnabled(false);
   try {
-    const response = await fetch(new URL('./Registro de personajes.xlsx', import.meta.url), { cache: 'no-store' });
-    if (!response.ok) throw new Error(`No se pudo leer el archivo Excel (HTTP ${response.status}).`);
-    if (!globalThis.XLSX) throw new Error('La biblioteca local de lectura no está disponible.');
-    const workbook = globalThis.XLSX.read(await response.arrayBuffer(), { type: 'array' });
-    characters = readCharacters(workbook, globalThis.XLSX);
+    const response = await fetch('/api/characters', { cache: 'no-store' });
+    if (!response.ok) throw new Error('El servicio de personajes no está disponible.');
+    characters = (await response.json()).characters;
+    setCharacters(characters);
     elements.form.reset();
     sort = { field: 'NIVEL', direction: 'descending' };
     populateFilters();
@@ -99,7 +114,7 @@ async function loadCharacters() {
     updateView();
   } catch (error) {
     characters = [];
-    elements.errorMessage.textContent = `${error.message} Comprueba que la web y «Registro de personajes.xlsx» están servidos juntos por HTTP.`;
+    elements.errorMessage.textContent = `${error.message} Vuelve a intentarlo.`;
     elements.error.hidden = false;
     elements.status.textContent = 'Registro no disponible';
   } finally {
@@ -118,4 +133,10 @@ elements.headers.forEach(header => header.querySelector('button').addEventListen
   updateView();
 }));
 document.querySelector('#retry-load').addEventListener('click', loadCharacters);
+onEditingChange(() => {
+  characters = visibleCharacters();
+  populateFilters();
+  setControlsEnabled(!isSaving());
+  updateView();
+});
 loadCharacters();

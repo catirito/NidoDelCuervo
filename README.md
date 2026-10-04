@@ -1,18 +1,50 @@
 # NidoDelCuervo
 
-Web estática para consultar los personajes de D&D del Nido del Cuervo. Usa HTML, CSS y JavaScript sin frameworks y carga automáticamente `Registro de personajes.xlsx`, única fuente de datos y exclusivamente de lectura.
+Web de personajes con HTML, CSS y JavaScript sin frameworks. La especificación 004 añade edición de niveles, rango automático y guardado atómico por lotes mediante Pages Functions y D1. El Excel original es histórico de solo lectura y fuente de importación inicial; D1 es la fuente activa tras importar.
 
-## Ejecutar localmente
+## Ejecutar la versión 004 en local
 
-Desde la raíz del proyecto, con Python 3 instalado:
+Usar Node moderno (24 verificado) y Wrangler 4 ya disponible. No hace falta instalar dependencias de la aplicación.
 
 ```sh
-python3 -m http.server 8765 --bind 127.0.0.1
+node scripts/build-cloudflare.mjs
+wrangler d1 migrations apply DB --local
+node scripts/import-characters.mjs .local/import.sql
+wrangler d1 execute DB --local --file .local/import.sql
+wrangler pages dev --port 8788 --ip 127.0.0.1
 ```
 
-Abrir [http://127.0.0.1:8765](http://127.0.0.1:8765). Detener el servidor con `Ctrl+C`. Este comando se ha probado; no hace falta instalar dependencias de Python. No abrir `index.html` con `file://`: la lectura del Excel necesita HTTP.
+Abrir [la aplicación local](http://127.0.0.1:8788). La configuración usa un identificador exclusivamente local y `remote: false`. No hay recursos D1 remotos creados ni cambios publicados. La importación se ejecuta una sola vez sobre una base vacía; el generador rechaza sobrescribir el SQL y la base rechaza una segunda importación. En visitas posteriores bastan preparación de archivos y `wrangler pages dev`. El estado D1 local está en `.wrangler/`, ignorado por Git; no borrarlo para mantener las ediciones locales.
 
-La web y el Excel deben permanecer juntos. Cada recarga vuelve a solicitar el fichero sin caché; no hay polling. Para usar una versión nueva del registro, el responsable de los datos debe colocar el Excel actualizado en la misma ruta y recargar la página. La web nunca modifica, guarda ni recalcula el libro.
+El servidor HTTP estático de versiones anteriores ya no ejecuta la API. Servir únicamente `.local/public`, nunca la raíz del repositorio. El script permite también una salida nueva fuera del proyecto. El paquete contiene una lista explícita de archivos, sin Excel, SQL ni documentación; el empaquetado no importa datos ni escribe en D1.
+
+## Editar niveles
+
+Editar habilita controles compactos de más y menos a la derecha del nivel, con paso de uno y límites 1–20. Los cambios son locales hasta Guardar; volver al nivel original retira el cambio. El rango se previsualiza según umbrales 1, 3, 5, 9, 13 y 17 y el servidor lo calcula de nuevo al guardar. Guardar envía solo personajes modificados en una petición. Sin cambios, vuelve a consulta sin escribir.
+
+`GET /api/characters` consulta los nueve campos, UUID v4 estable, fila de origen y versión. `PATCH /api/characters/batch` recibe `{changes: [{id, expectedVersion, fields: {NIVEL}}]}`. Solo permite nivel; no admite nombre, notas, estado, clase, subclase, especie, propietario ni rango manual. El guardado es atómico: si una versión está obsoleta o algún dato falla, no escribe ningún cambio del lote. No hay contraseña ni sesiones, según la decisión del usuario.
+
+Un conflicto conserva el borrador. Actualizar y revisar consulta el estado guardado, muestra nivel actual y propuesta y permite volver a Guardar tras revisión. Una respuesta perdida también exige actualizar antes de repetir; si el nivel deseado ya está guardado, se retira del borrador. No hay reintentos automáticos. Recargar antes de guardar pierde el borrador; el navegador avisa cuando hay cambios pendientes.
+
+## Validación local de 004
+
+Con la aplicación local en ejecución:
+
+```sh
+node tests/records.test.mjs
+node tests/api.test.mjs http://127.0.0.1:8788
+node tests/ui.test.cjs http://127.0.0.1:8788
+```
+
+La prueba de UI usa Playwright y Chrome existentes; si Playwright está fuera de la resolución habitual, indicar su ruta mediante `PLAYWRIGHT_MODULE`. No se añade una dependencia al proyecto. API y UI rechazan destinos que no sean localhost. Las pruebas escriben en D1 local y restauran los niveles de partida; las versiones avanzan. La prueba API compara con los niveles del Excel, por lo que debe ejecutarse con la importación inicial restaurada, antes de editar datos de revisión. Las pruebas comprueban importación, rangos, errores, concurrencia, atomicidad, borrador, recuperación de conflictos/respuesta perdida, filtros, temas y móvil. No ejecutar tests en producción.
+
+## Histórico, recuperación y publicación pendiente
+
+Conservar el Excel original intacto en privado; permite recuperar el estado inicial, no cambios posteriores. Una recuperación inicial requiere una nueva base vacía, nueva importación y revisión antes de cambiar el binding: genera nuevas identidades y obliga a recargar todos los clientes. No restaurar ni borrar la base activa sin autorización.
+
+D1 remoto gratuito dispone de Time Travel de siete días según [la documentación oficial](https://developers.cloudflare.com/d1/reference/time-travel/). Antes de una restauración: detener la edición, exportar el estado actual, revisar el momento de recuperación y pedir autorización para la operación destructiva. Después, comprobar datos fuera de producción y hacer que todos los clientes recarguen; las versiones de snapshots antiguos no sirven tras restaurar. D1 local no proporciona este histórico remoto. La ubicación de una copia privada adicional del Excel sigue pendiente.
+
+La publicación de 004 queda aplazada para la revisión local. Al autorizarla, crear D1 dentro de cuotas gratuitas, usar su identificador real en la configuración, aplicar migración e importar una sola vez; revisar binding y empaquetar Pages Functions con Wrangler. No publicar con el identificador local de ejemplo, reimportar en despliegues ni integrar en main sin autorización. Se conserva el proyecto Pages y las instrucciones noindex. [Desarrollo local de Pages](https://developers.cloudflare.com/pages/functions/local-development/).
 
 ## Consulta
 
@@ -22,7 +54,7 @@ La web y el Excel deben permanecer juntos. Cada recarga vuelve a solicitar el fi
 - Los filtros de clase, subclase, especie, rango y propietario se combinan con AND, también con el nombre. Borrar el nombre retira solo ese criterio. «Limpiar filtros» retira todos los filtros y conserva la ordenación elegida.
 - Los encabezados de esos cinco campos alternan orden ascendente/descendente. El rango se ordena alfabéticamente en español, sin deducir una jerarquía de juego. Los empates conservan la fila original y los vacíos quedan al final en ambos sentidos.
 - Los vacíos aparecen como una raya con texto accesible «Sin dato», sin alterar los valores. Los selectores contienen valores reales no vacíos; «Todas/Todos» incluye también filas con ese campo vacío.
-- `RANGO` usa los resultados almacenados de 199 fórmulas y los cuatro valores directos. No se comprueba su vigencia mediante recálculo. Los errores de carga y la ausencia de coincidencias tienen estados distintos.
+- En 004 `RANGO` se calcula desde el nivel al importar y al guardar; el Excel mantiene sus fórmulas y resultados intactos. Los errores de carga y la ausencia de coincidencias tienen estados distintos.
 
 ## Archivos
 
