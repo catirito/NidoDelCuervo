@@ -7,11 +7,11 @@ import { rankForLevel } from '../rank.js';
 const base = process.argv[2] ?? 'http://127.0.0.1:8788';
 assert.ok(['localhost', '127.0.0.1'].includes(new URL(base).hostname), 'Estas pruebas solo se ejecutan en local.');
 const read = async () => {
-  const response = await fetch(`${base}/api/characters`);
+  const response = await fetch(`${base}/api/characters?pageSize=all`);
   assert.equal(response.status, 200);
   assert.equal(response.headers.get('cache-control'), 'no-store');
   assert.match(response.headers.get('x-robots-tag'), /noindex/);
-  return (await response.json()).characters;
+  return (await response.json()).characters.sort((a, b) => a.sourceRow - b.sourceRow);
 };
 const patch = async changes => fetch(`${base}/api/characters/batch`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ changes }) });
 const change = (character, level) => ({ id: character.id, expectedVersion: character.version, fields: { NIVEL: level } });

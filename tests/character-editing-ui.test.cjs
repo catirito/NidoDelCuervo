@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 (async () => {
   const base = process.argv[2] || 'http://127.0.0.1:8788';
   assert.ok(['127.0.0.1', 'localhost'].includes(new URL(base).hostname));
-  const read = async () => (await (await fetch(base + '/api/characters')).json()).characters;
+  const read = async () => (await (await fetch(base + '/api/characters?pageSize=all')).json()).characters;
   const initial = await read();
   const original = initial.find(character => character.NIVEL < 20 && character.PERSONAJE && character.PROPIETARIO);
   const browser = await chromium.launch({ channel: 'chrome', headless: true });
@@ -50,6 +50,8 @@ const assert = require('node:assert/strict');
     assert.deepEqual(Object.keys(writes[0].changes[0].fields).sort(), ['ESTADO', 'NIVEL', 'NOTAS', 'PERSONAJE', 'PROPIETARIO']);
     assert.equal(await row().count(), 0);
     await page.click('#reset-filters');
+    await page.selectOption('#page-size', 'all');
+    await page.waitForFunction(() => document.querySelectorAll('tbody tr').length === 203);
     assert.equal(await page.locator('tbody tr').count(), 203);
     assert.equal(await page.locator('tbody b').count(), 0);
     await page.reload();

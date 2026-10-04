@@ -1,0 +1,14 @@
+import fs from 'node:fs/promises';
+const [input, output] = process.argv.slice(2);
+if (!input || !output) throw new Error('Indica exportación JSON actual y salida SQL nueva.');
+const data = JSON.parse(await fs.readFile(input, 'utf8'));
+const records = Array.isArray(data[0]?.results) ? data[0].results : data.characters;
+if (!Array.isArray(records) || !records.length) throw new Error('Exportación de personajes inválida.');
+const rows = records.map(row => ({ id: row.id, version: row.version, name: row.PERSONAJE, search: String(row.PERSONAJE ?? '').toLocaleLowerCase('es') }));
+const encoded = JSON.stringify(rows).replaceAll("'", "''");
+await fs.writeFile(output, `CREATE TABLE search_initialization_guard (valid INTEGER CHECK(valid = 1));
+INSERT INTO search_initialization_guard SELECT CASE WHEN (SELECT count(*) FROM characters) = ${rows.length} AND (SELECT count(*) FROM characters c JOIN json_each('${encoded}') j ON c.id = json_extract(j.value, '$.id') AND c.version = json_extract(j.value, '$.version') AND c.PERSONAJE IS json_extract(j.value, '$.name')) = ${rows.length} THEN 1 ELSE 0 END;
+UPDATE characters SET name_search = (SELECT json_extract(value, '$.search') FROM json_each('${encoded}') WHERE json_extract(value, '$.id') = characters.id);
+DROP TABLE search_initialization_guard;
+`, { flag: 'wx' });
+console.log(`Inicialización preparada: ${rows.length} nombres; UUID y versiones conservados.`);

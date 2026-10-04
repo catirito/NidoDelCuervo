@@ -5,6 +5,11 @@ const action = document.querySelector('#edit-button');
 const status = document.querySelector('#draft-status');
 const refresh = document.querySelector('#refresh-draft');
 let snapshot = [];
+let pageIds = [];
+let editOptions = {};
+let loading = false;
+const missing = new Set();
+const missingControls = document.querySelector('#missing-drafts');
 let catalogs = { classes: [], subclasses: [], species: [] };
 let draft = new Map();
 let subclassParents = new Map();
@@ -12,24 +17,33 @@ let editing = false;
 let saving = false;
 let requiresRefresh = false;
 let notify = () => {};
-export function setCharacters(characters, values) { snapshot = characters; if (values) catalogs = values; action.disabled = false; }
-export function onEditingChange(callback) { notify = callback; }
-export function filterSource() { return editing ? snapshot : visibleCharacters(); }
-export function visibleCharacters() {
+export function setCharacters(characters, values, options) {
+  const retained = new Map(snapshot.filter(item => draft.has(item.id)).map(item => [item.id, item]));
+  for (const character of characters) if (!retained.has(character.id)) retained.set(character.id, character);
+  snapshot = [...retained.values()];
+  pageIds = characters.map(item => item.id);
+  if (values) catalogs = values;
+  if (options) editOptions = options;
+  syncControls();
+}
+export function setLoading(value) { loading = value; syncControls(); }
+function allCharacters() {
   return snapshot.map(character => {
     const fields = draft.get(character.id) ?? {};
     return { ...character, ...fields, RANGO: Object.hasOwn(fields, 'NIVEL') ? rankForLevel(fields.NIVEL) : character.RANGO };
   });
 }
+export function onEditingChange(callback) { notify = callback; }
+export function visibleCharacters() { return pageIds.map(id => allCharacters().find(item => item.id === id)).filter(Boolean); }
 export function isEditing() { return editing; }
 export function isPending(id) { return draft.has(id); }
 export function isFieldPending(id, field) { return Object.hasOwn(draft.get(id) ?? {}, field); }
 export function isSaving() { return saving; }
 function syncControls(message) {
   action.textContent = saving ? 'Guardando…' : editing ? 'Guardar' : 'Editar';
-  action.disabled = saving || requiresRefresh;
+  action.disabled = saving || loading || requiresRefresh || missing.size > 0;
   refresh.hidden = !requiresRefresh;
-  refresh.disabled = saving;
+  refresh.disabled = saving || loading;
   status.textContent = message ?? (editing ? `${draft.size} personajes modificados` : '');
 }
 function setDraft(character, field, value, incremental = false) {
@@ -51,17 +65,17 @@ function subclassOptions(className) {
   if (!className) return [];
   const parent = catalogs.classes.find(item => item.nameKey === catalogKey(className));
   const existing = catalogs.subclasses.filter(item => item.classId === parent?.id).map(item => item.name);
-  const pending = visibleCharacters().filter(item => item.CLASS && catalogKey(item.CLASS) === catalogKey(className)).map(item => item.SUBCLASS).filter(Boolean);
+  const pending = allCharacters().filter(item => item.CLASS && catalogKey(item.CLASS) === catalogKey(className)).map(item => item.SUBCLASS).filter(Boolean);
   return [...new Set([...existing, ...pending])].sort((a, b) => a.localeCompare(b, 'es'));
 }
 function optionValues(field, character) {
-  if (field === 'SUBCLASS') return subclassOptions(visibleCharacters().find(item => item.id === character.id).CLASS);
-  const stored = field === 'CLASS' ? catalogs.classes.map(item => item.name) : field === 'SPECIE' ? catalogs.species.map(item => item.name) : snapshot.map(item => item[field]);
+  if (field === 'SUBCLASS') return subclassOptions(allCharacters().find(item => item.id === character.id).CLASS);
+  const stored = field === 'CLASS' ? catalogs.classes.map(item => item.name) : field === 'SPECIE' ? catalogs.species.map(item => item.name) : editOptions[field] ?? snapshot.map(item => item[field]);
   return [...new Set([...stored, ...[...draft.values()].map(fields => fields[field])].filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es'));
 }
 function catalogAdditions() {
   const additions = { classes: [], subclasses: [], species: [] };
-  for (const character of visibleCharacters().filter(character => draft.has(character.id))) {
+  for (const character of allCharacters().filter(character => draft.has(character.id))) {
     const fields = draft.get(character.id);
     if (Object.hasOwn(fields, 'CLASS') && character.CLASS && !catalogs.classes.some(item => item.nameKey === catalogKey(character.CLASS))) additions.classes.push(character.CLASS);
     if (Object.hasOwn(fields, 'SUBCLASS') && character.SUBCLASS) {
@@ -76,7 +90,7 @@ function catalogAdditions() {
 function bindText(control, character, field) {
   control.dataset.editor = field;
   control.dataset.characterId = character.id;
-  control.disabled = saving;
+  control.disabled = saving || loading;
   control.setAttribute('aria-label', `${fieldLabels[field]} de ${snapshot.find(item => item.id === character.id).PERSONAJE}`);
   control.addEventListener('input', () => {
     let value = control.value;
@@ -90,7 +104,7 @@ function bindText(control, character, field) {
       control.setAttribute('aria-invalid', 'true');
     }
     if (field === 'SUBCLASS') {
-      const parent = visibleCharacters().find(item => item.id === character.id).CLASS;
+      const parent = allCharacters().find(item => item.id === character.id).CLASS;
       if (parent) subclassParents.set(character.id, catalogKey(parent));
     }
     setDraft(character, field, value, true);
@@ -109,7 +123,7 @@ export function textControl(character, field) {
 export function selectorControl(character, field) {
   const group = document.createElement('div');
   const select = document.createElement('select');
-  select.disabled = saving || (field === 'SUBCLASS' && !character.CLASS);
+  select.disabled = saving || loading || (field === 'SUBCLASS' && !character.CLASS);
   select.dataset.editor = field;
   select.dataset.characterId = character.id;
   select.setAttribute('aria-label', `${fieldLabels[field]} de ${snapshot.find(item => item.id === character.id).PERSONAJE}`);
@@ -128,7 +142,7 @@ export function selectorControl(character, field) {
     if (!input.hidden) { input.value = ''; input.setCustomValidity(''); input.removeAttribute('aria-invalid'); input.focus(); return; }
     input.setCustomValidity('');
     if (field === 'SUBCLASS') {
-      const parent = visibleCharacters().find(item => item.id === character.id).CLASS;
+      const parent = allCharacters().find(item => item.id === character.id).CLASS;
       if (parent && select.value) subclassParents.set(character.id, catalogKey(parent)); else subclassParents.delete(character.id);
     }
     setDraft(character, field, select.value || null, true);
@@ -150,7 +164,7 @@ export function levelControl(character) {
     button.dataset.characterId = character.id;
     button.dataset.delta = delta;
     button.setAttribute('aria-label', `${delta > 0 ? 'Subir' : 'Bajar'} nivel de ${character.PERSONAJE}`);
-    button.disabled = saving || character.NIVEL + delta < 1 || character.NIVEL + delta > 20;
+    button.disabled = saving || loading || character.NIVEL + delta < 1 || character.NIVEL + delta > 20;
     button.addEventListener('click', () => {
       setDraft(character, 'NIVEL', character.NIVEL + delta);
       const candidates = [...document.querySelectorAll('button[data-character-id]')].filter(item => item.dataset.characterId === character.id && !item.disabled);
@@ -162,11 +176,12 @@ export function levelControl(character) {
   return control;
 }
 async function readLatest() {
-  const response = await fetch('/api/characters', { cache: 'no-store' });
+  const response = await fetch(`/api/characters?ids=${[...draft.keys()].join(',')}`, { cache: 'no-store' });
   if (!response.ok) throw new Error('No se pudo actualizar el registro.');
   return response.json();
 }
 async function refreshDraft() {
+  if (!draft.size) { requiresRefresh = false; syncControls(); notify({ saved: true }); return; }
   saving = true;
   syncControls('Actualizando el registro…');
   notify();
@@ -178,14 +193,18 @@ async function refreshDraft() {
     for (const [id, fields] of draft) {
       const current = latest.find(item => item.id === id);
       const original = snapshot.find(item => item.id === id);
-      if (!current) { differences.push(`${original.PERSONAJE}: ya no existe; cambio retirado`); draft.delete(id); continue; }
+      if (!current) { differences.push(`${original.PERSONAJE}: ya no existe; retira explícitamente su borrador`); missing.add(id); continue; }
+      missing.delete(id);
       for (const [field, value] of Object.entries(fields)) {
         if (current[field] === value) { delete fields[field]; differences.push(`${current.PERSONAJE}: ${fieldLabels[field]} ya está guardado`); }
         else if (current.version !== original.version) differences.push(`${current.PERSONAJE}, ${fieldLabels[field]}: guardado «${current[field] ?? 'vacío'}», tu propuesta «${value ?? 'vacío'}»`);
       }
       if (!Object.keys(fields).length) draft.delete(id);
     }
-    snapshot = latest;
+    const currentById = new Map(latest.map(item => [item.id, item]));
+    snapshot = snapshot.map(item => currentById.get(item.id) ?? item);
+    editOptions = latestResponse.editOptions;
+    renderMissing();
     requiresRefresh = false;
     saving = false;
     syncControls(`${differences.join(' · ') || 'Registro actualizado.'} Revisa el borrador y pulsa Guardar. ${draft.size} personajes pendientes.`);
@@ -198,12 +217,13 @@ async function refreshDraft() {
   }
 }
 function validateDraft() {
+  if (missing.size) { syncControls('Retira los borradores de personajes que ya no existen.'); return false; }
   for (const [id, fields] of draft) {
     for (const [field, value] of Object.entries(fields)) {
       try {
         validateField(field, value);
         if (field === 'SUBCLASS' && value !== null) {
-          const current = visibleCharacters().find(item => item.id === id);
+          const current = allCharacters().find(item => item.id === id);
           const parent = catalogs.classes.find(item => current.CLASS && item.nameKey === catalogKey(current.CLASS));
           const known = catalogs.subclasses.some(item => item.classId === parent?.id && item.nameKey === catalogKey(value));
           if (!known && (!current.CLASS || subclassParents.get(id) !== catalogKey(current.CLASS))) throw new RangeError('La clase ha cambiado. Revisa y selecciona una subclase válida.');
@@ -241,7 +261,7 @@ async function saveDraft() {
     editing = false;
     saving = false;
     syncControls('Cambios guardados.');
-    notify();
+    notify({ saved: true });
     action.focus({ preventScroll: true });
   } catch (error) {
     saving = false;
@@ -252,12 +272,31 @@ async function saveDraft() {
   }
 }
 action.addEventListener('click', () => {
-  if (saving || requiresRefresh) return;
+  if (saving || loading || requiresRefresh || missing.size) return;
   if (editing) { saveDraft(); return; }
   editing = true;
   syncControls();
   notify();
 });
+function renderMissing() {
+  missingControls.replaceChildren();
+  for (const id of missing) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = `Retirar borrador de ${snapshot.find(item => item.id === id)?.PERSONAJE ?? id}`;
+    button.addEventListener('click', () => {
+      draft.delete(id);
+      missing.delete(id);
+      subclassParents.delete(id);
+      pageIds = pageIds.filter(value => value !== id);
+      renderMissing();
+      syncControls();
+      notify();
+      action.focus();
+    });
+    missingControls.append(button);
+  }
+}
 refresh.addEventListener('click', refreshDraft);
 window.addEventListener('beforeunload', event => {
   if (!draft.size) return;

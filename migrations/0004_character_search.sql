@@ -1,0 +1,1 @@
+ALTER TABLE characters ADD COLUMN name_search TEXT NOT NULL DEFAULT '';
