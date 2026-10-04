@@ -5,7 +5,7 @@ const source = fileURLToPath(new URL('../', import.meta.url));
 const output = process.argv[2] ? path.resolve(process.argv[2]) : path.join(source, '.local/public');
 if (output !== path.join(source, '.local/public') && (output === source || source.startsWith(output + path.sep) || output.startsWith(source + path.sep))) throw new Error('La salida personalizada debe estar fuera del proyecto.');
 if (process.argv[2] && await fs.stat(output).then(() => true, () => false)) throw new Error('La salida personalizada debe ser una carpeta nueva.');
-const files = ['index.html', 'styles.css', 'app.js', 'editing.js', 'character-fields.js', 'rank.js', 'records.js', 'theme.js', 'robots.txt', '_headers', 'assets/logo-cuervo.png', 'assets/fonts/cinzel.ttf', 'assets/fonts/roboto-flex.ttf', 'assets/fonts/cinzel-OFL.txt', 'assets/fonts/roboto-flex-OFL.txt'];
+const files = ['index.html', 'styles.css', 'app.js', 'editing.js', 'character-fields.js', 'catalog-values.js', 'rank.js', 'records.js', 'theme.js', 'robots.txt', '_headers', 'assets/logo-cuervo.png', 'assets/fonts/cinzel.ttf', 'assets/fonts/roboto-flex.ttf', 'assets/fonts/cinzel-OFL.txt', 'assets/fonts/roboto-flex-OFL.txt'];
 if (!process.argv[2]) await fs.rm(output, { recursive: true, force: true });
 await fs.mkdir(output, { recursive: true });
 for (const file of files) {

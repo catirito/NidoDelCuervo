@@ -46,7 +46,7 @@ function renderCharacters(visible) {
       cell.dataset.field = field;
       cell.classList.toggle('field-pending', isFieldPending(character.id, field));
       if (isEditing() && ['PERSONAJE', 'NOTAS'].includes(field)) cell.replaceChildren(textControl(character, field));
-      if (isEditing() && ['ESTADO', 'PROPIETARIO'].includes(field)) cell.replaceChildren(selectorControl(character, field));
+      if (isEditing() && ['ESTADO', 'PROPIETARIO', 'CLASS', 'SUBCLASS', 'SPECIE'].includes(field)) cell.replaceChildren(selectorControl(character, field));
       if (field === 'NIVEL' && isEditing()) cell.replaceChildren(levelControl(character));
       if (field === 'RANGO' && isFieldPending(character.id, 'NIVEL')) {
         const label = document.createElement('span');
@@ -110,8 +110,9 @@ async function loadCharacters() {
   try {
     const response = await fetch('/api/characters', { cache: 'no-store' });
     if (!response.ok) throw new Error('El servicio de personajes no está disponible.');
-    characters = (await response.json()).characters;
-    setCharacters(characters);
+    const data = await response.json();
+    characters = data.characters;
+    setCharacters(characters, data.catalogs);
     elements.form.reset();
     sort = { field: 'NIVEL', direction: 'descending' };
     populateFilters();
@@ -143,6 +144,10 @@ onEditingChange(change => {
   if (change) {
     const row = [...elements.body.rows].find(row => row.dataset.characterId === change.id);
     if (row) {
+      if (change.field === 'CLASS') {
+        const current = visibleCharacters().find(character => character.id === change.id);
+        row.querySelector('[data-field=SUBCLASS]').replaceChildren(selectorControl(current, 'SUBCLASS'));
+      }
       row.classList.toggle('pending', isPending(change.id));
       for (const cell of row.cells) cell.classList.toggle('field-pending', isFieldPending(change.id, cell.dataset.field));
     }

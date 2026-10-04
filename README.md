@@ -1,6 +1,6 @@
 # NidoDelCuervo
 
-Web de personajes con HTML, CSS y JavaScript sin frameworks. La especificación 004 añade edición de niveles y rango automático; 005 amplía a nombre, notas, estado y propietario. El guardado por lotes es atómico mediante Pages Functions y D1. El Excel original es histórico de solo lectura y fuente de importación inicial; D1 es la fuente activa tras importar.
+Web de personajes con HTML, CSS y JavaScript sin frameworks. La especificación 004 añade edición de niveles y rango automático; 005 amplía a nombre, notas, estado y propietario; 006 añade clase, subclase y especie con catálogos persistentes. El guardado por lotes es atómico mediante Pages Functions y D1. El Excel original es histórico de solo lectura y fuente de importación inicial; D1 es la fuente activa tras importar.
 
 ## Ejecutar la versión 004 en local
 
@@ -22,7 +22,7 @@ El servidor HTTP estático de versiones anteriores ya no ejecuta la API. Servir 
 
 Editar habilita controles compactos de más y menos a la derecha del nivel, con paso de uno y límites 1–20. Los cambios son locales hasta Guardar; volver al nivel original retira el cambio. El rango se previsualiza según umbrales 1, 3, 5, 9, 13 y 17 y el servidor lo calcula de nuevo al guardar. Guardar envía solo personajes modificados en una petición. Sin cambios, vuelve a consulta sin escribir.
 
-`GET /api/characters` consulta los nueve campos, UUID v4 estable, fila de origen y versión. `PATCH /api/characters/batch` recibe `{changes: [{id, expectedVersion, fields: {NIVEL}}]}`. En 005 admite NIVEL, PERSONAJE, NOTAS, ESTADO y PROPIETARIO. No admite clase, subclase, especie ni rango manual. Propietario y estado siguen como texto en characters; no hay tablas relacionadas. El guardado es atómico: si una versión está obsoleta o algún dato falla, no escribe ningún cambio del lote. No hay contraseña ni sesiones, según la decisión del usuario.
+`GET /api/characters` consulta los nueve campos, UUID v4 estable, fila de origen y versión. `PATCH /api/characters/batch` recibe `{changes: [{id, expectedVersion, fields: {NIVEL}}]}`. En 006 admite NIVEL, PERSONAJE, NOTAS, ESTADO, PROPIETARIO, CLASS, SUBCLASS y SPECIE. No admite rango manual ni campos internos. Propietario y estado siguen como texto en characters; no hay tablas relacionadas. El guardado es atómico: si una versión está obsoleta o algún dato falla, no escribe ningún cambio del lote. No hay contraseña ni sesiones, según la decisión del usuario.
 
 Un conflicto conserva el borrador. Actualizar y revisar consulta el estado guardado, muestra nivel actual y propuesta y permite volver a Guardar tras revisión. Una respuesta perdida también exige actualizar antes de repetir; si el nivel deseado ya está guardado, se retira del borrador. No hay reintentos automáticos. Recargar antes de guardar pierde el borrador; el navegador avisa cuando hay cambios pendientes.
 
@@ -102,3 +102,37 @@ Nombre obligatorio, máximo 50 caracteres. Notas opcionales, máximo 2.000 carac
 Los campos omitidos se conservan y los vacíos opcionales se guardan como null. Rango solo se recalcula al cambiar nivel. La API admite hasta 203 personajes y 3 MiB por petición, suficiente para los límites acordados incluso con caracteres escapados. La búsqueda/filtros de edición se aplican sobre el snapshot guardado: editar nombre/propietario no oculta la fila hasta Guardar. Cambiar filtros explícitamente conserva el borrador de filas ocultas.
 
 Un conflicto muestra valores guardados y propuestos de los campos pendientes; actualizar no descarta cambios locales diferentes. Tras una respuesta perdida se retiran los campos que ya coinciden con lo guardado antes de reenviar. La normalización reutiliza las opciones leídas en la petición y las nuevas del lote; sin catálogo independiente no impone unicidad global a altas simultáneas en personajes distintos. No hay migración, reimportación ni creación de recursos remotos de 005. Commit local autorizado; sin push ni publicación.
+
+## Catálogos — 006 local
+Clases y especies tienen tablas independientes con UUID, nombre y clave normalizada única. Subclases tienen UUID y FK a clase, con nombre único dentro de esa clase. Los campos de texto de personajes se conservan para mantener el contrato. GET devuelve characters y catalogs: classes, subclasses (classId), species; todas las opciones están disponibles aunque nadie las use.
+
+Para una base local nueva, después de importar personajes y antes de editar:
+
+```sh
+wrangler d1 execute DB --local --command 'SELECT * FROM characters ORDER BY sourceRow' --json > .local/catalog-source-characters.json
+node scripts/import-catalogs.mjs .local/catalog-source-characters.json .local/import-catalogs.sql
+wrangler d1 execute DB --local --file .local/import-catalogs.sql
+```
+
+Las migraciones se aplican con el comando ya indicado al iniciar. La carga lee Classes/Species en el Excel y concilia con personajes actuales. Importa 15 clases, 150 relaciones de subclase y 179 especies; incluye Ranger–Phantom y Rogue–Phantom. Corrige Ágios, sourceRow 49, a Paladin–Oath of Devotion únicamente tras comprobar su identidad/estado, manteniendo UUID y demás datos e incrementando versión. SQL verifica además versión antes de aplicar; estado inesperado o catálogos ya cargados abortan la transacción. El Excel se mantiene intacto. No reimportar personajes ni catálogos al preparar archivos o publicar.
+
+En edición, clase/subclase/especie usan selectores completos y opción nueva con input debajo, máximo 50 puntos de código Unicode. Sin clase no hay subclase seleccionable; cambiar clase limpia la incompatible y conserva una que sea válida en ambas. Las nuevas subclases se vinculan a la clase elegida, no globalmente por nombre. Se quitan espacios exteriores y se reutiliza grafía existente comparando sin mayúsculas, sin quitar acentos.
+
+PATCH admite catalogAdditions opcional: `{classes: [nombre], subclasses: [{className, name}], species: [nombre]}`. El frontend lo deriva exclusivamente de opciones nuevas necesarias en los campos finales modificados. Se rechazan altas independientes y subclases incompatibles sin declaración nueva. Inserts de catálogo y UPDATE de personajes comparten una transacción D1 batch; cada insert y el UPDATE exigen coincidencia de todas las versiones. Un conflicto no crea opciones; un fallo de sentencia revierte todo. Claves únicas y resolución de grafía dentro del UPDATE evitan duplicación y grafías divergentes al crear opciones simultáneamente.
+
+Si otra persona cambia la clase durante edición de subclase, actualizar conserva la propuesta pero exige revisar su relación; no vincula una subclase nueva automáticamente a una clase distinta de aquella donde se introdujo.
+
+Pruebas adicionales, exclusivamente contra localhost:
+
+```sh
+node tests/catalogs.test.mjs http://127.0.0.1:8788
+node tests/catalogs-ui.test.cjs http://127.0.0.1:8788
+```
+
+Utilizan Miniflare existente con Wrangler y, para UI, Playwright/Chrome existentes. Si están fuera de resolución habitual, indicar sus rutas con MINIFLARE_MODULE y PLAYWRIGHT_MODULE; no se han instalado dependencias nuevas. Las pruebas comprueban catálogos, relaciones, opciones sin uso, normalización, concurrencia y rollback forzado. Restauran personajes y eliminan únicamente opciones con prefijo aleatorio creado por la prueba en D1 local. No ejecutarlas en producción.
+
+006 está implementada y validada en local, sin commit, push, recursos remotos ni publicación autorizados. No se han comprobado todos los navegadores ni lectores de pantalla reales.
+
+## Publicación conjunta 004–006
+
+Publicación autorizada el 4 de octubre de 2026 en https://nido-del-cuervo.pages.dev con D1 `nido-personajes`. `wrangler.production.jsonc` identifica la base remota; `wrangler.jsonc` conserva el entorno local aislado. El primer despliegue carga el snapshot validado una sola vez; los siguientes no deben importar datos. Las referencias anteriores a publicación pendiente describen etapas superadas. No se ejecutan tests en producción.

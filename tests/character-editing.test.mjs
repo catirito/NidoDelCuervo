@@ -14,7 +14,7 @@ assert.equal(validateField('PERSONAJE', '😀'.repeat(50)).length, 100);
 assert.throws(() => validateField('PERSONAJE', '😀'.repeat(51)), RangeError);
 try {
   for (const fields of [{ PERSONAJE: '' }, { PERSONAJE: '   ' }, { PERSONAJE: null }, { PERSONAJE: 'x'.repeat(51) }, { ESTADO: 'x'.repeat(51) }, { PROPIETARIO: 2 }, { NOTAS: 'x'.repeat(2001) }]) assert.equal((await patch([change(a, fields)])).status, 422);
-  for (const fields of [{ CLASS: 'Wizard' }, {}, { RANGO: 'manual' }]) assert.equal((await patch([change(a, fields)])).status, 400);
+  for (const fields of [{ sourceRow: 1 }, {}, { RANGO: 'manual' }]) assert.equal((await patch([change(a, fields)])).status, 400);
   assert.deepEqual(await read(), initial);
   const response = await patch([change(a, { PERSONAJE: 'Prueba local', NOTAS: 'Primera línea\n<b>Texto literal</b>', ESTADO: '  Estado local  ', PROPIETARIO: '  Propietario local  ' }), change(b, { PERSONAJE: 'Prueba local', PROPIETARIO: 'PROPIETARIO LOCAL', ESTADO: 'ESTADO LOCAL' })]);
   assert.equal(response.status, 200);

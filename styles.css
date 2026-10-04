@@ -625,3 +625,4 @@ td textarea:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px
 .new-option { margin-top: 6px; }
 .field-pending input, .field-pending select, .field-pending textarea { border-color: var(--focus); }
 [aria-invalid="true"] { outline: 2px solid var(--focus); }
+td[data-field="CLASS"], td[data-field="SUBCLASS"], td[data-field="SPECIE"] { min-width: 170px; }

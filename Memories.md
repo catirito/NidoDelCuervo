@@ -4,7 +4,7 @@
 Recoger decisiones confirmadas y sus motivos para retomar el trabajo con contexto. Las reglas estables están en `AGENTS.md`; este archivo no las sustituye ni las duplica. `Memories.md` es una convención de este proyecto, no un mecanismo automático ni un estándar universal.
 
 ## Etapa actual
-005 implementada y validada en local, commit local autorizado por el usuario, sin push ni publicación. La siguiente etapa autorizada es retomar y detallar la especificación 006, no implementar. Mantener ramas por especificación y no integrar en main.
+005 implementada y validada en local, commit local 0847da5 creado, sin push ni publicación. Etapa activa: detallar y clarificar 006 en codex/006-edicion-catalogos, adelantada por fast-forward a la base local de 005. Plan, tareas e implementación de 006 autorizados y completados; validación local pasa, resultado en http://127.0.0.1:8788 para revisión. Commit, push y publicación de 006 no autorizados. Mantener ramas por especificación y no integrar en main.
 
 004 implementada y validada localmente, commit `40452ae`; entregada en http://127.0.0.1:8788. Sin push ni publicación. D1 y API locales activos, niveles iniciales restaurados, versiones avanzadas por pruebas. Recursos remotos/publicación aplazados. No integrar en main.
 
@@ -136,3 +136,27 @@ Diseño de 005 aprobado por el usuario: boceto con edición dentro de celdas, no
 Etapa 005: tareas autorizadas y desglosadas en seis bloques en tasks.md: validación, PATCH atómico, borrador por campos, controles aprobados, guardado/reconciliación y validación/entrega local. Todas pendientes; no hay autorización de implementación, commit, push o publicación de 005.
 
 Entrega 005: edición de PERSONAJE/NOTAS/ESTADO/PROPIETARIO junto a NIVEL en PATCH atómico. Sin tablas adicionales; validación compartida, límites por puntos de código Unicode y cuerpo 3 MiB. Pruebas API y navegador local pasan, restaurando datos de partida y conservando Excel. Cursor estable, filas fuera del filtro retenidas hasta Guardar, opciones nuevas/canónicas y recuperación de conflictos/respuesta perdida. Commit local autorizado; push/publicación no autorizados. Próximo trabajo: clarificación 006.
+
+Decisiones confirmadas de 006: cambiar clase vacía subclase incompatible y permite seleccionar otra antes de guardar. Clases/subclases tendrán tablas de catálogo relacionadas en la misma D1; esquema concreto pendiente del plan. No crear una base remota nueva en esta etapa.
+
+Carga inicial 006 confirmada: poblar clases y subclases con los valores/relaciones actuales del Excel, comprobando los usados en personajes y sin inventar asociaciones. La inspección encontró dos combinaciones de personajes ausentes del catálogo comparando sin mayúsculas y con trim; conciliación pendiente antes de migrar.
+
+Conciliación 006: el usuario confirma Ranger–Phantom válido para Lucien, además de Rogue–Phantom; añadir relación Ranger–Phantom y permitir mismo nombre de subclase asociado a distintas clases. Ágios (fila 49), Barbarian–Oath of Devotion, parece error según usuario; confirmar campo/corrección antes de modificar D1. No modificar Excel.
+
+Ágios 006: usuario confirma corregir CLASS a Paladin y conservar SUBCLASS Oath of Devotion. Aplicar en D1 durante implementación, conservando UUID/resto de datos y comprobando estado actual para no pisar ediciones; Excel histórico intacto. No se ha modificado D1 todavía en clarificación.
+
+Clarificación 006 confirmada: CLASS, SUBCLASS y SPECIE admiten Sin dato/null y máximo 50 caracteres. Subclase no vacía depende de clase seleccionada; vaciar clase vacía subclase. Normalización/deduplicación pendiente.
+
+Normalización 006 confirmada: quitar espacios exteriores y reutilizar grafía existente si solo cambia capitalización. Subclases comparadas por clase; mismo nombre bajo clases distintas permitido. No fusionar por nombre global ni modificar el Excel.
+
+Especie 006: usuario decide mantener SPECIE como texto en characters, igual que estado/propietario; no crear tabla ni catálogo independiente de especies. Selector derivado de valores existentes en personajes más opción nueva; persiste con el personaje, disponible mientras se use. Sustituye propuesta inicial de catálogo de especies y opciones independientes del uso.
+
+Corrección posterior de especie 006: usuario exige mostrar siempre todas las especies, incluidas las no usadas. Sustituye selector derivado solo de characters; hace falta lista independiente de opciones. SPECIE puede seguir en characters, pero almacenamiento de catálogo independiente queda por confirmar frente a preferencia anterior de no crear tabla.
+
+Especies 006 confirmado finalmente: tabla sencilla de catálogo en la misma D1, selector con todas las opciones aun sin uso, carga desde Excel y opciones nuevas persistentes al guardar. SPECIE sigue como dato del personaje. Sustituye preferencia anterior de no crear tabla y elimina la duda de almacenamiento independiente.
+
+Entrega local 006: catálogos classes/subclasses/species 15/150/179, UUID y claves normalizadas únicas, FK subclase/clase. GET devuelve catálogos completos; PATCH catalogAdditions y fields en una transacción con guardia conjunta de versiones, resolución autoritativa de grafía y rollback comprobado. Ranger/Rogue–Phantom separados; Ágios CLASS Paladin corregida conservando UUID/resto de campos. Carga inicial protegida/repetición rechazada; no reimportar al preparar/desplegar. API y UI locales pasan, incluida concurrencia, conflictos sin altas parciales, opciones sin uso, respuesta perdida y clase remota cambiada durante borrador de subclase. Datos de partida restaurados salvo corrección autorizada; Excel intacto. Sin commit, push ni publicación de 006.
+
+## Publicación conjunta 004–006 — 4 de octubre de 2026
+
+El usuario autoriza commit y publicación de todo. Se crea D1 `nido-personajes` (3107c487-41dd-4cb0-a4e6-6e46027d9c40) y se carga una sola vez el snapshot local validado, conservando UUID, ediciones y catálogos. Configuración remota en `wrangler.production.jsonc`; la local sigue aislada en `wrangler.jsonc`. Publicación en el proyecto Pages existente, sin integrar en main. No se ejecutan tests en producción. El Excel continúa intacto.
