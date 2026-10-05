@@ -8,6 +8,7 @@
   <link rel="icon" href="assets/logo-cuervo.png" type="image/png">
   <link rel="stylesheet" href="styles.css">
   <script src="theme.js"></script>
+  <script src="vendor/xlsx.full.min.js" defer></script>
   <script type="module" src="app.js"></script>
 </head>
 <body>
@@ -44,7 +45,8 @@
       </form>
     </section>
     <section class="results" aria-labelledby="results-title" aria-busy="true">
-      <div class="results-bar"><h3 id="results-title">El elenco</h3><div class="edit-actions"><button id="edit-button" type="button" disabled>Editar</button><button id="refresh-draft" type="button" hidden>Actualizar y revisar</button></div><p id="result-status" role="status" aria-live="polite" aria-atomic="true">Cargando personajes…</p></div>
+      <div class="results-bar"><h3 id="results-title">El elenco</h3><div class="edit-actions"><button id="export-button" type="button" disabled>Exportar Excel</button><button id="edit-button" type="button" disabled>Editar</button><button id="refresh-draft" type="button" hidden>Actualizar y revisar</button></div><p id="result-status" role="status" aria-live="polite" aria-atomic="true">Cargando personajes…</p></div>
+      <p id="export-status" role="status" aria-live="polite" aria-atomic="true"></p>
       <p id="draft-status" role="status" aria-live="polite" aria-atomic="true"></p>
       <p id="table-help" class="table-help">Ordena con los encabezados de clase, subclase, especie, rango y propietario. <span>En pantallas pequeñas, desliza la tabla horizontalmente.</span></p>
       <div class="table-scroll" role="region" aria-label="Tabla de personajes, desplazamiento horizontal" aria-describedby="table-help" tabindex="0">

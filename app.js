@@ -1,3 +1,4 @@
+import { downloadCharacters } from './export-excel.js';
 import { setCharacters, visibleCharacters, onEditingChange, isEditing, isPending, isSaving, levelControl, textControl, selectorControl, filterSource, isFieldPending } from './editing.js';
 import { fields, filterCharacters, sortCharacters, categoryValues, isMissing } from './records.js';
 
@@ -17,6 +18,34 @@ const elements = {
   headers: [...document.querySelectorAll('th[data-sort]')]
 };
 let characters = [];
+let loaded = false;
+let exporting = false;
+const exportButton = document.querySelector('#export-button');
+const exportStatus = document.querySelector('#export-status');
+
+function updateExportAvailability() {
+  exportButton.disabled = !loaded || !characters.length || isEditing() || isSaving() || exporting;
+}
+
+function exportCharacters() {
+  updateExportAvailability();
+  if (exportButton.disabled) return;
+  exporting = true;
+  updateExportAvailability();
+  exportStatus.textContent = '';
+  try {
+    const records = sortCharacters(visibleCharacters(), sort.field, sort.direction);
+    downloadCharacters(records, globalThis.XLSX);
+    exportStatus.textContent = `Descarga solicitada: ${records.length} personajes.`;
+  } catch (error) {
+    exportStatus.textContent = 'No se pudo exportar el Excel. Vuelve a intentarlo.';
+  } finally {
+    exporting = false;
+    updateExportAvailability();
+  }
+}
+
+exportButton.addEventListener('click', exportCharacters);
 let sort = { field: 'NIVEL', direction: 'descending' };
 
 function renderCell(value) {
@@ -101,6 +130,9 @@ function setControlsEnabled(enabled) {
 }
 
 async function loadCharacters() {
+  loaded = false;
+  updateExportAvailability();
+  exportStatus.textContent = '';
   elements.results.setAttribute('aria-busy', 'true');
   elements.error.hidden = true;
   elements.empty.hidden = true;
@@ -113,6 +145,7 @@ async function loadCharacters() {
     const data = await response.json();
     characters = data.characters;
     setCharacters(characters, data.catalogs);
+    loaded = true;
     elements.form.reset();
     sort = { field: 'NIVEL', direction: 'descending' };
     populateFilters();
@@ -126,6 +159,7 @@ async function loadCharacters() {
     elements.status.textContent = 'Registro no disponible';
   } finally {
     elements.results.setAttribute('aria-busy', 'false');
+    updateExportAvailability();
   }
 }
 
@@ -141,6 +175,8 @@ elements.headers.forEach(header => header.querySelector('button').addEventListen
 }));
 document.querySelector('#retry-load').addEventListener('click', loadCharacters);
 onEditingChange(change => {
+  updateExportAvailability();
+  exportStatus.textContent = '';
   if (change) {
     const row = [...elements.body.rows].find(row => row.dataset.characterId === change.id);
     if (row) {
