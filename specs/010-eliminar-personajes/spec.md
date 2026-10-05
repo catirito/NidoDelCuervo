@@ -57,3 +57,6 @@ Permitir retirar personajes de la lista mediante una eliminación lógica pendie
 
 ## Próxima etapa
 Revisar tasks.md, preparado tras autorización del desglose. Las tres clarificaciones están resueltas y el plan aprobado; implementación sigue sin autorización. No modificar código, esquema o datos.
+
+## Ajuste visual posterior aprobado
+Usuario aprueba edición en dos líneas por personaje en la misma rama 010 y autoriza documentación, código, pruebas, commit/push, integración y publicación. En escritorio: nombre, clase/subclase/especie/nivel/rango arriba; propietario, estado, notas y Eliminar debajo. Cada campo conserva su etiqueta, identidad y controles; ordenar sigue disponible. Móvil reorganiza bloques sin forzar ancho. Al guardar vuelve la tabla normal. Sustituye el diseño de edición en una única línea; no modifica persistencia, datos o migraciones. Incluir hover compartido de Añadir personaje.
