@@ -651,3 +651,15 @@ td[data-field="CLASS"], td[data-field="SUBCLASS"], td[data-field="SPECIE"] { min
 #submit-create { background: var(--accent); color: var(--on-accent); }
 
 #create-range { margin-left: 8px; color: var(--muted); }
+
+:root { --danger: #ff969f; }
+:root[data-theme="light"] { --danger: #a51d36; }
+@media (prefers-color-scheme: light) { :root:not([data-theme]) { --danger: #a51d36; } }
+.character-actions { min-width: 160px; }
+.delete-button { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 6px 10px; border: 1px solid transparent; border-radius: 7px; color: var(--danger); background: transparent; font: inherit; cursor: pointer; }
+.delete-button span { font-size: 20px; line-height: 1; }
+.delete-button[aria-pressed="true"] { border-color: var(--danger); }
+.delete-button:hover:not(:disabled) { background: var(--soft); }
+.delete-button:disabled { opacity: .5; cursor: default; }
+.deletion-action { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.deletion-action .pending-label { color: var(--danger); max-width: 190px; }

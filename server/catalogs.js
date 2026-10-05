@@ -64,7 +64,7 @@ export function prepareCatalogChanges(changes, additions, catalogs, characters) 
   if (wanted.classes.some(item => !used.classes.has(item.nameKey)) || wanted.subclasses.some(item => !used.subclasses.has(`${item.classKey}|${item.nameKey}`)) || wanted.species.some(item => !used.species.has(item.nameKey))) throw new RangeError('No se pueden crear opciones sin usarlas en el lote.');
   return wanted;
 }
-const versionGuard = `(SELECT count(*) FROM json_each(?1) AS incoming JOIN characters ON characters.id = json_extract(incoming.value, '$.id') AND characters.version = json_extract(incoming.value, '$.expectedVersion')) = json_array_length(?1)`;
+const versionGuard = `(SELECT count(*) FROM json_each(?1) AS incoming JOIN characters ON characters.id = json_extract(incoming.value, '$.id') AND characters.version = json_extract(incoming.value, '$.expectedVersion') AND characters.is_deleted = 0) = json_array_length(?1)`;
 export function catalogWrites(db, additions, changes) {
   const writes = [];
   const payload = JSON.stringify(changes ?? []);

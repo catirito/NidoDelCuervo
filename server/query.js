@@ -1,9 +1,10 @@
+import { serializeCharacter } from './characters.js';
 import { fields } from '../records.js';
 import { catalogStatements, catalogsFromResults } from './catalogs.js';
 const categories = { class: 'CLASS', subclass: 'SUBCLASS', species: 'SPECIE', rank: 'RANGO', owner: 'PROPIETARIO' };
 const sorts = ['NIVEL', ...Object.values(categories)];
 const collator = new Intl.Collator('es', { sensitivity: 'variant', numeric: false });
-const columns = ['id', ...fields, 'sourceRow', 'version'].join(', ');
+const columns = ['id', ...fields, 'sourceRow', 'version', 'is_deleted'].join(', ');
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 export function parseQuery(url) {
   const params = new URL(url).searchParams;
@@ -30,18 +31,18 @@ function metadata(results) {
   return { filterOptions: Object.fromEntries(Object.values(categories).map(field => [field, options[field]])), editOptions: { ESTADO: options.ESTADO, PROPIETARIO: options.PROPIETARIO } };
 }
 export async function queryCharacters(db, query, attempt = 0) {
-  const readiness = await db.prepare("SELECT count(*) AS count FROM characters WHERE name_search = '' AND PERSONAJE IS NOT NULL AND PERSONAJE != ''").first();
+  const readiness = await db.prepare("SELECT count(*) AS count FROM characters WHERE is_deleted = 0 AND name_search = '' AND PERSONAJE IS NOT NULL AND PERSONAJE != ''").first();
   if (readiness.count) throw new Error('Búsqueda pendiente de inicializar.');
-  const globalSql = `SELECT DISTINCT CLASS, SUBCLASS, SPECIE, RANGO, PROPIETARIO, ESTADO FROM characters`;
+  const globalSql = `SELECT DISTINCT CLASS, SUBCLASS, SPECIE, RANGO, PROPIETARIO, ESTADO FROM characters WHERE is_deleted = 0`;
   if (query.ids) {
     const results = await db.batch([db.prepare(`SELECT ${columns} FROM characters WHERE id IN (SELECT value FROM json_each(?)) ORDER BY sourceRow`).bind(JSON.stringify(query.ids)), db.prepare(globalSql), ...catalogStatements.map(sql => db.prepare(sql))]);
-    return { characters: results[0].results, missingIds: query.ids.filter(id => !results[0].results.some(row => row.id === id)), ...metadata(results[1].results), catalogs: catalogsFromResults(results.slice(2)) };
+    return { characters: results[0].results.map(serializeCharacter), missingIds: query.ids.filter(id => !results[0].results.some(row => row.id === id)), ...metadata(results[1].results), catalogs: catalogsFromResults(results.slice(2)) };
   }
-  const clauses = ['instr(name_search, ?1) > 0'];
+  const clauses = ['is_deleted = 0', 'instr(name_search, ?1) > 0'];
   const values = [query.search.toLocaleLowerCase('es')];
   for (const [field, value] of Object.entries(query.filters)) if (value) { values.push(value); clauses.push(`${field} = ?${values.length}`); }
   const where = clauses.join(' AND ');
-  const preliminary = query.sort === 'NIVEL' ? [] : (await db.prepare(`SELECT DISTINCT ${query.sort} AS value FROM characters WHERE ${query.sort} IS NOT NULL AND ${query.sort} != ''`).all()).results.map(row => row.value).sort(collator.compare);
+  const preliminary = query.sort === 'NIVEL' ? [] : (await db.prepare(`SELECT DISTINCT ${query.sort} AS value FROM characters WHERE is_deleted = 0 AND ${query.sort} IS NOT NULL AND ${query.sort} != ''`).all()).results.map(row => row.value).sort(collator.compare);
   const ranks = preliminary.map((value, index) => ({ value, index }));
   const orderValues = [...values];
   let order = query.sort;
@@ -51,7 +52,7 @@ export async function queryCharacters(db, query, attempt = 0) {
   }
   const missing = `(${query.sort} IS NULL OR ${query.sort} = '') ASC`;
   const effective = `CASE WHEN totalMatches = 0 THEN 1 ELSE min(${query.page}, max(1, (totalMatches + ${query.size === 'all' ? 'totalMatches' : query.size} - 1) / max(1, ${query.size === 'all' ? 'totalMatches' : query.size}))) END`;
-  const counts = `SELECT (SELECT count(*) FROM characters WHERE ${where}) AS totalMatches, (SELECT count(*) FROM characters) AS totalRecords`;
+  const counts = `SELECT (SELECT count(*) FROM characters WHERE ${where}) AS totalMatches, (SELECT count(*) FROM characters WHERE is_deleted = 0) AS totalRecords`;
   const pageSql = `WITH totals AS (${counts}), paging AS (SELECT *, ${effective} AS page FROM totals) SELECT ${columns} FROM characters WHERE ${where} ORDER BY ${missing}, ${order} ${query.direction.toUpperCase()}, sourceRow ASC ${query.size === 'all' ? '' : `LIMIT ${query.size} OFFSET ((SELECT page FROM paging) - 1) * ${query.size}`}`;
   const results = await db.batch([db.prepare(pageSql).bind(...orderValues), db.prepare(`WITH totals AS (${counts}) SELECT *, ${effective} AS page FROM totals`).bind(...values), db.prepare(globalSql), ...catalogStatements.map(sql => db.prepare(sql))]);
   if (query.sort !== 'NIVEL') {
@@ -64,5 +65,5 @@ export async function queryCharacters(db, query, attempt = 0) {
   const pagination = results[1].results[0];
   pagination.pageSize = query.size;
   pagination.totalPages = query.size === 'all' ? (pagination.totalMatches ? 1 : 0) : Math.ceil(pagination.totalMatches / query.size);
-  return { characters: results[0].results, pagination, ...metadata(results[2].results), catalogs: catalogsFromResults(results.slice(3)) };
+  return { characters: results[0].results.map(serializeCharacter), pagination, ...metadata(results[2].results), catalogs: catalogsFromResults(results.slice(3)) };
 }

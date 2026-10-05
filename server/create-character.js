@@ -2,7 +2,7 @@ import { editableFields, validateField } from '../character-fields.js';
 import { rankForLevel } from '../rank.js';
 import { catalogName } from '../catalog-values.js';
 import { readCatalogs, prepareCatalogChanges, catalogWrites } from './catalogs.js';
-import { normalizeOptions } from './characters.js';
+import { normalizeOptions, serializeCharacter } from './characters.js';
 import { jsonResponse, failure, readJson } from './http.js';
 
 export function validateCreation(body) {
@@ -33,8 +33,8 @@ async function receipt(db, id, hash) {
   return creationResponse(db, id, 200);
 }
 async function creationResponse(db, id, status) {
-  const character = await db.prepare('SELECT id, PERSONAJE, CLASS, SUBCLASS, SPECIE, NIVEL, RANGO, ESTADO, PROPIETARIO, NOTAS, sourceRow, version FROM characters WHERE id = ?').bind(id).first();
-  return jsonResponse({ character, catalogs: await readCatalogs(db) }, status);
+  const character = await db.prepare('SELECT id, PERSONAJE, CLASS, SUBCLASS, SPECIE, NIVEL, RANGO, ESTADO, PROPIETARIO, NOTAS, sourceRow, version, is_deleted FROM characters WHERE id = ?').bind(id).first();
+  return jsonResponse({ character: serializeCharacter(character), catalogs: await readCatalogs(db) }, status);
 }
 export async function createCharacter({ request, env }) {
   if (request.headers.has('Origin') && request.headers.get('Origin') !== new URL(request.url).origin) return failure(403, 'ORIGIN', 'Origen no permitido.');

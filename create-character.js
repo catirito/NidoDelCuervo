@@ -107,7 +107,7 @@ function confirmed(character) {
   uncertain = false;
   pending = false;
   close();
-  status.textContent = `Personaje guardado: ${character.PERSONAJE}.`;
+  status.textContent = character.is_deleted ? `El personaje ${character.PERSONAJE} se guardó y ahora está eliminado.` : `Personaje guardado: ${character.PERSONAJE}.`;
   attempt = null;
   confirmedRefresh = true;
   saved();

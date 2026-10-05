@@ -1,6 +1,6 @@
 import { setCreationContext, setCreationAvailable, onCharacterCreated, creationRefreshFailed, creationRefreshCompleted } from './create-character.js';
 import { downloadCharacters } from './export-excel.js';
-import { setCharacters, visibleCharacters, onEditingChange, isEditing, isPending, isSaving, levelControl, textControl, selectorControl, setLoading, isFieldPending } from './editing.js';
+import { setCharacters, visibleCharacters, onEditingChange, isEditing, isPending, isSaving, levelControl, textControl, selectorControl, setLoading, isFieldPending, deletionControl, isDeletionPending } from './editing.js';
 import { fields, isMissing } from './records.js';
 
 const labels = { CLASS: 'clase', SUBCLASS: 'subclase', SPECIE: 'especie', RANGO: 'rango', PROPIETARIO: 'propietario', NIVEL: 'nivel' };
@@ -86,12 +86,14 @@ function renderCell(value) {
 }
 
 function renderCharacters(visible) {
+  document.querySelector('#actions-header').hidden = !isEditing();
   const fragment = document.createDocumentFragment();
   for (const character of visible) {
     const row = document.createElement('tr');
     row.dataset.sourceRow = character.sourceRow;
     row.dataset.characterId = character.id;
     row.classList.toggle('pending', isPending(character.id));
+    row.classList.toggle('deletion-pending', isDeletionPending(character.id));
     for (const field of fields) {
       const cell = renderCell(character[field]);
       cell.dataset.field = field;
@@ -106,6 +108,12 @@ function renderCharacters(visible) {
         cell.append(label);
       }
       row.append(cell);
+    }
+    if (isEditing()) {
+      const actions = document.createElement('td');
+      actions.className = 'character-actions';
+      actions.append(deletionControl(character));
+      row.append(actions);
     }
     fragment.append(row);
   }
