@@ -71,3 +71,6 @@ Los comandos Node anteriores se ejecutaron con el runtime indicado. La prueba de
 ## Próxima etapa
 Revisión del usuario. Commit, push y publicación pendientes de autorización; la rama GitHub continúa pendiente del bloqueo de revisión automática anterior.
 
+
+## Validación de la integración con paginación
+Usuario autoriza merge conjunto en main y publicación. Pasan tests/export-excel.test.mjs, tests/records.test.mjs, tests/pagination.test.mjs, tests/export-excel-ui.test.cjs y tests/pagination-ui.test.cjs con el runtime Node/Playwright existente. Chrome local utiliza D1 aislada para paginación y descarga real, no API simulada. La prueba de exportación confirma 203 personajes desde página 2 y vista filtrada vacía, criterio activo, GET completo sin filtros, ausencia de escrituras, errores/reintento, bloqueo durante preparación, teclado y móvil. Las pruebas de paginación restauran los datos locales modificados; versiones locales pueden avanzar. Producción no se usa para pruebas. Excel histórico intacto.

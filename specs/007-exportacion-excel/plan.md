@@ -39,4 +39,7 @@ No incluir Registro de personajes.xlsx ni documentación interna en la salida p�
 - Comprobar el contenido de la salida del build y que el Excel histórico conserve su hash. No es necesario ampliar pruebas de D1 si no se modifica su código.
 
 ## Próxima etapa
-Revisión del usuario; commit, push y publicación pendientes de autorización.
+Revisión del usuario; commit, integración con paginación en main y publicación autorizados.
+
+## Integración con paginación autorizada — 5 de octubre de 2026
+La tabla ahora consulta páginas al servidor. Para conservar la exportación de todos los personajes, obtenerlos con GET /api/characters?pageSize=all&sort=...&direction=..., sin filtros ni búsqueda. Generar el XLSX solo en el navegador y no almacenar el archivo en el servidor. Esta decisión de integración sustituye el uso de un snapshot completo cargado previamente y la ausencia de solicitudes adicionales descritos en el plan inicial. Bloquear edición durante la preparación para evitar exportar borradores. No modificar API ni D1 para exportar.

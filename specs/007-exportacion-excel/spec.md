@@ -36,4 +36,7 @@ Archivo `.xlsx`, hoja «Personajes» y encabezados visibles de la tabla. Nivel n
 Importación, sincronización bidireccional, modificación del Excel histórico y edición de catálogos mediante Excel.
 
 ## Próxima etapa
-Revisión del usuario; commit, push y publicación pendientes de autorización.
+Revisión del usuario; commit, integración con paginación en main y publicación autorizados.
+
+## Integración con paginación autorizada — 5 de octubre de 2026
+La tabla ahora consulta páginas al servidor. Para conservar la exportación de todos los personajes, obtenerlos con GET /api/characters?pageSize=all&sort=...&direction=..., sin filtros ni búsqueda. Generar el XLSX solo en el navegador y no almacenar el archivo en el servidor. Esta decisión de integración sustituye el uso de un snapshot completo cargado previamente y la ausencia de solicitudes adicionales descritos en el plan inicial. Bloquear edición durante la preparación para evitar exportar borradores. No modificar API ni D1 para exportar.
