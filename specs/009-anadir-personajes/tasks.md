@@ -76,3 +76,5 @@ Commit 3bc888c y rama codex/009-anadir-personajes subidos y verificados con ls-r
 
 ## Ajuste de disposición solicitado
 Rango de alta a la derecha del control de nivel dentro de la misma fila, con actualización automática y aria-live. Verificado con Chrome local a 1440/320 px: alineación y límites horizontales correctos; nivel 3 muestra Cuervo blanco. Build y diff-check pasan. Sin escrituras a D1, commit, push o publicación de este ajuste.
+
+Ajuste de rango aprobado y publicado: commit 5daf5e1, push de rama 009 y despliegue 72077da1.nido-del-cuervo.pages.dev completados. Navegador en URL principal confirma rango a la derecha del nivel; modal cancelada sin guardar. Sin cambios de esquema o datos.
