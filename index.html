@@ -45,7 +45,7 @@
       </form>
     </section>
     <section class="results" aria-labelledby="results-title" aria-busy="true">
-      <div class="results-bar"><h3 id="results-title">El elenco</h3><div class="edit-actions"><button id="export-button" type="button" disabled>Exportar Excel</button><button id="edit-button" type="button" disabled>Editar</button><button id="refresh-draft" type="button" hidden>Actualizar y revisar</button></div></div>
+      <div class="results-bar"><h3 id="results-title">El elenco</h3><div class="edit-actions"><button id="export-button" type="button" disabled>Exportar Excel</button><button id="create-button" type="button" disabled>Añadir personaje</button><button id="edit-button" type="button" disabled>Editar</button><button id="refresh-draft" type="button" hidden>Actualizar y revisar</button></div></div>
       <p id="export-status" role="status" aria-live="polite" aria-atomic="true"></p>
       <div id="missing-drafts"></div>
       <p id="draft-status" role="status" aria-live="polite" aria-atomic="true"></p>
@@ -76,6 +76,16 @@
       <div id="error-state" class="error-state" role="alert" hidden><h4>No se pudo cargar el registro</h4><p id="error-message"></p><button id="retry-load" type="button">Volver a intentar</button></div>
     </section>
   </main>
+  <dialog id="create-dialog" aria-labelledby="create-title">
+    <form id="create-form">
+      <h3 id="create-title">Añadir personaje</h3>
+      <p>Nombre, clase, especie y propietario son obligatorios.</p>
+      <div id="create-fields"></div>
+      <p id="create-message" role="status" aria-live="polite"></p>
+      <div class="create-actions"><button id="cancel-create" type="button">Cancelar</button><button id="submit-create" type="submit">Guardar personaje</button></div>
+    </form>
+  </dialog>
+  <p id="creation-status" class="creation-status" role="status" aria-live="polite"></p>
   <footer><span>Nido del Cuervo</span><span>Registro de personajes</span></footer>
   <noscript><p>Activa JavaScript para consultar el registro de personajes.</p></noscript>
 </body>

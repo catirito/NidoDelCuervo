@@ -598,7 +598,7 @@ noscript p {
 
 .results-bar { flex-wrap: wrap; }
 .edit-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-left: auto; }
-#export-button, #edit-button, #refresh-draft { min-height: 32px; padding: 5px 14px; background: var(--white); color: var(--ink); border: 1px solid #806c99; border-radius: 7px; font-size: 13px; }
+#create-button, #export-button, #edit-button, #refresh-draft { min-height: 32px; padding: 5px 14px; background: var(--white); color: var(--ink); border: 1px solid #806c99; border-radius: 7px; font-size: 13px; }
 #export-button:hover:not(:disabled), #edit-button:hover:not(:disabled), #refresh-draft:hover:not(:disabled), .level-control button:hover:not(:disabled) { background: #b59bd8; color: #17131e; }
 #export-status, #draft-status { font-size: 13px; color: var(--ink); }
 #export-status:empty, #draft-status:empty { display: none; }
@@ -632,3 +632,22 @@ td[data-field="CLASS"], td[data-field="SUBCLASS"], td[data-field="SPECIE"] { min
 .pagination label, #page-status { font-size: 14px; }
 #missing-drafts { display: flex; flex-wrap: wrap; gap: 8px; }
 @media (max-width: 760px) { .pagination { flex-direction: column; align-items: stretch; gap: 16px; } .page-navigation { justify-content: space-between; } .page-size { justify-content: flex-end; } }
+
+#create-button { font: inherit; cursor: pointer; }
+#create-dialog { width: min(620px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); box-sizing: border-box; overflow: auto; padding: 28px; border: 1px solid var(--muted); border-radius: 8px; background: var(--white); color: var(--ink); }
+#create-dialog::backdrop { background: rgb(0 0 0 / 55%); }
+#create-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+#create-fields label { display: block; margin-bottom: 6px; }
+#create-fields input, #create-fields select, #create-fields textarea { box-sizing: border-box; width: 100%; font: inherit; }
+#create-fields [data-creation-field="NOTAS"] { grid-column: 1 / -1; }
+#create-fields textarea { min-height: 90px; }
+.create-actions { display: flex; gap: 12px; justify-content: flex-end; }
+.create-actions button { font: inherit; padding: 10px 16px; cursor: pointer; }
+.creation-status { max-width: 1440px; margin: 16px auto; padding: 0 24px; }
+@media (max-width: 600px) { #create-fields { grid-template-columns: 1fr; } #create-dialog { padding: 20px; } }
+#create-fields textarea { padding: 10px 12px; background: var(--white); color: var(--ink); border: 1px solid var(--accent); border-radius: var(--control-radius); }
+#create-dialog h3 { margin-top: 0; font-family: 'Cinzel', serif; font-size: 22px; }
+.create-actions button { background: var(--white); color: var(--ink); border: 1px solid var(--accent); border-radius: 7px; }
+#submit-create { background: var(--accent); color: var(--on-accent); }
+
+#create-range { margin-left: 8px; color: var(--muted); }
