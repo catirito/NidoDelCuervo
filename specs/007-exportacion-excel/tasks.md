@@ -74,3 +74,6 @@ Revisión del usuario. Commit, push y publicación pendientes de autorización; 
 
 ## Validación de la integración con paginación
 Usuario autoriza merge conjunto en main y publicación. Pasan tests/export-excel.test.mjs, tests/records.test.mjs, tests/pagination.test.mjs, tests/export-excel-ui.test.cjs y tests/pagination-ui.test.cjs con el runtime Node/Playwright existente. Chrome local utiliza D1 aislada para paginación y descarga real, no API simulada. La prueba de exportación confirma 203 personajes desde página 2 y vista filtrada vacía, criterio activo, GET completo sin filtros, ausencia de escrituras, errores/reintento, bloqueo durante preparación, teclado y móvil. Las pruebas de paginación restauran los datos locales modificados; versiones locales pueden avanzar. Producción no se usa para pruebas. Excel histórico intacto.
+
+## Entrega publicada
+Merge en main 5f5649e y push confirmados. Cloudflare Pages confirmó 6598ab42.nido-del-cuervo.pages.dev; URL estable https://nido-del-cuervo.pages.dev. Comprobación visual de solo lectura en navegador: botón Exportar Excel, 50 de 203 personajes y paginador Página 1 de 5. Sin escrituras de prueba, importación ni nuevas migraciones en producción. Las pruebas funcionales de descarga y paginación se ejecutaron en local. Excluidos histórico y documentos internos del paquete público.

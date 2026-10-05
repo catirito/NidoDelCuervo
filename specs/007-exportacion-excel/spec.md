@@ -40,3 +40,6 @@ Revisión del usuario; commit, integración con paginación en main y publicaci�
 
 ## Integración con paginación autorizada — 5 de octubre de 2026
 La tabla ahora consulta páginas al servidor. Para conservar la exportación de todos los personajes, obtenerlos con GET /api/characters?pageSize=all&sort=...&direction=..., sin filtros ni búsqueda. Generar el XLSX solo en el navegador y no almacenar el archivo en el servidor. Esta decisión de integración sustituye el uso de un snapshot completo cargado previamente y la ausencia de solicitudes adicionales descritos en el plan inicial. Bloquear edición durante la preparación para evitar exportar borradores. No modificar API ni D1 para exportar.
+
+## Entrega publicada
+Merge en main 5f5649e y push confirmados. Cloudflare Pages confirmó 6598ab42.nido-del-cuervo.pages.dev; URL estable https://nido-del-cuervo.pages.dev. Comprobación visual de solo lectura en navegador: botón Exportar Excel, 50 de 203 personajes y paginador Página 1 de 5. Sin escrituras de prueba, importación ni nuevas migraciones en producción. Las pruebas funcionales de descarga y paginación se ejecutaron en local. Excluidos histórico y documentos internos del paquete público.
