@@ -50,10 +50,14 @@ function renderField(field) {
     control = makeLevel(draft.NIVEL, 'nuevo personaje', false, delta => {
       draft.NIVEL += delta;
       wrapper.replaceWith(renderField(field));
-      document.querySelector('#create-range').textContent = rankForLevel(draft.NIVEL);
       const buttons = [...container.querySelectorAll('[data-creation-field="NIVEL"] button')];
       (buttons.find(button => Number(button.dataset.delta) === delta && !button.disabled) ?? buttons.find(button => !button.disabled)).focus();
     });
+    const range = document.createElement('span');
+    range.id = 'create-range';
+    range.setAttribute('aria-live', 'polite');
+    range.textContent = rankForLevel(draft.NIVEL);
+    control.append(range);
   } else if (['PERSONAJE', 'NOTAS'].includes(field)) {
     control = makeText(field, draft[field]);
     control.addEventListener('input', () => validateInput(control, field));
@@ -148,10 +152,6 @@ openButton.addEventListener('click', () => {
   attempt = null;
   uncertain = false;
   container.replaceChildren(...['PERSONAJE', 'CLASS', 'SUBCLASS', 'SPECIE', 'NIVEL', 'PROPIETARIO', 'ESTADO', 'NOTAS'].map(renderField));
-  const range = document.createElement('p');
-  range.id = 'create-range';
-  range.textContent = rankForLevel(1);
-  container.append(range);
   message.textContent = '';
   lock(false);
   dialog.showModal();

@@ -649,3 +649,5 @@ td[data-field="CLASS"], td[data-field="SUBCLASS"], td[data-field="SPECIE"] { min
 #create-dialog h3 { margin-top: 0; font-family: 'Cinzel', serif; font-size: 22px; }
 .create-actions button { background: var(--white); color: var(--ink); border: 1px solid var(--accent); border-radius: 7px; }
 #submit-create { background: var(--accent); color: var(--on-accent); }
+
+#create-range { margin-left: 8px; color: var(--muted); }

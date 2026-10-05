@@ -73,3 +73,6 @@ El usuario autoriza commit, push de la rama y publicación. Aplicar únicamente 
 
 ## Publicación completada
 Commit 3bc888c y rama codex/009-anadir-personajes subidos y verificados con ls-remote. Solo migración 0005 pendiente aplicada en D1 remota existente, sin reimportación. Cloudflare confirmó despliegue 386a89cd.nido-del-cuervo.pages.dev, servido en https://nido-del-cuervo.pages.dev. Navegador confirma 203 registros y apertura/cancelación de modal con catálogos globales, obligatorios y nivel inicial 1. Sin crear personajes ni realizar pruebas de escritura en producción. Rama separada de main.
+
+## Ajuste de disposición solicitado
+Rango de alta a la derecha del control de nivel dentro de la misma fila, con actualización automática y aria-live. Verificado con Chrome local a 1440/320 px: alineación y límites horizontales correctos; nivel 3 muestra Cuervo blanco. Build y diff-check pasan. Sin escrituras a D1, commit, push o publicación de este ajuste.
