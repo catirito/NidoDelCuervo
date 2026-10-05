@@ -67,3 +67,5 @@ Migración 0006 aplicada localmente. Pasan soft-delete.test.mjs y soft-delete-ui
 
 ## Entrega autorizada
 Commit/push de la misma rama y despliegue con migración 0006 sobre D1 existente, sin reimportación ni pruebas de escritura en producción. Esta autorización posterior sustituye los límites de entrega local anteriores; no incluye merge en main.
+
+Publicación completada el 5 de octubre de 2026: migración 0006 aplicada en D1 existente; despliegue dbde1008.nido-del-cuervo.pages.dev con código 619ad4a y URL estable https://nido-del-cuervo.pages.dev. Chrome confirma 204 personajes activos, 50 acciones Eliminar en la página de edición, sin errores JavaScript ni escrituras de prueba. Excel histórico, AGENTS.md, Memories.md y .git/config devuelven 404. Push de rama 010 completado; sin integración en main.
