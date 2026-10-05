@@ -1,6 +1,6 @@
 # 010 — Eliminar personajes
 
-Estado: especificación autorizada, con las tres clarificaciones resueltas y plan preparado para revisión. Planificación autorizada y guardada en plan.md para revisión. Desglose de tareas e implementación aún no autorizados. Rama local `codex/010-eliminar-personajes`, creada antes de estos documentos desde `6657dd9`, última entrega publicada de 009. Autorización posterior: commit de documentos, integración de ramas pendientes en main y push a GitHub. Implementación, migraciones y publicación de 010 no autorizadas.
+Estado: implementación y validación local completadas en codex/010-eliminar-personajes. Usuario autoriza commit, push y publicación en producción el 5 de octubre de 2026; integración en main no solicitada en esta entrega.
 
 ## Objetivo
 Permitir retirar personajes de la lista mediante una eliminación lógica pendiente hasta guardar la edición. Conservar íntegramente el registro en D1, marcándolo con `is_deleted = true`, sin borrar físicamente sus datos ni modificar el Excel histórico.
@@ -56,4 +56,4 @@ Permitir retirar personajes de la lista mediante una eliminación lógica pendie
 9. No se modifica ni publica el Excel histórico; no se implementan restauración o purga.
 
 ## Próxima etapa
-Revisar plan.md, preparado tras autorización de planificación. Las tres clarificaciones están resueltas; desglose de tareas e implementación siguen sin autorización. No modificar código, esquema o datos.
+Revisar tasks.md, preparado tras autorización del desglose. Las tres clarificaciones están resueltas y el plan aprobado; implementación sigue sin autorización. No modificar código, esquema o datos.

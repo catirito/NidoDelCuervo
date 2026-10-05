@@ -17,6 +17,8 @@ let subclassParents = new Map();
 let editing = false;
 let saving = false;
 let requiresRefresh = false;
+let savedNotice = '';
+const unavailable = new Map();
 let notify = () => {};
 export function setCharacters(characters, values, options) {
   const retained = new Map(snapshot.filter(item => draft.has(item.id)).map(item => [item.id, item]));
@@ -35,7 +37,8 @@ function allCharacters() {
   });
 }
 export function onEditingChange(callback) { notify = callback; }
-export function visibleCharacters() { return pageIds.map(id => allCharacters().find(item => item.id === id)).filter(Boolean); }
+export function visibleCharacters() { return pageIds.filter(id => !snapshot.find(item => item.id === id)?.is_deleted).map(id => allCharacters().find(item => item.id === id)).filter(Boolean); }
+export function isDeletionPending(id) { return draft.get(id)?.is_deleted === true; }
 export function isEditing() { return editing; }
 export function isPending(id) { return draft.has(id); }
 export function isFieldPending(id, field) { return Object.hasOwn(draft.get(id) ?? {}, field); }
@@ -45,7 +48,8 @@ function syncControls(message) {
   action.disabled = saving || loading || requiresRefresh || missing.size > 0;
   refresh.hidden = !requiresRefresh;
   refresh.disabled = saving || loading;
-  status.textContent = message ?? (editing ? `${draft.size} personajes modificados` : '');
+  const deletions = [...draft.values()].filter(fields => fields.is_deleted).length;
+  status.textContent = message ?? (editing ? `${draft.size} personajes modificados${deletions ? ` · ${deletions} pendientes de eliminar` : ''}` : savedNotice);
 }
 function setDraft(character, field, value, incremental = false) {
   const fields = { ...(draft.get(character.id) ?? {}) };
@@ -61,6 +65,38 @@ function setDraft(character, field, value, incremental = false) {
   if (Object.keys(fields).length) draft.set(character.id, fields); else draft.delete(character.id);
   syncControls();
   notify(incremental ? { id: character.id, field } : undefined);
+}
+export function deletionControl(character) {
+  const group = document.createElement('div');
+  group.className = 'deletion-action';
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'delete-button';
+  button.dataset.deleteId = character.id;
+  button.setAttribute('aria-label', `Eliminar ${character.PERSONAJE}`);
+  button.setAttribute('aria-pressed', String(isDeletionPending(character.id)));
+  button.disabled = saving || loading || requiresRefresh || missing.size > 0;
+  const icon = document.createElement('span');
+  icon.textContent = '×';
+  icon.setAttribute('aria-hidden', 'true');
+  button.append(icon, 'Eliminar');
+  button.addEventListener('click', () => {
+    if (saving || loading || requiresRefresh || missing.size) return;
+    const fields = { ...(draft.get(character.id) ?? {}) };
+    if (fields.is_deleted) delete fields.is_deleted; else fields.is_deleted = true;
+    if (Object.keys(fields).length) draft.set(character.id, fields); else draft.delete(character.id);
+    syncControls();
+    notify();
+    document.querySelector(`button[data-delete-id="${character.id}"]`)?.focus({ preventScroll: true });
+  });
+  group.append(button);
+  if (isDeletionPending(character.id)) {
+    const label = document.createElement('span');
+    label.className = 'pending-label';
+    label.textContent = 'Eliminación pendiente. Pulsa de nuevo para desmarcar.';
+    group.append(label);
+  }
+  return group;
 }
 function subclassOptions(className) {
   if (!className) return [];
@@ -164,11 +200,27 @@ async function refreshDraft() {
     for (const [id, fields] of draft) {
       const current = latest.find(item => item.id === id);
       const original = snapshot.find(item => item.id === id);
-      if (!current) { differences.push(`${original.PERSONAJE}: ya no existe; retira explícitamente su borrador`); missing.add(id); continue; }
+      if (!current) { differences.push(`${original.PERSONAJE}: ya no existe; retira explícitamente su borrador`); missing.add(id); unavailable.set(id, 'ya no existe'); continue; }
+      if (current.is_deleted) {
+        pageIds = pageIds.filter(value => value !== id);
+        if (fields.is_deleted && Object.entries(fields).every(([field, value]) => current[field] === value)) {
+          draft.delete(id);
+          missing.delete(id);
+          unavailable.delete(id);
+          subclassParents.delete(id);
+          differences.push(`${current.PERSONAJE}: eliminación y campos ya guardados`);
+        } else {
+          missing.add(id);
+          unavailable.set(id, 'está eliminado; no se pueden aplicar estos cambios');
+          differences.push(`${current.PERSONAJE}: está eliminado; retira explícitamente su borrador sin aplicar las propuestas pendientes`);
+        }
+        continue;
+      }
       missing.delete(id);
+      unavailable.delete(id);
       for (const [field, value] of Object.entries(fields)) {
-        if (current[field] === value) { delete fields[field]; differences.push(`${current.PERSONAJE}: ${fieldLabels[field]} ya está guardado`); }
-        else if (current.version !== original.version) differences.push(`${current.PERSONAJE}, ${fieldLabels[field]}: guardado «${current[field] ?? 'vacío'}», tu propuesta «${value ?? 'vacío'}»`);
+        if (current[field] === value) { delete fields[field]; differences.push(`${current.PERSONAJE}: ${fieldLabels[field] ?? 'Eliminación'} ya está guardado`); }
+        else if (current.version !== original.version) differences.push(`${current.PERSONAJE}, ${fieldLabels[field] ?? 'Eliminación'}: guardado «${current[field] ?? 'vacío'}», tu propuesta «${value ?? 'vacío'}»`);
       }
       if (!Object.keys(fields).length) draft.delete(id);
     }
@@ -192,7 +244,8 @@ function validateDraft() {
   for (const [id, fields] of draft) {
     for (const [field, value] of Object.entries(fields)) {
       try {
-        validateField(field, value);
+        if (field === 'is_deleted') { if (value !== true) throw new RangeError('Marca de eliminación inválida.'); }
+        else validateField(field, value);
         if (field === 'SUBCLASS' && value !== null) {
           const current = allCharacters().find(item => item.id === id);
           const parent = catalogs.classes.find(item => current.CLASS && item.nameKey === catalogKey(current.CLASS));
@@ -224,6 +277,7 @@ async function saveDraft() {
       const names = (result.error?.ids ?? []).map(id => snapshot.find(item => item.id === id)?.PERSONAJE ?? 'Personaje desconocido');
       throw new Error(`${result.error?.message ?? 'No se pudo confirmar el guardado.'}${names.length ? ` (${names.join(', ')})` : ''}`);
     }
+    if (!Array.isArray(result.characters) || result.characters.length !== changes.length || new Set(result.characters.map(character => character.id)).size !== changes.length || changes.some(change => !result.characters.some(character => character.id === change.id))) throw new Error('No se pudo confirmar el lote completo.');
     catalogs = result.catalogs;
     const updated = new Map(result.characters.map(character => [character.id, character]));
     snapshot = snapshot.map(character => updated.get(character.id) ?? character);
@@ -231,7 +285,8 @@ async function saveDraft() {
     subclassParents.clear();
     editing = false;
     saving = false;
-    syncControls('Cambios guardados.');
+    savedNotice = 'Cambios guardados.';
+    syncControls();
     notify({ saved: true });
     action.focus({ preventScroll: true });
   } catch (error) {
@@ -246,6 +301,7 @@ action.addEventListener('click', () => {
   if (saving || loading || requiresRefresh || missing.size) return;
   if (editing) { saveDraft(); return; }
   editing = true;
+  savedNotice = '';
   syncControls();
   notify();
 });
@@ -258,6 +314,7 @@ function renderMissing() {
     button.addEventListener('click', () => {
       draft.delete(id);
       missing.delete(id);
+      unavailable.delete(id);
       subclassParents.delete(id);
       pageIds = pageIds.filter(value => value !== id);
       renderMissing();
@@ -265,7 +322,9 @@ function renderMissing() {
       notify();
       action.focus();
     });
-    missingControls.append(button);
+    const explanation = document.createElement('p');
+    explanation.textContent = `${snapshot.find(item => item.id === id)?.PERSONAJE ?? id}: ${unavailable.get(id) ?? 'no disponible'}.`;
+    missingControls.append(explanation, button);
   }
 }
 refresh.addEventListener('click', refreshDraft);

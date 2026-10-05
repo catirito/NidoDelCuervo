@@ -1,6 +1,6 @@
 # Plan — 010: eliminar personajes
 
-Estado: planificación autorizada y preparada para revisión. Especificación clarificada; desglose de tareas e implementación todavía no autorizados. Rama local `codex/010-eliminar-personajes`, desde `6657dd9`, con la entrega publicada de 009. La preparación del plan no modifica main ni implementa la funcionalidad. Tras guardarlo, el usuario autoriza commit de documentos, integración de ramas pendientes en main y push a GitHub; no autoriza implementación o despliegue.
+Estado: implementación y validación local completadas en codex/010-eliminar-personajes. Usuario autoriza commit, push y publicación en producción el 5 de octubre de 2026; integración en main no solicitada en esta entrega.
 
 ## Resultado y alcance
 Añadir al extremo derecho de cada fila, solo durante edición, una pequeña X roja y «Eliminar». La acción alterna una marca local; la segunda pulsación la retira sin perder campos editados. Guardar persiste todos los cambios válidos y las marcas en el mismo lote atómico. El registro se conserva en D1 y desaparece de lista y exportación tras `is_deleted = true`.
@@ -92,4 +92,4 @@ Usar Node, Wrangler local, Miniflare y Chrome/Playwright ya disponibles, con fix
 - Build por whitelist pública, exclusión de Excel/documentos internos y git diff --check. No publicar ni migrar remotamente en esta etapa.
 
 ## Próxima etapa
-Revisión del plan y autorización para desglosar tareas. Implementación, migración local y pruebas funcionales de 010 siguen pendientes de autorización, al igual que publicación. La autorización posterior de commit/merge/push se limita a integrar entregas existentes y estos documentos, sin implementar 010.
+Revisión de tasks.md y autorización de implementación. Implementación, migración local y pruebas funcionales de 010 siguen pendientes de autorización, al igual que publicación. La autorización posterior de commit/merge/push se limita a integrar entregas existentes y estos documentos, sin implementar 010.

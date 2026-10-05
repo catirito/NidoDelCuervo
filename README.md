@@ -11,3 +11,5 @@ Use **Añadir personaje** beside **Editar** to create a shared character. The fo
 Use **Exportar Excel** beside **Editar** to download all saved characters with the nine table fields and the active sort order, regardless of filters. The Excel file is generated in your browser and downloaded to your device; it is not stored on the server. Export is disabled while editing. Export queries the complete saved roster, including characters outside the current page.
 
 Built with HTML, CSS, and vanilla JavaScript, with responsive layouts and light and dark themes. Hosted on Cloudflare Pages, using Pages Functions for the API and Cloudflare D1 for persistent storage. The original Excel workbook is preserved privately as a read-only import source and historical reference.
+
+During editing, **Eliminar** toggles a pending soft deletion. Saving commits edited fields and deletions atomically. Deleted records retain their data in D1 and are excluded from the list and Excel exports.

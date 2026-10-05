@@ -15,7 +15,7 @@ const assert = require('node:assert/strict');
   const initial = await read();
   const original = initial[0];
   const id = randomUUID();
-  const fake = { ...original, id, sourceRow: 9999, version: 0, PERSONAJE: 'Temporal paginación', name_search: 'temporal paginación' };
+  const fake = { ...original, id, sourceRow: 9999, version: 0, PERSONAJE: 'Temporal paginación', is_deleted: 0, name_search: 'temporal paginación' };
   const columns = Object.keys(fake);
   await db.prepare(`INSERT INTO characters (${columns.join(', ')}) VALUES (${columns.map(() => '?').join(', ')})`).bind(...columns.map(key => fake[key])).run();
   const browser = await chromium.launch({ channel: 'chrome', headless: true });
