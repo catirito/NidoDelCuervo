@@ -1,3 +1,4 @@
+import { makeText, makeSelector, makeLevel } from './character-controls.js';
 import { catalogKey } from './catalog-values.js';
 import { rankForLevel } from './rank.js';
 import { fieldLabels, validateField, reuseValue } from './character-fields.js';
@@ -111,31 +112,17 @@ function bindText(control, character, field) {
   });
 }
 export function textControl(character, field) {
-  const control = document.createElement(field === 'NOTAS' ? 'textarea' : 'input');
-  if (field !== 'NOTAS') control.type = 'text';
-  control.value = character[field] ?? '';
-  control.required = field === 'PERSONAJE';
-  control.placeholder = field === 'NOTAS' ? 'Sin notas' : '';
+  const control = makeText(field, character[field]);
   bindText(control, character, field);
   try { validateField(field, character[field]); } catch (error) { control.setCustomValidity(error.message); control.setAttribute('aria-invalid', 'true'); }
   return control;
 }
 export function selectorControl(character, field) {
-  const group = document.createElement('div');
-  const select = document.createElement('select');
+  const { group, select, input } = makeSelector(field, character[field], optionValues(field, character));
   select.disabled = saving || loading || (field === 'SUBCLASS' && !character.CLASS);
   select.dataset.editor = field;
   select.dataset.characterId = character.id;
   select.setAttribute('aria-label', `${fieldLabels[field]} de ${snapshot.find(item => item.id === character.id).PERSONAJE}`);
-  select.append(new Option(field === 'ESTADO' ? 'Sin estado' : field === 'PROPIETARIO' ? 'Sin propietario' : 'Sin dato', ''));
-  for (const value of optionValues(field, character)) select.append(new Option(value, value));
-  select.append(new Option(`Añadir ${fieldLabels[field].toLocaleLowerCase('es')}…`, '__new'));
-  select.value = character[field] ?? '';
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.hidden = true;
-  input.className = 'new-option';
-  input.placeholder = `${['CLASS', 'SUBCLASS', 'SPECIE'].includes(field) ? 'Nueva' : 'Nuevo'} ${fieldLabels[field].toLocaleLowerCase('es')}`;
   bindText(input, character, field);
   select.addEventListener('change', () => {
     input.hidden = select.selectedIndex !== select.options.length - 1;
@@ -151,28 +138,12 @@ export function selectorControl(character, field) {
   return group;
 }
 export function levelControl(character) {
-  const control = document.createElement('div');
-  control.className = 'level-control';
-  const value = document.createElement('output');
-  value.textContent = character.NIVEL;
-  const buttons = document.createElement('div');
-  buttons.className = 'level-buttons';
-  for (const delta of [1, -1]) {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.textContent = delta > 0 ? '+' : '−';
-    button.dataset.characterId = character.id;
-    button.dataset.delta = delta;
-    button.setAttribute('aria-label', `${delta > 0 ? 'Subir' : 'Bajar'} nivel de ${character.PERSONAJE}`);
-    button.disabled = saving || loading || character.NIVEL + delta < 1 || character.NIVEL + delta > 20;
-    button.addEventListener('click', () => {
-      setDraft(character, 'NIVEL', character.NIVEL + delta);
-      const candidates = [...document.querySelectorAll('button[data-character-id]')].filter(item => item.dataset.characterId === character.id && !item.disabled);
-      (candidates.find(item => Number(item.dataset.delta) === delta) ?? candidates[0] ?? action).focus({ preventScroll: true });
-    });
-    buttons.append(button);
-  }
-  control.append(value, buttons);
+  const control = makeLevel(character.NIVEL, character.PERSONAJE, saving || loading, delta => {
+    setDraft(character, 'NIVEL', character.NIVEL + delta);
+    const candidates = [...document.querySelectorAll('button[data-character-id]')].filter(item => item.dataset.characterId === character.id && !item.disabled);
+    (candidates.find(item => Number(item.dataset.delta) === delta) ?? candidates[0] ?? action).focus({ preventScroll: true });
+  });
+  for (const button of control.querySelectorAll('button')) button.dataset.characterId = character.id;
   return control;
 }
 async function readLatest() {

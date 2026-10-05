@@ -67,10 +67,11 @@ export function prepareCatalogChanges(changes, additions, catalogs, characters) 
 const versionGuard = `(SELECT count(*) FROM json_each(?1) AS incoming JOIN characters ON characters.id = json_extract(incoming.value, '$.id') AND characters.version = json_extract(incoming.value, '$.expectedVersion')) = json_array_length(?1)`;
 export function catalogWrites(db, additions, changes) {
   const writes = [];
-  const payload = JSON.stringify(changes);
+  const payload = JSON.stringify(changes ?? []);
+  const guard = changes ? versionGuard : '1 = 1';
   for (const [table, options] of [['classes', additions.classes], ['species', additions.species]]) {
-    if (options.length) writes.push(db.prepare(`INSERT INTO ${table} (id, name, name_key) SELECT json_extract(value, '$.id'), json_extract(value, '$.name'), json_extract(value, '$.nameKey') FROM json_each(?2) WHERE ${versionGuard} ON CONFLICT(name_key) DO NOTHING`).bind(payload, JSON.stringify(options)));
+    if (options.length) writes.push(db.prepare(`INSERT INTO ${table} (id, name, name_key) SELECT json_extract(value, '$.id'), json_extract(value, '$.name'), json_extract(value, '$.nameKey') FROM json_each(?2) WHERE ${guard} ON CONFLICT(name_key) DO NOTHING`).bind(payload, JSON.stringify(options)));
   }
-  if (additions.subclasses.length) writes.push(db.prepare(`INSERT INTO subclasses (id, class_id, name, name_key) SELECT json_extract(value, '$.id'), (SELECT id FROM classes WHERE name_key = json_extract(value, '$.classKey')), json_extract(value, '$.name'), json_extract(value, '$.nameKey') FROM json_each(?2) WHERE ${versionGuard} ON CONFLICT(class_id, name_key) DO NOTHING`).bind(payload, JSON.stringify(additions.subclasses)));
+  if (additions.subclasses.length) writes.push(db.prepare(`INSERT INTO subclasses (id, class_id, name, name_key) SELECT json_extract(value, '$.id'), (SELECT id FROM classes WHERE name_key = json_extract(value, '$.classKey')), json_extract(value, '$.name'), json_extract(value, '$.nameKey') FROM json_each(?2) WHERE ${guard} ON CONFLICT(class_id, name_key) DO NOTHING`).bind(payload, JSON.stringify(additions.subclasses)));
   return writes;
 }

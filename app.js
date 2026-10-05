@@ -1,3 +1,4 @@
+import { setCreationContext, setCreationAvailable, onCharacterCreated, creationRefreshFailed, creationRefreshCompleted } from './create-character.js';
 import { downloadCharacters } from './export-excel.js';
 import { setCharacters, visibleCharacters, onEditingChange, isEditing, isPending, isSaving, levelControl, textControl, selectorControl, setLoading, isFieldPending } from './editing.js';
 import { fields, isMissing } from './records.js';
@@ -24,6 +25,7 @@ const exportButton = document.querySelector('#export-button');
 const exportStatus = document.querySelector('#export-status');
 
 function updateExportAvailability() {
+  setCreationAvailable(loaded && !loading && !isSaving() && !exporting);
   exportButton.disabled = !loaded || loading || !pagination?.totalRecords || isEditing() || isSaving() || exporting;
 }
 
@@ -188,6 +190,8 @@ async function loadCharacters(focusAction = false) {
     page = pagination.page;
     filterOptions = data.filterOptions;
     setCharacters(data.characters, data.catalogs, data.editOptions);
+    setCreationContext(data.catalogs, data.editOptions);
+    creationRefreshCompleted();
     populateFilters();
     updateSortHeaders();
     elements.controls.disabled = false;
@@ -199,6 +203,7 @@ async function loadCharacters(focusAction = false) {
     else if (focused === previousPage || focused === nextPage) pageSize.focus({ preventScroll: true });
   } catch (error) {
     if (number !== requestNumber || error.name === 'AbortError') return;
+    creationRefreshFailed();
     elements.errorMessage.textContent = `${error.message} Se conservan los filtros y cambios pendientes.`;
     elements.error.hidden = false;
     elements.status.textContent = 'Registro no disponible';
@@ -245,6 +250,7 @@ onEditingChange(change => {
   setControlsEnabled(!isSaving());
   if (!loading && elements.error.hidden) updateView();
 });
+onCharacterCreated(() => loadCharacters());
 loadCharacters();
 
 previousPage.addEventListener('click', () => { page--; loadCharacters(); });
