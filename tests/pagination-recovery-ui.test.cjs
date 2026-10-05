@@ -1,0 +1,76 @@
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const { Miniflare, convertV4MiniflareOptions } = require(process.env.MINIFLARE_MODULE || 'miniflare');
+const fs = require('node:fs');
+const path = require('node:path');
+const { randomUUID } = require('node:crypto');
+const assert = require('node:assert/strict');
+(async () => {
+  const base = process.argv[2] || 'http://127.0.0.1:8788';
+  assert.ok(['localhost', '127.0.0.1'].includes(new URL(base).hostname));
+  const config = JSON.parse(fs.readFileSync('wrangler.jsonc', 'utf8'));
+  assert.equal(config.d1_databases[0].remote, false);
+  const runtime = new Miniflare(convertV4MiniflareOptions({ modules: true, script: 'export default {}', resourcePersistencePath: path.resolve('.wrangler/state/v3'), d1Databases: { DB: config.d1_databases[0].database_id } }));
+  const db = await runtime.getD1Database('DB');
+  const read = async () => (await (await fetch(base + '/api/characters?pageSize=all')).json()).characters;
+  const initial = await read();
+  const original = initial[0];
+  const id = randomUUID();
+  const fake = { ...original, id, sourceRow: 9999, version: 0, PERSONAJE: 'Temporal paginación', name_search: 'temporal paginación' };
+  const columns = Object.keys(fake);
+  await db.prepare(`INSERT INTO characters (${columns.join(', ')}) VALUES (${columns.map(() => '?').join(', ')})`).bind(...columns.map(key => fake[key])).run();
+  const browser = await chromium.launch({ channel: 'chrome', headless: true });
+  const page = await browser.newPage({ viewport: { width: 1600, height: 1000 } });
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  const settled = () => page.waitForFunction(() => document.querySelector('.results').getAttribute('aria-busy') === 'false' && document.querySelector('#error-state').hidden);
+  try {
+    await page.goto(base); await settled();
+    await page.click('#edit-button');
+    await page.locator(`tr[data-character-id="${original.id}"] textarea`).fill('Respuesta perdida paginación');
+    let writes = 0;
+    await page.route('**/api/characters/batch', async route => { writes++; await route.fetch(); await route.abort(); });
+    await page.click('#edit-button'); await page.waitForSelector('#refresh-draft:not([hidden])');
+    await page.unroute('**/api/characters/batch');
+    await page.click('#next-page'); await settled();
+    await page.click('#refresh-draft'); await page.waitForFunction(() => document.querySelector('#refresh-draft').hidden);
+    assert.match(await page.locator('#draft-status').textContent(), /ya está guardado/);
+    assert.equal(writes, 1);
+    await page.click('#edit-button');
+    await page.fill('#name-search', fake.PERSONAJE);
+    await page.waitForFunction(id => document.querySelector('tbody tr')?.dataset.characterId === id, id);
+    await page.click('#edit-button');
+    await page.locator(`tr[data-character-id="${id}"] textarea`).fill('No descartar silenciosamente');
+    await db.prepare('DELETE FROM characters WHERE id = ?').bind(id).run();
+    await page.click('#edit-button'); await page.waitForSelector('#refresh-draft:not([hidden])');
+    await page.click('#refresh-draft'); await page.waitForSelector('#missing-drafts button');
+    assert.equal(await page.locator('#edit-button').isDisabled(), true);
+    assert.match(await page.locator('#draft-status').textContent(), /ya no existe/);
+    await page.click('#missing-drafts button');
+    assert.equal(await page.locator('#edit-button').isDisabled(), false);
+    assert.equal(await page.locator('#missing-drafts button').count(), 0);
+    await page.click('#edit-button');
+    await page.click('#reset-filters'); await settled();
+    let delayed;
+    await page.route('**/api/characters?**', async route => {
+      const search = new URL(route.request().url()).searchParams.get('search');
+      if (search === 'consulta antigua') { await new Promise(resolve => { delayed = resolve; }); try { await route.fulfill({ json: { characters: [], pagination: { page: 1, pageSize: 50, totalMatches: 0, totalRecords: initial.length, totalPages: 0 }, filterOptions: {}, editOptions: {}, catalogs: { classes: [], subclasses: [], species: [] } } }); } catch {} }
+      else await route.continue();
+    });
+    await page.fill('#name-search', 'consulta antigua');
+    await page.waitForRequest(request => new URL(request.url()).searchParams.get('search') === 'consulta antigua');
+    await page.fill('#name-search', original.PERSONAJE);
+    await page.waitForFunction(id => document.querySelector('tbody tr')?.dataset.characterId === id && document.querySelector('.results').getAttribute('aria-busy') === 'false', original.id);
+    delayed();
+    await page.unroute('**/api/characters?**', { behavior: 'wait' });
+    assert.equal(await page.locator(`tr[data-character-id="${original.id}"]`).count(), 1);
+    assert.deepEqual(errors, []);
+    console.log('Chrome local: respuesta perdida reconciliada, borrador desaparecido retirado explícitamente y respuesta antigua ignorada.');
+  } finally {
+    await browser.close();
+    await db.prepare('DELETE FROM characters WHERE id = ?').bind(id).run();
+    const current = (await read()).find(item => item.id === original.id);
+    const response = await fetch(base + '/api/characters/batch', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ changes: [{ id: original.id, expectedVersion: current.version, fields: { NOTAS: original.NOTAS } }] }) });
+    assert.equal(response.status, 200);
+    await runtime.dispose();
+  }
+})().catch(error => { console.error(error); process.exitCode = 1; });

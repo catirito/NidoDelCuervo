@@ -16,12 +16,12 @@ WITH changes AS (
   FROM json_each(?1)
 )
 UPDATE characters
-SET ${assignments.join(', ')}, version = version + 1
+SET ${assignments.join(', ')}, name_search = CASE WHEN (SELECT json_type(fields, '$.PERSONAJE') FROM changes WHERE changes.id = characters.id) IS NOT NULL THEN (SELECT json_extract(fields, '$._nameSearch') FROM changes WHERE changes.id = characters.id) ELSE name_search END, version = version + 1
 WHERE id IN (SELECT id FROM changes)
   AND (SELECT count(*) FROM changes JOIN characters AS current
        ON current.id = changes.id AND current.version = changes.expectedVersion)
       = (SELECT count(*) FROM changes)
-RETURNING *`;
+RETURNING id, PERSONAJE, CLASS, SUBCLASS, SPECIE, NIVEL, RANGO, ESTADO, PROPIETARIO, NOTAS, sourceRow, version`;
 export function validateChanges(body) {
   if (!body || Object.keys(body).some(key => !['changes', 'catalogAdditions'].includes(key)) || !Array.isArray(body.changes) || body.changes.length < 1 || body.changes.length > 203) throw new Error('Lote inválido: entre 1 y 203 cambios.');
   const ids = new Set();
@@ -29,6 +29,7 @@ export function validateChanges(body) {
     if (!change || Object.keys(change).sort().join(',') !== 'expectedVersion,fields,id' || typeof change.id !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(change.id) || ids.has(change.id) || !Number.isSafeInteger(change.expectedVersion) || change.expectedVersion < 0 || !change.fields || typeof change.fields !== 'object' || Array.isArray(change.fields) || !Object.keys(change.fields).length || Object.keys(change.fields).some(field => !editableFields.includes(field))) throw new Error('Identificador, versión o campos inválidos.');
     ids.add(change.id);
     const fields = Object.fromEntries(Object.entries(change.fields).map(([field, value]) => [field, validateField(field, value)]));
+    if (Object.hasOwn(fields, 'PERSONAJE')) fields._nameSearch = fields.PERSONAJE.toLocaleLowerCase('es');
     if (Object.hasOwn(fields, 'NIVEL')) fields.RANGO = rankForLevel(fields.NIVEL);
     return { id: change.id, expectedVersion: change.expectedVersion, fields };
   });

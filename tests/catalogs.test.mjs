@@ -11,7 +11,7 @@ const config = JSON.parse(await fs.readFile('wrangler.jsonc', 'utf8'));
 assert.equal(config.d1_databases[0].remote, false);
 const runtime = new Miniflare(convertV4MiniflareOptions({ modules: true, script: 'export default {}', resourcePersistencePath: path.resolve('.wrangler/state/v3'), d1Databases: { DB: config.d1_databases[0].database_id } }));
 const db = await runtime.getD1Database('DB');
-const read = async () => (await (await fetch(`${base}/api/characters`)).json());
+const read = async () => (await (await fetch(`${base}/api/characters?pageSize=all`)).json());
 const patch = async (changes, catalogAdditions) => fetch(`${base}/api/characters/batch`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ changes, ...(catalogAdditions ? { catalogAdditions } : {}) }) });
 const change = (character, fields) => ({ id: character.id, expectedVersion: character.version, fields });
 const start = await read();

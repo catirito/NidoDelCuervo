@@ -4,11 +4,11 @@
 Recoger decisiones confirmadas y sus motivos para retomar el trabajo con contexto. Las reglas estables están en `AGENTS.md`; este archivo no las sustituye ni las duplica. `Memories.md` es una convención de este proyecto, no un mecanismo automático ni un estándar universal.
 
 ## Etapa actual
-005 implementada y validada en local, commit local 0847da5 creado, sin push ni publicación. Etapa activa: detallar y clarificar 006 en codex/006-edicion-catalogos, adelantada por fast-forward a la base local de 005. Plan, tareas e implementación de 006 autorizados y completados; validación local pasa, resultado en http://127.0.0.1:8788 para revisión. Commit, push y publicación de 006 no autorizados. Mantener ramas por especificación y no integrar en main.
+Usuario autoriza integrar exportación y paginación en main y publicar el resultado (5 de octubre de 2026). Integración en curso en codex/007-exportacion-excel. Exportación y paginación conservan sus carpetas 007 existentes como antecedentes, sin renumeración retrospectiva. La paginación carga solo una página: exportar obtiene todos los personajes guardados mediante GET pageSize=all, sin filtros ni búsqueda y con el orden activo, y genera el archivo exclusivamente en el navegador. Sustituye el plan anterior de snapshot completo sin solicitudes adicionales. Deshabilitar exportación durante edición/carga/error/generación; una vista filtrada vacía no impide exportar el registro completo.
 
-004 implementada y validada localmente, commit `40452ae`; entregada en http://127.0.0.1:8788. Sin push ni publicación. D1 y API locales activos, niveles iniciales restaurados, versiones avanzadas por pruebas. Recursos remotos/publicación aplazados. No integrar en main.
+Paginación ya publicada en su rama: a495be8; migración 0004 y name_search inicializados en producción. No reimportar personajes ni repetir la inicialización al publicar. Conserva tamaños 20/50/100/Todos y borradores entre páginas.
 
-005 conserva nombre, notas, estado y propietario en `specs/005-edicion-datos-personajes/`, con rama local/GitHub `codex/005-edicion-datos-personajes`. 006 conserva clase, subclase y especie, selectores, opciones nuevas persistentes y dependencia clase/subclase en `specs/006-edicion-catalogos/`, rama local/GitHub `codex/006-edicion-catalogos`. Sus ramas se crearon antes de escribir documentos. 005 tiene plan en revisión y boceto preparado; sus tareas e implementación siguen pendientes. El plan y las tareas de 006 siguen como marcadores pendientes. Los documentos de 005/006 siguen como cambios locales sin commit; se conservaron los cambios de publicación anteriores y se volvió a la rama 004.
+004–006 implementadas, validadas localmente, publicadas en Cloudflare con D1 e integradas en main mediante commit 80c3810. README breve en inglés y URL actual. Acceso GitHub corregido con credencial de catirito; push normal comprobado. Estas decisiones sustituyen las referencias históricas a publicación e integración pendientes.
 
 Decisiones de 004: GET characters y PATCH characters/batch; solo NIVEL editable en lote. «Editar» habilita menos/más, sin clave, sin escrituras intermedias; «Guardar» envía solo UUID, versión y nivel final modificado. Paso de uno en los controles, intervalo 1–20, diferencia final de varios niveles permitida. Sin sesiones ni autenticación por decisión expresa del usuario. Rango automático: 1–2 Corvato, 3–4 Cuervo blanco, 5–8 Cuervo gris, 9–12 Cuervo negro, 13–16 Cuervo de ébano y 17–20 Cuervo de ónice. Conflictos detectados por versión; atomicidad completa del lote confirmada: si falla un cambio, no se guarda ninguno.
 
@@ -160,3 +160,9 @@ Entrega local 006: catálogos classes/subclasses/species 15/150/179, UUID y clav
 ## Publicación conjunta 004–006 — 4 de octubre de 2026
 
 El usuario autoriza commit y publicación de todo. Se crea D1 `nido-personajes` (3107c487-41dd-4cb0-a4e6-6e46027d9c40) y se carga una sola vez el snapshot local validado, conservando UUID, ediciones y catálogos. Configuración remota en `wrangler.production.jsonc`; la local sigue aislada en `wrangler.jsonc`. Publicación en el proyecto Pages existente, sin integrar en main. No se ejecutan tests en producción. El Excel continúa intacto.
+
+## Entrega 007 autorizada
+
+El usuario autoriza commit, push de codex/007-paginacion y publicación en Cloudflare. No autoriza integración en main en esta entrega. Aplicar únicamente migración 0004 y backfill protegido desde datos actuales de D1; no reimportar personajes. Mantener prohibición de tests en producción.
+
+Publicación 007: Wrangler confirmó despliegue completo y D1 confirmó carga transaccional de claves. Exportación SQL completa rechazada por Cloudflare (authentication code 10000); copia privada de personajes obtenida mediante SELECT en .local/production-pagination-snapshot.json. Excel intacto y archivos privados excluidos del paquete.

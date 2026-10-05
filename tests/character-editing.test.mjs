@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { validateField } from '../character-fields.js';
 const base = process.argv[2] ?? 'http://127.0.0.1:8788';
 assert.ok(['127.0.0.1', 'localhost'].includes(new URL(base).hostname));
-const read = async () => (await (await fetch(`${base}/api/characters`)).json()).characters;
+const read = async () => (await (await fetch(`${base}/api/characters?pageSize=all`)).json()).characters;
 const patch = async changes => fetch(`${base}/api/characters/batch`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ changes }) });
 const change = (character, fields) => ({ id: character.id, expectedVersion: character.version, fields });
 const maximumBody = { changes: Array.from({ length: 203 }, () => ({ id: '11111111-1111-4111-8111-111111111111', expectedVersion: Number.MAX_SAFE_INTEGER, fields: { PERSONAJE: '\u0000'.repeat(50), NOTAS: '\u0000'.repeat(2000), ESTADO: '\u0000'.repeat(50), PROPIETARIO: '\u0000'.repeat(50), NIVEL: 20 } })) };

@@ -600,11 +600,11 @@ noscript p {
 }
 
 .results-bar { flex-wrap: wrap; }
-.edit-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
-#edit-button, #refresh-draft { min-height: 32px; padding: 5px 14px; background: var(--white); color: var(--ink); border: 1px solid #806c99; border-radius: 7px; font-size: 13px; }
-#edit-button:hover:not(:disabled), #refresh-draft:hover:not(:disabled), .level-control button:hover:not(:disabled) { background: #b59bd8; color: #17131e; }
-#draft-status { font-size: 13px; color: var(--ink); }
-#draft-status:empty { display: none; }
+.edit-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-left: auto; }
+#export-button, #edit-button, #refresh-draft { min-height: 32px; padding: 5px 14px; background: var(--white); color: var(--ink); border: 1px solid #806c99; border-radius: 7px; font-size: 13px; }
+#export-button:hover:not(:disabled), #edit-button:hover:not(:disabled), #refresh-draft:hover:not(:disabled), .level-control button:hover:not(:disabled) { background: #b59bd8; color: #17131e; }
+#export-status, #draft-status { font-size: 13px; color: var(--ink); }
+#export-status:empty, #draft-status:empty { display: none; }
 .level-control { display: flex; align-items: center; gap: 6px; }
 .level-control output { min-width: 22px; text-align: center; font-weight: 650; }
 .level-buttons { display: flex; flex-direction: column; gap: 2px; }
@@ -626,3 +626,12 @@ td textarea:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px
 .field-pending input, .field-pending select, .field-pending textarea { border-color: var(--focus); }
 [aria-invalid="true"] { outline: 2px solid var(--focus); }
 td[data-field="CLASS"], td[data-field="SUBCLASS"], td[data-field="SPECIE"] { min-width: 170px; }
+
+.pagination { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 20px 0; }
+.page-navigation, .page-size { display: flex; align-items: center; gap: 12px; }
+.pagination button, #missing-drafts button { padding: 8px 12px; border: 1px solid var(--accent); border-radius: 6px; background: var(--soft); color: var(--ink); font: inherit; }
+.pagination button:disabled { opacity: .45; cursor: default; }
+.page-size select { width: auto; min-width: 85px; }
+.pagination label, #page-status { font-size: 14px; }
+#missing-drafts { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 760px) { .pagination { flex-direction: column; align-items: stretch; gap: 16px; } .page-navigation { justify-content: space-between; } .page-size { justify-content: flex-end; } }

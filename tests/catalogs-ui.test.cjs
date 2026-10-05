@@ -11,7 +11,7 @@ const { randomUUID } = require('node:crypto');
   assert.equal(config.d1_databases[0].remote, false);
   const runtime = new Miniflare(convertV4MiniflareOptions({ modules: true, script: 'export default {}', resourcePersistencePath: path.resolve('.wrangler/state/v3'), d1Databases: { DB: config.d1_databases[0].database_id } }));
   const db = await runtime.getD1Database('DB');
-  const read = async () => (await (await fetch(base + '/api/characters')).json());
+  const read = async () => (await (await fetch(base + '/api/characters?pageSize=all')).json());
   const initial = await read();
   const original = initial.characters.find(character => character.CLASS === 'Warlock' && character.SUBCLASS);
   const prefix = `Interfaz ${randomUUID().slice(0, 8)}`;
@@ -31,6 +31,8 @@ const { randomUUID } = require('node:crypto');
   try {
     await page.goto(base); await page.waitForSelector('tbody tr');
     await page.fill('#name-search', original.PERSONAJE);
+    await page.waitForResponse(response => new URL(response.url()).searchParams.get('search') === original.PERSONAJE);
+    await page.waitForFunction(() => document.querySelector('.results').getAttribute('aria-busy') === 'false');
     await page.click('#edit-button');
     assert.equal(await select('SPECIE').locator('option').count(), 181);
     await select('CLASS').selectOption('Ranger');
