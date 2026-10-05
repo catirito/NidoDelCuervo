@@ -70,3 +70,6 @@ Revisión local del usuario. Commit, push, merge y publicación requieren autori
 
 ## Entrega autorizada
 El usuario autoriza commit, push de la rama y publicación. Aplicar únicamente migración 0005 pendiente en D1 existente; no reimportar ni ejecutar pruebas de escritura en producción. Integración en main no solicitada.
+
+## Publicación completada
+Commit 3bc888c y rama codex/009-anadir-personajes subidos y verificados con ls-remote. Solo migración 0005 pendiente aplicada en D1 remota existente, sin reimportación. Cloudflare confirmó despliegue 386a89cd.nido-del-cuervo.pages.dev, servido en https://nido-del-cuervo.pages.dev. Navegador confirma 203 registros y apertura/cancelación de modal con catálogos globales, obligatorios y nivel inicial 1. Sin crear personajes ni realizar pruebas de escritura en producción. Rama separada de main.
