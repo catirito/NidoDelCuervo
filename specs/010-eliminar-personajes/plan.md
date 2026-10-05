@@ -93,3 +93,6 @@ Usar Node, Wrangler local, Miniflare y Chrome/Playwright ya disponibles, con fix
 
 ## Próxima etapa
 Revisión de tasks.md y autorización de implementación. Implementación, migración local y pruebas funcionales de 010 siguen pendientes de autorización, al igual que publicación. La autorización posterior de commit/merge/push se limita a integrar entregas existentes y estos documentos, sin implementar 010.
+
+## Ajuste visual posterior aprobado
+Usuario aprueba edición en dos líneas por personaje en la misma rama 010 y autoriza documentación, código, pruebas, commit/push, integración y publicación. En escritorio: nombre, clase/subclase/especie/nivel/rango arriba; propietario, estado, notas y Eliminar debajo. Cada campo conserva su etiqueta, identidad y controles; ordenar sigue disponible. Móvil reorganiza bloques sin forzar ancho. Al guardar vuelve la tabla normal. Sustituye el diseño de edición en una única línea; no modifica persistencia, datos o migraciones. Incluir hover compartido de Añadir personaje.

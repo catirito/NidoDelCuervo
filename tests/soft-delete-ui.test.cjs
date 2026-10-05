@@ -28,7 +28,7 @@ const { randomUUID } = require('node:crypto');
   }
   const [a,b,c,d,e,f]=fixtures;const last=fixtures.at(-1);
   await visit(); assert.equal(await page.locator('.delete-button').count(),0);
-  await page.click('#edit-button'); assert.equal(await page.locator('#actions-header').isVisible(),true);
+  await page.click('#edit-button'); assert.equal(await page.locator('.editing-table').count(),1); assert.equal(await row(a.id).locator('.editor-field-label').count(),9);
   await row(a.id).locator('input[data-editor="PERSONAJE"]').fill(`${prefix} editado`);
   await button(a.id).click(); assert.equal(await button(a.id).getAttribute('aria-pressed'),'true'); assert.equal(writes.length,0);
   assert.equal(await button(a.id).evaluate(element=>element===document.activeElement),true);

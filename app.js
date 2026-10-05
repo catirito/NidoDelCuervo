@@ -2,6 +2,7 @@ import { setCreationContext, setCreationAvailable, onCharacterCreated, creationR
 import { downloadCharacters } from './export-excel.js';
 import { setCharacters, visibleCharacters, onEditingChange, isEditing, isPending, isSaving, levelControl, textControl, selectorControl, setLoading, isFieldPending, deletionControl, isDeletionPending } from './editing.js';
 import { fields, isMissing } from './records.js';
+import { fieldLabels } from './character-fields.js';
 
 const labels = { CLASS: 'clase', SUBCLASS: 'subclase', SPECIE: 'especie', RANGO: 'rango', PROPIETARIO: 'propietario', NIVEL: 'nivel' };
 const elements = {
@@ -86,16 +87,20 @@ function renderCell(value) {
 }
 
 function renderCharacters(visible) {
+  document.querySelector('.table-scroll table').classList.toggle('editing-table', isEditing());
+  elements.results.classList.toggle('is-editing', isEditing());
   document.querySelector('#actions-header').hidden = !isEditing();
   const fragment = document.createDocumentFragment();
   for (const character of visible) {
     const row = document.createElement('tr');
+    row.setAttribute('role', 'row');
     row.dataset.sourceRow = character.sourceRow;
     row.dataset.characterId = character.id;
     row.classList.toggle('pending', isPending(character.id));
     row.classList.toggle('deletion-pending', isDeletionPending(character.id));
     for (const field of fields) {
       const cell = renderCell(character[field]);
+      cell.setAttribute('role', 'cell');
       cell.dataset.field = field;
       cell.classList.toggle('field-pending', isFieldPending(character.id, field));
       if (isEditing() && ['PERSONAJE', 'NOTAS'].includes(field)) cell.replaceChildren(textControl(character, field));
@@ -107,11 +112,18 @@ function renderCharacters(visible) {
         label.textContent = 'Pendiente de guardar';
         cell.append(label);
       }
+      if (isEditing()) {
+        const label = document.createElement('span');
+        label.className = 'editor-field-label';
+        label.textContent = fieldLabels[field] ?? 'Rango';
+        cell.prepend(label);
+      }
       row.append(cell);
     }
     if (isEditing()) {
       const actions = document.createElement('td');
       actions.className = 'character-actions';
+      actions.setAttribute('role', 'cell');
       actions.append(deletionControl(character));
       row.append(actions);
     }
@@ -247,7 +259,8 @@ onEditingChange(change => {
     if (row) {
       if (change.field === 'CLASS') {
         const current = visibleCharacters().find(character => character.id === change.id);
-        row.querySelector('[data-field=SUBCLASS]').replaceChildren(selectorControl(current, 'SUBCLASS'));
+        const cell = row.querySelector('[data-field=SUBCLASS]');
+        cell.replaceChildren(cell.querySelector('.editor-field-label'), selectorControl(current, 'SUBCLASS'));
       }
       row.classList.toggle('pending', isPending(change.id));
       for (const cell of row.cells) cell.classList.toggle('field-pending', isFieldPending(change.id, cell.dataset.field));

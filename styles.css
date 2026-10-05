@@ -599,7 +599,7 @@ noscript p {
 .results-bar { flex-wrap: wrap; }
 .edit-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-left: auto; }
 #create-button, #export-button, #edit-button, #refresh-draft { min-height: 32px; padding: 5px 14px; background: var(--white); color: var(--ink); border: 1px solid #806c99; border-radius: 7px; font-size: 13px; }
-#export-button:hover:not(:disabled), #edit-button:hover:not(:disabled), #refresh-draft:hover:not(:disabled), .level-control button:hover:not(:disabled) { background: #b59bd8; color: #17131e; }
+#create-button:hover:not(:disabled), #export-button:hover:not(:disabled), #edit-button:hover:not(:disabled), #refresh-draft:hover:not(:disabled), .level-control button:hover:not(:disabled) { background: #b59bd8; color: #17131e; }
 #export-status, #draft-status { font-size: 13px; color: var(--ink); }
 #export-status:empty, #draft-status:empty { display: none; }
 .level-control { display: flex; align-items: center; gap: 6px; }
@@ -663,3 +663,36 @@ td[data-field="CLASS"], td[data-field="SUBCLASS"], td[data-field="SPECIE"] { min
 .delete-button:disabled { opacity: .5; cursor: default; }
 .deletion-action { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
 .deletion-action .pending-label { color: var(--danger); max-width: 190px; }
+
+.editing-table { display: block; min-width: 0; }
+.editing-table thead, .editing-table tbody { display: block; }
+.editing-table thead tr { display: flex; flex-wrap: wrap; gap: 4px 16px; padding: 8px 20px; }
+.editing-table th { border: 0; padding: 4px 0; }
+.editing-table th:not([data-sort]) { display: none; }
+.editing-table tbody tr { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr)) minmax(0, .65fr) minmax(0, .9fr); grid-template-areas: "name class subclass species level rank" "owner owner status notes notes actions"; gap: 16px; padding: 20px; border-bottom: 1px solid var(--line); }
+.editing-table tbody tr:last-child { border-bottom: 0; }
+.editing-table td { min-width: 0; max-width: none; padding: 0; border: 0; text-align: left; white-space: normal; overflow-wrap: anywhere; font-size: 13px; font-weight: normal; color: var(--ink); }
+.editing-table td[data-field] { min-width: 0; max-width: none; }
+.editing-table td[data-field="PERSONAJE"] { grid-area: name; }
+.editing-table td[data-field="CLASS"] { grid-area: class; }
+.editing-table td[data-field="SUBCLASS"] { grid-area: subclass; }
+.editing-table td[data-field="SPECIE"] { grid-area: species; }
+.editing-table td[data-field="NIVEL"] { grid-area: level; }
+.editing-table td[data-field="RANGO"] { grid-area: rank; }
+.editing-table td[data-field="PROPIETARIO"] { grid-area: owner; }
+.editing-table td[data-field="ESTADO"] { grid-area: status; }
+.editing-table td[data-field="NOTAS"] { grid-area: notes; }
+.editing-table .character-actions { grid-area: actions; align-self: center; }
+.editor-field-label { display: block; margin-bottom: 6px; color: var(--muted); font-size: 11px; font-weight: 650; }
+.editing-table input, .editing-table select, .editing-table textarea { box-sizing: border-box; min-width: 0; }
+.editing-table tr.pending { background: #a17ac51a; }
+.editing-table tr.pending td { background: transparent; }
+@media (max-width: 1000px) {
+  .editing-table tbody tr { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-areas: "name name level" "class subclass species" "rank owner status" "notes notes actions"; }
+}
+@media (max-width: 600px) {
+  .editing-table tbody tr { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: "name name" "class subclass" "species species" "level rank" "owner owner" "status status" "notes notes" "actions actions"; padding: 16px; }
+  .editing-table input, .editing-table select, .editing-table textarea { font-size: 16px; }
+}
+
+.results.is-editing .table-help span { display: none; }
