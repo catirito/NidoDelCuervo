@@ -13,6 +13,7 @@
 ## Colaboración orientada al aprendizaje
 - Explicar brevemente los motivos y los cambios para ayudar al usuario a aprender buenas prácticas de desarrollo con IA.
 - Trabajar con cambios pequeños y delimitados. Preguntar cuando exista una ambigüedad real sobre una decisión que afecte al comportamiento.
+- Antes de abordar un cambio, valorar la claridad del resultado esperado, las partes afectadas, las consecuencias de un error y la verificación necesaria. Proponer brevemente un proceso proporcional: corrección acotada, mejora documental o desarrollo guiado por especificaciones, explicando el motivo. Respetar la etapa y el proceso ya autorizados; cualquier simplificación del flujo del curso debe acordarse con el usuario. No repetir el análisis ni pedir otra confirmación cuando el alcance y el proceso ya estén acordados, salvo que aparezca información que los cambie.
 - Usar múltiples agentes cuando el usuario pida practicar ese flujo, con tareas delimitadas y un responsable de integración.
 
 ## Código limpio
