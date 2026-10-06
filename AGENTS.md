@@ -36,4 +36,7 @@
 - Organizar cada funcionalidad dentro de `specs/` en una carpeta con número de tres cifras y nombre descriptivo, como `001-registro-personajes/`. Cada carpeta contiene `spec.md`, `plan.md` y `tasks.md`; las rutas citadas parten de la raíz del proyecto.
 - Mantener en `AGENTS.md` las reglas estables del proyecto.
 - Consultar `Memories.md` al retomar el trabajo o iniciar una tarea que dependa de decisiones del proyecto.
-- Actualizar `Memories.md` cuando se confirme o cambie una decisión relevante, distinguiendo decisiones confirmadas de pendientes. Evitar un diario de acciones y no duplicar las reglas de `AGENTS.md`.
+- Mantener `Memories.md` como una síntesis breve del estado vigente: etapa y alcance autorizados, decisiones confirmadas y sus motivos relevantes, dudas pendientes y enlaces a los documentos necesarios para continuar. No convertirlo en un diario ni duplicar las reglas de `AGENTS.md` o el detalle de las especificaciones.
+- Actualizar `Memories.md` cuando cambie una decisión relevante o el estado del trabajo. Sustituir las afirmaciones obsoletas en lugar de acumular estados anteriores, conservando los motivos que sigan siendo útiles. Git conserva las versiones anteriores; no mantener un archivo histórico paralelo.
+- Antes de cerrar una tarea, el agente debe comprobar la coherencia de las decisiones y estados afectados entre `Memories.md`, la especificación, el plan y las tareas. Buscar y corregir las referencias que aún presenten una decisión sustituida como vigente; distinguir lo propuesto, autorizado, implementado, validado y publicado sin declarar avances sin evidencia.
+- Informar brevemente de la documentación actualizada y de cualquier contradicción que no pueda resolverse con la evidencia disponible.
