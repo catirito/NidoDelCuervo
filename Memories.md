@@ -1,195 +1,57 @@
 # Memoria del proyecto
 
 ## Propósito
-Recoger decisiones confirmadas y sus motivos para retomar el trabajo con contexto. Las reglas estables están en `AGENTS.md`; este archivo no las sustituye ni las duplica. `Memories.md` es una convención de este proyecto, no un mecanismo automático ni un estándar universal.
-
-## Etapa actual
-010 implementada y validada localmente en codex/010-eliminar-personajes. Eliminación lógica pendiente alternable durante edición; Guardar persiste campos y marca en lote atómico. GET normal/Excel excluyen eliminados; GET ids y recibos de alta permiten reconciliar sin reactivar. Pruebas API/Chrome y regresiones pasan, fixtures restaurados y Excel intacto. Evidencia en specs/010-eliminar-personajes/tasks.md. Usuario autoriza commit, push y publicación el 5 de octubre de 2026, incluida migración incremental 0006 en D1 existente; sin reimportar ni pruebas de escritura remotas. Autorización posterior confirmada: integrar esta implementación en main y subirla a GitHub.
-
-## Antecedente: entrega 009
-009 implementada y validada localmente tras autorización del usuario, en rama codex/009-anadir-personajes desde main local 85b82ec. Botón Añadir personaje junto a Editar abre modal con fábricas compartidas de controles. Obligatorios nombre/clase/especie/propietario, nivel inicial 1 modificable, restantes opcionales y rango derivado. POST /api/characters guarda personaje/catálogos/recibo en batch atómico; migración 0005 aplicada exclusivamente en D1 local. UUID y huella canónica permiten reintentar sin duplicados y recuperar el personaje actual sin sobrescribir ediciones posteriores. Borradores de edición y consulta conservados, respuesta perdida recuperable, confirmación de alta independiente del refresco. API/Chrome y regresiones pasan; pruebas restauran personajes y catálogos locales. Excel histórico conserva su hash. Evidencia en specs/009-anadir-personajes/tasks.md; vista http://127.0.0.1:8788. Entrega 009 autorizada y completada: commit 3bc888c y push de codex/009-anadir-personajes verificados; migración 0005 aplicada en D1 existente sin reimportar. Despliegue 386a89cd.nido-del-cuervo.pages.dev publicado en URL principal https://nido-del-cuervo.pages.dev, con la rama de producción existente de Pages codex/003-selector-tema. Navegador confirma 203 personajes y apertura/cancelación de modal con catálogos completos y nivel 1; sin escrituras de prueba en producción. Integración en main no solicitada. Borrador 008-anadir-personajes de otro worktree no canónico; 009 es la spec activa de alta.
-
-Ajuste posterior autorizado en la misma rama 009: rango de la modal junto al control de nivel, a su derecha, también en móvil. Ajuste aprobado, commit 5daf5e1 subido en la misma rama y publicado: despliegue 72077da1.nido-del-cuervo.pages.dev, URL principal verificada en navegador con Corvato a la derecha de nivel 1. Sin migraciones ni escrituras de prueba en D1.
-
-## Antecedente: entrega local 008
-008 implementada y revisada en local tras autorización en `specs/008-cabecera-listado/`. Rama local/GitHub `codex/008-cabecera-listado` desde main 223290a, creada antes de documentos. Decisión confirmada: título y acciones en primera fila; contador fuera de esa barra, en línea independiente a la izquierda, después de ayuda y antes de tabla, también en móvil. Conservar textos, actualizaciones y atributos accesibles. Cambio realizado solo en index.html/styles.css, sin JavaScript ni datos; contador fuera de results-bar con atributos accesibles intactos. Revisión local pasa a 1440/390/320 px en claro/oscuro, paginación, búsqueda vacía y foco por teclado. Build y diff-check pasan; carga/error no forzados. Vista http://127.0.0.1:8788 abierta. Usuario aprueba 008 y autoriza integrarla en main, con publicación expresamente aplazada. Commit y merge locales autorizados; sin push ni despliegue en esta entrega.
-
-## Antecedente: entrega conjunta 007
-Usuario autoriza integrar exportación y paginación en main y publicar el resultado (5 de octubre de 2026). Integración completada: exportación/paginación combinadas en a16b850, merge en main 5f5649e y push de main/rama exportación confirmados. Publicación Cloudflare completada: 6598ab42.nido-del-cuervo.pages.dev, URL estable https://nido-del-cuervo.pages.dev. Navegador confirma Exportar Excel y paginación 1 de 5, 50 de 203 personajes. D1 remota sin importación ni migración adicional. Exportación y paginación conservan sus carpetas 007 existentes como antecedentes, sin renumeración retrospectiva. La paginación carga solo una página: exportar obtiene todos los personajes guardados mediante GET pageSize=all, sin filtros ni búsqueda y con el orden activo, y genera el archivo exclusivamente en el navegador. Sustituye el plan anterior de snapshot completo sin solicitudes adicionales. Deshabilitar exportación durante edición/carga/error/generación; una vista filtrada vacía no impide exportar el registro completo.
-
-Paginación ya publicada en su rama: a495be8; migración 0004 y name_search inicializados en producción. No reimportar personajes ni repetir la inicialización al publicar. Conserva tamaños 20/50/100/Todos y borradores entre páginas.
-
-004–006 implementadas, validadas localmente, publicadas en Cloudflare con D1 e integradas en main mediante commit 80c3810. README breve en inglés y URL actual. Acceso GitHub corregido con credencial de catirito; push normal comprobado. Estas decisiones sustituyen las referencias históricas a publicación e integración pendientes.
-
-Decisiones de 004: GET characters y PATCH characters/batch; solo NIVEL editable en lote. «Editar» habilita menos/más, sin clave, sin escrituras intermedias; «Guardar» envía solo UUID, versión y nivel final modificado. Paso de uno en los controles, intervalo 1–20, diferencia final de varios niveles permitida. Sin sesiones ni autenticación por decisión expresa del usuario. Rango automático: 1–2 Corvato, 3–4 Cuervo blanco, 5–8 Cuervo gris, 9–12 Cuervo negro, 13–16 Cuervo de ébano y 17–20 Cuervo de ónice. Conflictos detectados por versión; atomicidad completa del lote confirmada: si falla un cambio, no se guarda ninguno.
-
-Importar ocho campos intactos y calcular/corregir rango desde nivel. Revisión local: 203 niveles enteros 1–15 y tres rangos incompatibles ignorando mayúsculas. D1 será fuente activa; Excel intacto como histórico inicial no público. Copia privada adicional pendiente de ubicación; no reimportar en despliegues. Time Travel gratuito de siete días, sin nuevos backups programados. Plan gratuito y sin tests en producción. D1 local importado con 203 registros; importación fiel de ocho campos y rango derivado comprobada. API local pasa validación, umbrales, conflictos, atomicidad y concurrencia. Chrome local verifica borrador, un envío por lote, recarga, recuperación de conflicto/respuesta perdida, consulta, tema y móvil. Niveles originales restaurados tras pruebas; versiones locales avanzadas por validación. Excel conserva su hash. No se han creado recursos remotos de 004.
-
-Decisiones futuras de 006 conservadas: clase/subclase/especie con selectores del Excel y opción de texto nuevo; subclase filtrada por clase, nuevas subclases asociadas a la seleccionada. Reglas de textos y estado en 005, transición de clase incompatible y detalles de catálogos en 006 pendientes de clarificación al retomarlas.
-
-La especificación 003 está implementada, validada, aprobada por el usuario y publicada en el Site privado existente. La rama `codex/003-selector-tema` está publicada en GitHub y continúa separada de `main`, cuya integración no está autorizada. Documentos en `specs/003-selector-tema/`; entrega confirmada al final de esta memoria.
-
-La especificación 002 está implementada, validada, revisada por el usuario e integrada en `main` mediante el PR https://github.com/catirito/NidoDelCuervo/pull/1. El rediseño púrpura/plateado con logo nuevo y fuentes locales está publicado en https://nido-del-cuervo.catirito.chatgpt.site, conservando acceso privado. La rama `codex/002-diseno-visual` sigue existente; no se ha solicitado su eliminación.
-
-## Especificación 003: selector de tema
-Decisiones confirmadas: un botón arriba a la derecha alternará entre aspecto claro y oscuro. La elección manual se recordará en próximas visitas del mismo navegador y tendrá prioridad sobre la configuración del sistema. Cuando no exista una elección manual guardada se usará la configuración del sistema y se seguirán automáticamente sus cambios mientras la web esté abierta. Una elección manual impide que esos cambios sustituyan el tema elegido. Se conserva la funcionalidad de consulta y la identidad de la web.
-
-Clarificación confirmada: el tema claro tendrá fondo gris muy claro, texto oscuro y los mismos acentos púrpura/plateados. Durante la revisión, el usuario sustituyó el texto visible por un botón solo con icono: oscuro activo → luna; claro activo → sol. Esta preferencia confirmada sustituye la semántica anterior de icono de destino. Presentación final confirmada: icono discreto de 16 px, sin borde permanente, fondo marcado ni contenedor decorativo; área invisible de interacción de 44 × 44 px. Hover mediante cambio de color y foco visible al teclado. Se conservan los nombres accesibles dinámicos «Tema claro» y «Tema oscuro» mediante texto visualmente oculto. La clarificación queda resuelta; los valores cromáticos exactos y el dibujo de los iconos se concretarán dentro de esta dirección en el plan autorizado como propuestas ajustables tras comprobar contraste. No se han acordado nuevos controles. El plan aprovecha las variables CSS existentes y prevé `theme.js` separado de la consulta, preferencia manual en `localStorage` y seguimiento del sistema mediante `matchMedia`, con tolerancia a almacenamiento bloqueado. La implementación autorizada está completada y validada; evidencia y límites en `specs/003-selector-tema/tasks.md`. Chrome comprobó ambos temas, prioridad/persistencia, seguimiento automático, almacenamiento bloqueado, teclado, consulta y móvil a 1440, 390 y 320 px; prueba de datos y hash del Excel pasan. No se ha probado un lector de pantalla real, todos los navegadores ni un cambio real del sistema operativo. Con almacenamiento bloqueado no se puede persistir entre visitas. Revisión del usuario pendiente; commits, push y publicación del Site siguen sin autorización.
-
-## Decisiones confirmadas
-- El objetivo pedagógico es aprender desarrollo con IA paso a paso mediante una web simple; se avanza en etapas pequeñas para comprender cada decisión.
-- Se ha elegido HTML, CSS y JavaScript sin frameworks y en archivos separados, para mantener clara la separación entre estructura, presentación y lógica.
-- `Registro de personajes.xlsx` es la única fuente de datos y se utiliza solo en lectura, para conservar el registro original.
-- El usuario prefiere código autoexplicativo sin comentarios; la intención se expresa con nombres y estructura, y los motivos se documentan fuera del código.
-- Se adopta la secuencia del curso: constitución → especificación → clarificación → planificación → tareas → implementación → validación. `AGENTS.md` recoge reglas operativas y principios que contribuyen a la constitución; esta memoria conserva decisiones. La secuencia es la metodología elegida para el proyecto, no una exigencia universal de SDD.
-- Se ha elegido la Frontend Skill de OpenAI como orientación para futuras tareas de diseño visual, con alcance exclusivo de este proyecto. Instalación local verificada el 1 de octubre de 2026 en `.agents/skills/frontend-skill/`, con `SKILL.md`, `agents/openai.yaml` y `LICENSE.txt`, sin dependencias obligatorias. Procede de `openai/skills`, ruta `skills/.curated/frontend-skill`, commit `30444aed500c00c85294d12074f6e3ee794f808a`, anterior a su retirada del catálogo el 23 de abril de 2026. Fuente: https://github.com/openai/skills/tree/30444aed500c00c85294d12074f6e3ee794f808a/skills/.curated/frontend-skill. Se conserva la versión oficial sin modificar; su orientación se adapta a las restricciones de `AGENTS.md`. Su aparición en el catálogo de esta sesión está verificada; la presentación de registro está implementada y verificada visualmente.
-
-- La web mostrará una tabla de personajes de D&D con una presentación bonita y estructurada, permitirá ordenar y filtrar, y tendrá un logo de cuervo o de Nido del Cuervo sobre el menú. Los campos solicitados y las dudas están recogidos en `specs/001-registro-personajes/spec.md`.
-- Tras conocer los encabezados, el usuario confirmó mostrar los nueve campos de la hoja principal: `PERSONAJE`, `CLASS`, `SUBCLASS`, `SPECIE`, `NIVEL`, `RANGO`, `ESTADO`, `PROPIETARIO` y `NOTAS`. Esta decisión no incluye mostrar los catálogos auxiliares como tablas ni rellenar datos vacíos.
-- Se ha autorizado elaborar el plan manteniendo las decisiones no resueltas como pendientes. Los detalles menores se resolvieron durante la implementación autorizada; el comportamiento actual está en `specs/001-registro-personajes/spec.md` y `README.md`.
-- El usuario solicita controles básicos de filtrado y ordenación por clase, subclase, especie, rango y propietario, sin filtros avanzados. No ha solicitado filtros adicionales de nivel o estado.
-- El usuario confirma lógica AND entre todos los filtros activos, incluida la búsqueda parcial por `PERSONAJE`: cada fila debe cumplir todos los criterios.
-- El filtro de nombre debe actualizarse inmediatamente desde la primera letra y mostrar nombres que contengan el texto en cualquier posición, sin botón obligatorio y sin buscar en otros campos. Filtrar y ordenar solo cambia la vista, no el Excel.
-- El orden inicial será por `NIVEL` numérico descendente, con los niveles más altos primero, siguiendo la intención de orden del Excel.
-- La búsqueda parcial inmediata por `PERSONAJE` no distingue mayúsculas/minúsculas, confirmado por el usuario; se mantiene la combinación AND.
-- Está confirmado servir web y Excel juntos como página estática; se ha elegido Sites por petición del usuario, con acceso privado inicial.
-- La carpeta está vinculada mediante Git local con rama inicial `main` y `origin` en `https://github.com/catirito/NidoDelCuervo.git`. El commit inicial remoto con `README.md` se integró por avance rápido preservando los archivos locales. El usuario autorizó commit y push de la solución; fetch por transporte Git ya está verificado.
-- En empates de `NIVEL` se conservará el orden original de las filas del Excel, confirmado por el usuario.
-- La lectura será directa del XLSX mediante SheetJS Community Edition, en una copia local con versión fija y licencia, sin framework. La biblioteca está incorporada como versión 0.20.3, obtenida del repositorio oficial con licencia; procedencia y hashes en `vendor/README.md`.
-- El Excel se cargará automáticamente al abrir la web desde una ruta relativa servida junto a ella, sin selector manual. Se necesitará servir web y Excel por HTTP local o hosting estático para `fetch`, sin depender de `file://`. El comando HTTP local probado está en `README.md`; el despliegue en Sites está completado.
-- La Frontend Skill ya aparece en el catálogo de esta sesión, verificado el 1 de octubre de 2026. La presentación de la web está implementada y revisada en escritorio y móvil.
-- El usuario autorizó crear un logo temporal original: `assets/logo-cuervo.svg`, monocromo oscuro sobre fondo transparente, fácil de reemplazar. Asset creado y sintaxis/verificación visual comprobadas a 256 y 32 píxeles. El logo está integrado y la tarea de presentación está completada con revisión de la web.
-
-## Hallazgos verificados
-- El Excel contiene 203 registros en `Nido del Cuervo` y dos catálogos ocultos: `Species` (179 filas) y `Classes` (149 filas). Los encabezados y la correspondencia con los campos solicitados están documentados en `specs/001-registro-personajes/spec.md`.
-- “Detalles personales” no es un encabezado del Excel; la selección se resolvió confirmando los nueve campos de la hoja principal. Hay vacíos en clase, subclase, estado y notas, y el nombre de personaje no es una clave única.
-- `RANGO` combina 199 fórmulas con resultados guardados y 4 valores directos. Se leen sus resultados guardados y valores directos, sin recalcular ni sobrescribir la fuente. Los detalles y la limitación de la fórmula base constan en `specs/001-registro-personajes/spec.md`.
-- La inspección no encontró hipervínculos ni enlaces externos. Las filas ocultas de la hoja principal no contienen registros adicionales.
-
-## Detalles resueltos en implementación
-- Borrar el nombre retira solo ese criterio; los filtros se combinan con AND. La búsqueda conserva diferencias de acentos.
-- Selectores con valores reales no vacíos; vacíos visibles como raya accesible “Sin dato”, al final de las ordenaciones. No se completan datos.
-- Rango en orden alfabético español, sin inferir jerarquía de juego. Solo se muestra la hoja principal, sin enriquecimiento de catálogos.
-- Cada recarga vuelve a solicitar el Excel sin caché ni polling. El responsable de datos actualiza el fichero servido fuera de la web.
-- Menú mínimo con enlaces internos a registro y filtros. Presentación de papel/tinta, logo provisional y tabla desplazable en móvil.
-
-## Verificación y límites
-Prueba de datos con Node.js y Excel real: 203 registros y nueve campos fieles, vacíos, nombres repetidos, fórmulas guardadas, valores directos, orden numérico estable, búsqueda y filtros AND. Chrome verificó interacción, teclado, móvil, errores y recuperación, sin errores JavaScript; vistas revisadas a 1440 × 1000 y 390 × 844. El Excel conserva SHA256 `8ca0c7869c145d556ec22d40554c55fe5b3236a86452d65668c7b43a0bce528f`.
-
-No se ha probado un lector de pantalla real ni todos los navegadores; las fórmulas no se recalculan. El despliegue en Sites está completado. No se ha definido un flujo con múltiples agentes.
-
-La cuenta de las credenciales Git del terminal no tiene permiso de push sobre `catirito/NidoDelCuervo`; la conexión del plugin GitHub sí confirma permiso de escritura y se utiliza para publicar conservando el historial remoto. No se modifican credenciales ni configuración global.
-
-## Publicación online
-El Site asociado es `appgprj_6abe80aea354819180edc5e0c3f12bab`, registrado como Nido del Cuervo. La configuración se conserva en `.openai/hosting.json`; web y Excel se empaquetan juntos sin modificar la fuente. El Site comienza privado para la cuenta del usuario. GitHub contiene la solución publicada en el commit `033063a9a02c5c53607e7bdd657c22e376c1f5e4`.
-
-Publicación confirmada por Sites el 1 de octubre de 2026: https://nido-del-cuervo.catirito.chatgpt.site (privada). Despliegue `appgdep_6abe813508248191a3761ee6e892e3c7`, versión `appgprj_6abe80aea354819180edc5e0c3f12bab~appgver_c3b4386584388191a0104d0397182743`, fuente `c8a82905ee7628bd99b6c1b1598cc262764cd36b`. La copia de publicación en `/private/tmp/nido-sites-source` usa el repositorio de Sites; `origin` de la carpeta principal sigue en GitHub. Para futuras publicaciones, reutilizar el project_id y recuperar la fuente de Sites si esa copia temporal ya no existe.
-
-## Organización de documentos
-El usuario confirma una carpeta por funcionalidad dentro de `specs/`, con número correlativo de tres cifras y nombre descriptivo. El registro de personajes queda en `specs/001-registro-personajes/`, con `spec.md`, `plan.md` y `tasks.md`. Se conservaron los contenidos y se actualizaron las referencias; las rutas se expresan desde la raíz del proyecto.
-
-## Nueva especificación de diseño
-La funcionalidad 002 trata la mejora del diseño visual. Dirección confirmada: fantasía medieval, colores oscuros inspirados en D&D Beyond. El primer paso se centra en la temática de colores; el usuario solicitó una propuesta de paleta. Se propuso carbón, pizarra y blanco hueso; el usuario confirmó sustituir el rojo por dorado. También pide un estilo más moderno y suave con esquinas redondeadas. Los colores exactos y el tratamiento concreto siguen pendientes de clarificación. Los colores concretos y el resto del alcance están pendientes de clarificación. No se ha modificado la web.
-
-El usuario confirma como regla estable que cada nueva especificación tenga su propia rama desde el inicio y durante todas sus etapas. Regla incorporada en `AGENTS.md`; la especificación 002 continúa en su rama de diseño y entra en clarificación por autorización explícita.
-
-Clarificación de la especificación 002: retirar el total de personajes de arriba a la derecha y el menú actual, dando acceso más directo a la tabla. El usuario no solicita otras reorganizaciones por ahora. Se conservan búsqueda, filtros, ordenación, nueve campos y estados de consulta; el estado de resultados junto a la tabla es distinto del contador de cabecera. El plan y las tareas del rediseño todavía no se han creado.
-
-Etapa actual de la especificación 002: planificación autorizada y elaborada en `specs/002-diseno-visual/plan.md`. Incluye tema oscuro/dorado, radios suaves, retirada conjunta del contador en HTML y sus referencias JavaScript, retirada del menú, cabecera compacta y validación de contraste y comportamiento. Tareas e implementación pendientes; la web publicada conserva el diseño actual.
-
-Etapa actual de la especificación 002: tareas desglosadas por autorización del usuario en `specs/002-diseno-visual/tasks.md`. Siete tareas pendientes abarcan paleta, retirada conjunta de menú/contador y referencias, composición compacta, bordes suaves, validación funcional, revisión visual y entrega en la rama de diseño. Implementación todavía no iniciada.
-
-Implementación de la especificación 002 autorizada: hacer commits locales separados por cambio y no hacer push. El usuario revisará primero la web en local. No actualizar el Site durante esta revisión.
-
-Validación final de diseño 002: prueba de datos existente y Chrome pasan, Excel intacto, nueve campos conservados, sin menú ni contador de cabecera, contraste comprobado, teclado y móvil operables. Los cambios se han separado en commits locales. Revisión local en http://127.0.0.1:8765; sin push ni despliegue.
-
-Ampliación tipográfica 002 autorizada e implementada: Cinzel para nombre/títulos y Roboto Flex para tabla/controles. D&D Beyond usa Majesty y Roboto Flex en su portada inspeccionada; Cinzel se aprueba como aproximación temática. Copias originales de Google Fonts con licencias OFL 1.1 y procedencia en `assets/fonts/README.md`. Ambas cargan localmente sin solicitudes externas; Chrome verifica comportamiento y ajuste a 320, 390 y 1440 px. Cambio en commit separado; continúa la prohibición de push y despliegue hasta revisión del usuario.
-
-Revisión de identidad autorizada: logo aportado en `/Users/bruno/Downloads/cuervos1.png`, sustituir logo y adaptar el dorado a púrpura con tonos plateados. ImageGen prepara fondo exterior transparente, conservando cuervo, aro violáceo y disco plateado. `assets/logo-cuervo.png` reemplaza el SVG en cabecera y favicon, sin modificar el original del usuario. Nueva paleta validada por Chrome con contraste y comportamiento; continúa sin push ni despliegue.
-
-## Entrega confirmada de diseño 002
-PR integrado con merge `1f9d7346f350885958fe7b34e5835f1a256bacb4`, conservando los once commits separados. GitHub impidió una aprobación formal del propio autor; el usuario aprobó la integración en el chat. Despliegue de Sites `appgdep_6abe918e50508191a3cc339651fa1e86` confirmado como succeeded, versión `appgprj_6abe80aea354819180edc5e0c3f12bab~appgver_ec824e59bc3c819184a70e22779b14d0`, fuente de Sites `34959e7482ed081e8551c3f1d669f854e5a101b8`. Excel intacto; publicación privada. Las referencias anteriores a revisión local pendiente y prohibición de push describen etapas anteriores y han quedado superadas por esta autorización.
-
-Entrega 003 autorizada: el usuario aprobó el resultado final y autorizó commit, push de `codex/003-selector-tema` y despliegue al Site privado existente. No autorizó integración en `main`. Esta decisión supera las referencias anteriores a revisión pendiente y prohibición de publicación. Entrega confirmada el 3 de octubre de 2026: rama publicada con commit `ea3048995809c43b9afb7819adc8416c714bc3ef`, sin integrar en `main`. Sites confirmó `succeeded` en https://nido-del-cuervo.catirito.chatgpt.site, conservando acceso privado. Despliegue `appgdep_6ac1587b638c8191b742aaa414717f92`, versión `appgprj_6abe80aea354819180edc5e0c3f12bab~appgver_17ea56251e288191808f785ce13a1b18`, fuente de Sites `1d3026eda0b04ca25bec80831800b3d773a0b9dd`. Excel intacto. Las notas previas de revisión pendiente describen etapas ya superadas.
-
-
-## Publicación pública en Cloudflare
-El usuario autorizó publicar la versión actual en su cuenta de Cloudflare y usar la dirección gratuita del servicio. Publicación confirmada y verificada el 3 de octubre de 2026: https://nido-del-cuervo.pages.dev. Proyecto Pages `nido-del-cuervo`, producción asociada a `codex/003-selector-tema`, sin integración en `main`. Despliegue `f4680efa-35e6-4ac5-bec6-449e8eb27644`, estado `success`; dirección de versión https://f4680efa.nido-del-cuervo.pages.dev. El Site privado anterior sigue existente.
-
-La publicación usa Direct Upload y no despliega automáticamente desde GitHub. Para evitar distribuir el libro completo, `scripts/build-cloudflare.mjs` lee el Excel original con la biblioteca y el parser existentes, exporta únicamente los nueve campos del registro más `sourceRow` para conservar los empates, y prepara una copia separada con `characters.json`. No incluye el XLSX, sus hojas ocultas, documentos del proyecto ni `.git`. Solo en esa copia adapta la carga a JSON y retira la biblioteca del navegador. HTML, CSS y JavaScript originales siguen sin cambios. El Excel permanece como única fuente de datos, intacto y de solo lectura. Los datos visibles de personajes, propietarios y notas son públicos en esta URL; no hay control de acceso. Actualizar el Excel exige regenerar y volver a publicar; la web pública consulta la copia del último despliegue.
-
-Comando de preparación probado: `node scripts/build-cloudflare.mjs /private/tmp/nido-cloudflare-reproducible-check`, con una carpeta de salida nueva fuera del proyecto. Requiere Node y no instala dependencias. Se compararon los doce archivos generados con la copia desplegada: idénticos. Wrangler 4.147.0 ya estaba disponible y se utilizó con el Node del runtime de Codex porque el Node global es antiguo. Publicación probada: `wrangler pages deploy <carpeta-preparada> --project-name nido-del-cuervo --branch codex/003-selector-tema`; la carpeta debe contener exclusivamente la salida del script. No publicar la raíz del repositorio. Direct Upload no puede convertirse en integración Git dentro del mismo proyecto, según Cloudflare.
-
-Validación: prueba existente `node tests/records.test.mjs` pasa y conserva el hash del Excel. Chrome comprobó en localhost y en la URL pública: 203 registros, búsqueda, filtros, ordenación, cambio de tema y persistencia, móvil a 390 px y ausencia de errores JavaScript. El XLSX, `AGENTS.md`, `Memories.md` y `.git/config` devuelven HTTP 404. No se han comprobado todos los navegadores ni lectores de pantalla. El script y esta documentación quedan como cambios locales sin commit ni push.
-
-El usuario autorizó añadir instrucciones para robots y publicar el cambio. Publicado el 3 de octubre de 2026 en el despliegue `f6dc9217.nido-del-cuervo.pages.dev`, manteniendo la URL principal. `robots.txt` contiene `User-agent: *` y `Disallow: /`; `_headers` aplica `X-Robots-Tag: noindex, nofollow, noarchive` a todas las rutas. El script de preparación incluye ambos archivos en futuras publicaciones. Verificados HTTP 200, contenido de robots.txt y cabecera en portada, robots.txt y characters.json tanto en URL principal como de versión; se mantienen los 203 registros. Estas instrucciones no restringen el acceso público ni garantizan desindexación: robots.txt bloquea rastreo y puede impedir que un buscador lea noindex; una URL enlazada desde fuera aún podría aparecer sin contenido. No se ha comprobado la presencia actual del sitio en índices. Cambios locales sin commit ni push.
-
-Clarificación 005: fuente real de estado Trotamundos, Jubilado, Muerto o vacío; sin nombres vacíos. Máximos actuales 38 caracteres en nombre y 27 en notas, observaciones sin establecer límites. Pendientes tipo de control, valores nuevos/vacíos, límites y normalización. Reutilizar PATCH batch atómico de 004.
-
-Decisión confirmada de 005: editar PROPIETARIO con selector de valores existentes y opción de introducir un propietario nuevo. Cambio local hasta Guardar, mismo PATCH atómico; tras guardar el nuevo valor queda disponible en selectores. Pendientes reglas de vacío, tamaño y deduplicación. La exclusión de propietario de 004 sigue vigente y no limita esta ampliación de 005.
-
-Plan 005 elaborado: sin nueva tabla de propietarios ni migración; ampliar PATCH atómico a NIVEL/PERSONAJE/NOTAS/ESTADO/PROPIETARIO. Propietario como texto en characters confirmado. Controles/vacíos/límites, estado con opciones nuevas, comparación de variantes de propietario y filas que dejan de cumplir filtros siguen como propuestas del plan, no decisiones confirmadas.
-
-Clarificación confirmada de 005: ESTADO usa selector con valores existentes, Sin estado y opción de añadir nuevo texto. Guarda solo con el lote; los nuevos valores quedan disponibles desde los registros, sin nueva tabla. Sustituye la propuesta inicial de estados cerrados. Longitud y normalización pendientes.
-
-Clarificación confirmada de 005: nombre obligatorio; notas, estado y propietario pueden quedar vacíos. Límites y normalización siguen pendientes.
-
-Límites confirmados de 005: 50 caracteres en PERSONAJE, ESTADO y PROPIETARIO; 2.000 en NOTAS. Sustituyen la propuesta de 100. Normalización y tratamiento de variantes siguen pendientes.
-
-Normalización confirmada de 005 para ESTADO/PROPIETARIO: quitar espacios exteriores y reutilizar grafía de valor existente cuando solo difiere en mayúsculas. No fusionar ni modificar otros registros.
-
-Filtros en 005 confirmado: si editar una fila hace que deje de cumplir el filtro/búsqueda activos, mantenerla visible durante edición y reaplicar tras Guardar; no ocultarla mientras se escribe ni descartar su borrador.
-
-Boceto 005 preparado en specs/005-edicion-datos-personajes/sketch/, simulación separada sin escrituras a API/D1. Controles de nombre, notas, estado y propietario, opciones nuevas con input bajo selector y niveles compactos. Capturas desktop/móvil verificadas con 203 filas y sin errores JS; revisión visual del usuario pendiente. Filtros no conectados en el boceto.
-
-Diseño de 005 aprobado por el usuario: boceto con edición dentro de celdas, nombre/input, notas/textarea, estado y propietario/selectores con campo debajo para valor nuevo, niveles compactos. Siguiente etapa: desglose de tareas, pendiente de autorización; implementación todavía no autorizada.
-
-Etapa 005: tareas autorizadas y desglosadas en seis bloques en tasks.md: validación, PATCH atómico, borrador por campos, controles aprobados, guardado/reconciliación y validación/entrega local. Todas pendientes; no hay autorización de implementación, commit, push o publicación de 005.
-
-Entrega 005: edición de PERSONAJE/NOTAS/ESTADO/PROPIETARIO junto a NIVEL en PATCH atómico. Sin tablas adicionales; validación compartida, límites por puntos de código Unicode y cuerpo 3 MiB. Pruebas API y navegador local pasan, restaurando datos de partida y conservando Excel. Cursor estable, filas fuera del filtro retenidas hasta Guardar, opciones nuevas/canónicas y recuperación de conflictos/respuesta perdida. Commit local autorizado; push/publicación no autorizados. Próximo trabajo: clarificación 006.
-
-Decisiones confirmadas de 006: cambiar clase vacía subclase incompatible y permite seleccionar otra antes de guardar. Clases/subclases tendrán tablas de catálogo relacionadas en la misma D1; esquema concreto pendiente del plan. No crear una base remota nueva en esta etapa.
-
-Carga inicial 006 confirmada: poblar clases y subclases con los valores/relaciones actuales del Excel, comprobando los usados en personajes y sin inventar asociaciones. La inspección encontró dos combinaciones de personajes ausentes del catálogo comparando sin mayúsculas y con trim; conciliación pendiente antes de migrar.
-
-Conciliación 006: el usuario confirma Ranger–Phantom válido para Lucien, además de Rogue–Phantom; añadir relación Ranger–Phantom y permitir mismo nombre de subclase asociado a distintas clases. Ágios (fila 49), Barbarian–Oath of Devotion, parece error según usuario; confirmar campo/corrección antes de modificar D1. No modificar Excel.
-
-Ágios 006: usuario confirma corregir CLASS a Paladin y conservar SUBCLASS Oath of Devotion. Aplicar en D1 durante implementación, conservando UUID/resto de datos y comprobando estado actual para no pisar ediciones; Excel histórico intacto. No se ha modificado D1 todavía en clarificación.
-
-Clarificación 006 confirmada: CLASS, SUBCLASS y SPECIE admiten Sin dato/null y máximo 50 caracteres. Subclase no vacía depende de clase seleccionada; vaciar clase vacía subclase. Normalización/deduplicación pendiente.
-
-Normalización 006 confirmada: quitar espacios exteriores y reutilizar grafía existente si solo cambia capitalización. Subclases comparadas por clase; mismo nombre bajo clases distintas permitido. No fusionar por nombre global ni modificar el Excel.
-
-Especie 006: usuario decide mantener SPECIE como texto en characters, igual que estado/propietario; no crear tabla ni catálogo independiente de especies. Selector derivado de valores existentes en personajes más opción nueva; persiste con el personaje, disponible mientras se use. Sustituye propuesta inicial de catálogo de especies y opciones independientes del uso.
-
-Corrección posterior de especie 006: usuario exige mostrar siempre todas las especies, incluidas las no usadas. Sustituye selector derivado solo de characters; hace falta lista independiente de opciones. SPECIE puede seguir en characters, pero almacenamiento de catálogo independiente queda por confirmar frente a preferencia anterior de no crear tabla.
-
-Especies 006 confirmado finalmente: tabla sencilla de catálogo en la misma D1, selector con todas las opciones aun sin uso, carga desde Excel y opciones nuevas persistentes al guardar. SPECIE sigue como dato del personaje. Sustituye preferencia anterior de no crear tabla y elimina la duda de almacenamiento independiente.
-
-Entrega local 006: catálogos classes/subclasses/species 15/150/179, UUID y claves normalizadas únicas, FK subclase/clase. GET devuelve catálogos completos; PATCH catalogAdditions y fields en una transacción con guardia conjunta de versiones, resolución autoritativa de grafía y rollback comprobado. Ranger/Rogue–Phantom separados; Ágios CLASS Paladin corregida conservando UUID/resto de campos. Carga inicial protegida/repetición rechazada; no reimportar al preparar/desplegar. API y UI locales pasan, incluida concurrencia, conflictos sin altas parciales, opciones sin uso, respuesta perdida y clase remota cambiada durante borrador de subclase. Datos de partida restaurados salvo corrección autorizada; Excel intacto. Sin commit, push ni publicación de 006.
-
-## Publicación conjunta 004–006 — 4 de octubre de 2026
-
-El usuario autoriza commit y publicación de todo. Se crea D1 `nido-personajes` (3107c487-41dd-4cb0-a4e6-6e46027d9c40) y se carga una sola vez el snapshot local validado, conservando UUID, ediciones y catálogos. Configuración remota en `wrangler.production.jsonc`; la local sigue aislada en `wrangler.jsonc`. Publicación en el proyecto Pages existente, sin integrar en main. No se ejecutan tests en producción. El Excel continúa intacto.
-
-## Entrega 007 autorizada
-
-El usuario autoriza commit, push de codex/007-paginacion y publicación en Cloudflare. No autoriza integración en main en esta entrega. Aplicar únicamente migración 0004 y backfill protegido desde datos actuales de D1; no reimportar personajes. Mantener prohibición de tests en producción.
-
-Publicación 007: Wrangler confirmó despliegue completo y D1 confirmó carga transaccional de claves. Exportación SQL completa rechazada por Cloudflare (authentication code 10000); copia privada de personajes obtenida mediante SELECT en .local/production-pagination-snapshot.json. Excel intacto y archivos privados excluidos del paquete.
-
-## Entrega conjunta de paginación y exportación — 5 de octubre de 2026
-Aprobación expresa de merge y publicación. Main y codex/007-exportacion-excel subidas a GitHub; titularidad verificada con conector autenticado como catirito y repo catirito/NidoDelCuervo. Publicación usa la rama de producción existente de Pages codex/003-selector-tema, con código de main 5f5649e; no cambia la rama de Git. Paquete público separado, con SheetJS/licencia y sin Excel histórico ni documentos internos. D1 existente conservada. Navegador de la app confirma la web publicada con Exportar Excel, 203 personajes y cinco páginas. Acceso HTTP desde Python devolvió 403; no se usa como evidencia de fallo de despliegue ni de 404 de rutas sensibles. Esas exclusiones están verificadas en el paquete local.
-
-## Integración autorizada de entregas — 5 de octubre de 2026
-Usuario autoriza integrar todas las ramas pendientes en main y subirlas a GitHub, incluidos spec/plan 010. Main conserva la implementación publicada de 009 y su ajuste de rango, 008 cabecera/listado y documentación 010. Merges locales sin conflictos; comprobación de ascendencia de todas las refs de entregas pasa. Regresiones records y export-excel pasan y git diff --check correcto. No se implementa eliminación ni se despliega o modifica D1 en este paso.
-
-Publicación completada el 5 de octubre de 2026: migración 0006 aplicada en D1 existente; despliegue dbde1008.nido-del-cuervo.pages.dev con código 619ad4a y URL estable https://nido-del-cuervo.pages.dev. Chrome confirma 204 personajes activos, 50 acciones Eliminar en la página de edición, sin errores JavaScript ni escrituras de prueba. Excel histórico, AGENTS.md, Memories.md y .git/config devuelven 404. Push de rama 010 completado; sin integración en main.
-
-Integración posterior 010 autorizada: implementación y evidencias de publicación integradas en main; conflicto exclusivamente documental resuelto conservando antecedentes. Código publicado sin cambios adicionales; no requiere nuevo despliegue.
-
-Ajuste local posterior en rama 010: Añadir personaje comparte la regla hover de Exportar Excel/Editar, incluyendo :not(:disabled). Chrome local verifica claro/oscuro, hover idéntico a Editar, disabled sin hover y foco visible. Build y diff-check pasan. Autorización posterior confirmada para completar código, pruebas, push y publicación.
-
-Ajuste de edición aprobado: dos líneas por personaje en escritorio, campos principales arriba y propietario/estado/notas/Eliminar debajo, etiquetas visibles y ordenación conservada. Disposición adaptable en móvil, vuelta a tabla normal al guardar. Chrome verifica ausencia de desbordamiento horizontal a 1440/1280/1024/390/320 px en claro/oscuro y capturas revisadas. Regresiones soft-delete-ui, catalogs-ui y create-character-ui pasan con fixtures restaurados. Build/diff-check pasan. Sin cambios de datos ni migraciones nuevas.
-
-Ajuste visual publicado y verificado el 5 de octubre de 2026: despliegue 33c3ec76.nido-del-cuervo.pages.dev, código main 9a66185, URL estable https://nido-del-cuervo.pages.dev. Chrome en producción confirma edición adaptable sin desbordamiento horizontal a 1440/1280/1024/390/320 px en claro/oscuro, vuelta a tabla normal, hover compartido y rutas privadas404; cero escrituras de prueba y errores JavaScript. Rama010 y main integradas y subidas, sin cambios de datos ni nuevas migraciones.
+Síntesis del estado vigente y de las decisiones necesarias para continuar. Las reglas estables están en `AGENTS.md`; el detalle funcional y las evidencias están en `specs/`. Git conserva las versiones anteriores. Esta memoria es una convención del proyecto, no un mecanismo automático.
+
+## Estado y alcance actuales
+- Las funcionalidades hasta 010, incluidos alta, eliminación lógica y edición adaptable en dos líneas, están implementadas e integradas en `main`. La evidencia de la última publicación del producto quedó registrada en `14306d7`.
+- Última publicación documentada: 5 de octubre de 2026, código `9a66185`, despliegue `33c3ec76.nido-del-cuervo.pages.dev`, URL estable https://nido-del-cuervo.pages.dev. La comprobación de producción registrada está en `specs/010-eliminar-personajes/tasks.md`; no equivale a una nueva comprobación remota en cada lectura de esta memoria.
+- Trabajo autorizado actual: corrección documental de `AGENTS.md` y `Memories.md` tras la revisión del proceso con IA. Corrección revisada por el usuario; commit, merge y push del bug autorizados por separado. Sin autorización de despliegue ni cambios de producto. No hay una nueva especificación funcional autorizada. La propuesta de instrucción sobre proporcionalidad sigue como borrador y queda fuera de esta entrega. Ejemplo docente de esta corrección en `.specify/bugs/memoria-estado-vigente/`: `assessment.md`, `fix.md` y `test.md`; flujo aplicado manualmente, sin instalar Spec Kit.
+
+## Arquitectura y datos vigentes
+- HTML, CSS y JavaScript separados; Pages Functions sirve la API y D1 es la fuente activa de consulta y edición. La web no lee el Excel histórico ni un snapshot `characters.json` como fuente activa.
+- `Registro de personajes.xlsx` conserva los 203 registros de la importación inicial; no representa el total actual de D1 ni un límite funcional. Permanece privado y de solo lectura. No reimportar personajes ni catálogos al desplegar: se perderían cambios posteriores.
+- Los personajes tienen UUID estable, versión de concurrencia y `sourceRow` para desempates. El nombre no es una clave única. El rango se calcula desde el nivel, no desde las fórmulas históricas del Excel.
+- Clases, subclases y especies tienen catálogos propios en la misma D1; sus opciones permanecen disponibles aunque no estén en uso. Las subclases pertenecen a una clase. Estado y propietario se obtienen de valores guardados en personajes, sin catálogos independientes.
+- La consulta y escritura son públicas, sin cuentas ni autenticación, por decisión expresa del usuario. «Editar» cambia el modo de interfaz; no constituye control de acceso. Las instrucciones para robots tampoco restringen acceso.
+
+## Comportamiento que debe conservarse
+- Consulta: nueve campos del registro; búsqueda parcial por nombre sin distinguir mayúsculas, conservando diferencias de acentos; filtros combinados con AND. Orden inicial por nivel descendente y desempate estable por `sourceRow`.
+- Paginación en servidor sobre el conjunto filtrado y ordenado: 50 filas inicialmente en escritorio y 20 en móvil; tamaños 20/50/100/Todos. Los borradores se conservan entre páginas y las respuestas antiguas no deben sustituir consultas más recientes.
+- Edición: nombre, nivel, notas, estado, propietario, clase, subclase y especie. Guardar persiste el lote completo de forma atómica con control de versiones; un conflicto no puede dejar cambios o catálogos parciales. La recuperación de respuestas perdidas conserva propuestas y evita confirmaciones falsas.
+- Nivel entero entre 1 y 20; rango derivado en `rank.js`. Nombre obligatorio; máximo 50 puntos de código Unicode en nombre y opciones, 2.000 en notas. Las opciones eliminan espacios exteriores y reutilizan grafía existente si solo cambia capitalización. Cambiar de clase vacía una subclase incompatible.
+- Alta: modal con los controles de edición; nombre, clase, especie y propietario obligatorios, nivel inicial 1 modificable y restantes campos opcionales. El alta es independiente de los borradores de edición; reintentar una operación incierta no duplica personajes.
+- Eliminación lógica: «Eliminar» alterna una marca pendiente durante edición y conserva los demás cambios. Guardar persiste campos y marca juntos. Los datos permanecen en D1; lista y exportación excluyen eliminados. La reconciliación no los reactiva. Restauración, purga y listado de eliminados no están implementados.
+- Exportación: obtiene todos los personajes activos guardados, sin filtros ni búsqueda y con el orden activo, incluidos los de otras páginas. Genera el XLSX en el navegador con nueve campos, sin guardar el archivo en el servidor. Se deshabilita durante edición y estados de carga, error o generación; una búsqueda sin resultados no impide exportar el registro completo.
+- Presentación: identidad púrpura/plateada, logo PNG y fuentes locales Cinzel/Roboto Flex. El selector muestra luna en oscuro y sol en claro; preferencia manual persistida cuando el almacenamiento está disponible, con prioridad sobre el sistema. Sin elección manual sigue el sistema.
+- Cabecera: título y acciones juntos; contador en línea independiente antes de la tabla. La edición usa dos líneas por personaje en escritorio y bloques adaptables en móvil; al salir vuelve la tabla de consulta. Los botones de alta, exportación y edición comparten hover y conservan foco visible.
+
+## Mapa de especificaciones
+Consultar solo las funcionalidades afectadas; cada carpeta contiene `spec.md`, `plan.md` y `tasks.md`.
+- `specs/001-registro-personajes/`: campos e inspección del Excel inicial. Su arquitectura de lectura directa está sustituida por 004.
+- `specs/002-diseno-visual/` y `specs/003-selector-tema/`: identidad visual y temas.
+- `specs/004-edicion-niveles/`: transición a D1, rangos, edición atómica y concurrencia.
+- `specs/005-edicion-datos-personajes/`: edición de nombre, notas, estado y propietario.
+- `specs/006-edicion-catalogos/`: catálogos completos, dependencias y normalización.
+- `specs/007-paginacion/` y `specs/007-exportacion-excel/`: dos carpetas con el mismo número conservadas sin renumeración retrospectiva; identificar siempre por nombre completo. La exportación integrada consulta el conjunto completo mediante API, sustituyendo el diseño inicial sin solicitudes adicionales.
+- `specs/008-cabecera-listado/`: distribución del contador y acciones.
+- `specs/009-anadir-personajes/`: especificación canónica de alta; el borrador `008-anadir-personajes` de otro worktree no debe usarse como alternativa.
+- `specs/010-eliminar-personajes/`: eliminación lógica y ajuste posterior de edición en dos líneas.
+
+## Entorno y publicación
+- Repositorio: https://github.com/catirito/NidoDelCuervo. La rama de integración actual es `main`; comprobar el estado real de Git al retomar. Los problemas antiguos de credenciales no deben asumirse vigentes: publicaciones posteriores registran push normal correcto.
+- Hosting activo: Cloudflare Pages, proyecto `nido-del-cuervo`, mediante Direct Upload; subir a GitHub no publica automáticamente. La rama de producción de Pages documentada es `codex/003-selector-tema`, aunque el código integrado procede de `main`. No confundir ambas referencias.
+- `wrangler.jsonc` configura D1 local; `wrangler.production.jsonc` identifica D1 de producción `nido-personajes`. Las migraciones hasta 0006 constan aplicadas en la última entrega. Comprobar el estado remoto antes de cualquier migración futura autorizada.
+- `scripts/build-cloudflare.mjs` prepara `.local/public` mediante una lista explícita de archivos; incluye SheetJS y licencia para exportar, excluye Excel histórico y documentación interna. No publicar la raíz. El despliegue de la API también requiere Functions y configuración de producción; el paquete estático por sí solo no describe el despliegue completo.
+- El Site privado de Sites pertenece a una entrega anterior y no es el destino activo de publicación. Consultar Git si fuera necesario recuperar sus identificadores o procedimiento.
+
+## Validación y límites conocidos
+- Evidencias de API, navegador, recuperación, atomicidad y regresiones en los `tasks.md` correspondientes. Las pruebas con escrituras se ejecutan en local, restauran fixtures y deben ser secuenciales si comparten D1. No ejecutar escrituras de prueba en producción.
+- La última entrega documenta revisión de edición a 1440/1280/1024/390/320 px en ambos temas, ausencia de errores JavaScript y rutas privadas con 404. No se ha acreditado compatibilidad con todos los navegadores ni una prueba con lector de pantalla real.
+- `tests/records.test.mjs` comprueba el hash del Excel histórico. En la revisión documental del 6 de octubre también pasaron esa prueba y `tests/export-excel.test.mjs`; no se repitieron las pruebas de escritura de D1 ni la validación remota.
+- El entorno de pruebas depende de Node, Chrome, Playwright/Miniflare y, según la prueba, un servidor D1 local. Los comandos y limitaciones registrados están en `specs/007-exportacion-excel/tasks.md` y las pruebas de cada funcionalidad. No asumir que un servidor local sigue activo.
+
+## Pendientes identificados
+- Revisar en una tarea documental posterior los estados antiguos que persisten en algunas especificaciones y planes: por ejemplo, 006 aún describe entrega solo local, 009 conserva implementación no autorizada y 010 conserva una próxima etapa anterior a su implementación. Esta limpieza se limita a la memoria; no se han corregido esos documentos ni deben interpretarse sus estados antiguos como estado vigente de la entrega integrada.
+- La reproducibilidad del entorno de pruebas desde una copia limpia es una mejora propuesta en la auditoría, todavía no autorizada para implementación.
+- No consta una estrategia adicional de copias programadas acordada. Antes de tomar decisiones de recuperación, verificar las capacidades actuales de D1 y las copias realmente disponibles; una copia puntual de personajes no equivale a un respaldo completo de base de datos.
