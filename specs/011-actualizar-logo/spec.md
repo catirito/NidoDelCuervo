@@ -1,6 +1,6 @@
 # 011 — Actualizar logo y favicon
 
-Estado: implementación autorizada por el usuario y completada el 16 de octubre de 2026 en `codex/011-actualizar-logo`, con validación local de CA-01–CA-06 documentada en tasks.md. Aceptación visual confirmada el 16 de octubre de 2026; el usuario autoriza commit, push, publicación y cierre. Entrega Git y despliegue en curso.
+Estado: cerrada el 16 de octubre de 2026. Implementación y validación local completadas, resultado aceptado visualmente por el usuario e integrado en `main`. Código `8bd2304` publicado en producción mediante despliegue `5c95cb28-e4ee-4318-98b9-32a2a628b5d3`; comprobación remota completada. Evidencia de cierre en tasks.md.
 
 ## Objetivo
 Actualizar la identidad gráfica de la web con el logo aportado por el usuario y utilizarlo también como favicon, para que la cabecera y la pestaña del navegador identifiquen Nido del Cuervo con la misma imagen.
@@ -53,4 +53,4 @@ El plan mantiene el espacio actual de la cabecera. El ajuste opcional del favico
 ## Validación y siguiente etapa
 CA-01–CA-06 verificados localmente en Chrome; evidencia y límites en `specs/011-actualizar-logo/tasks.md`. Se ha conservado el archivo original exacto para la cabecera y generado favicons del dibujo completo, sin recorte. Los detalles pequeños del dado pierden legibilidad a 16 px.
 
-Aceptación visual confirmada. Siguiente paso: completar y verificar la publicación autorizada. La web publicada conserva todavía la identidad anterior; commit, push de cambios, integración y despliegue quedan autorizados para esta entrega.
+Spec cerrada: resultado aceptado, commit `8bd2304` integrado y subido a GitHub en rama 011 y `main`, y publicado en https://nido-del-cuervo.pages.dev. Los recursos remotos coinciden con los locales; validación remota y límites en tasks.md. No quedan tareas de esta spec pendientes.

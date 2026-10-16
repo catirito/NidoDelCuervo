@@ -1,6 +1,6 @@
 # Plan — 011: actualizar logo y favicon
 
-Estado: plan ejecutado tras autorización de implementación el 16 de octubre de 2026, en `codex/011-actualizar-logo`. Validación local completada y documentada en tasks.md; aceptación visual confirmada por el usuario, que autoriza commit, push, publicación y cierre. Entrega en curso.
+Estado: cerrada el 16 de octubre de 2026. Implementación y validación local completadas, resultado aceptado visualmente por el usuario e integrado en `main`. Código `8bd2304` publicado en producción mediante despliegue `5c95cb28-e4ee-4318-98b9-32a2a628b5d3`; comprobación remota completada. Evidencia de cierre en tasks.md.
 
 ## Resultado previsto
 La cabecera mostrará una copia exacta del PNG aportado, conservando su transparencia y composición. La pestaña usará favicons derivados del mismo motivo, con encuadre adaptado solo si mejora su legibilidad. La web conservará su presentación y comportamiento actuales.
@@ -44,6 +44,6 @@ Comprobaciones ejecutadas durante la implementación autorizada; resultados y l�
 - Cerrar la revisión documental con `git diff --check` y coherencia entre spec, plan, tareas y `Memories.md`.
 
 ## 5. Orden y límites de la siguiente etapa
-Tareas ejecutadas y validación local completada. Aceptación visual confirmada. Siguiente paso: completar y verificar la publicación autorizada. No se necesitó adaptar el encuadre de los favicons ni modificar CSS.
+Tareas ejecutadas, validación local y remota completada, y resultado aceptado por el usuario. Código integrado, subido y publicado; cierre y evidencia remota en tasks.md. No se necesitó adaptar el encuadre de los favicons ni modificar CSS.
 
-Trabajar en `codex/011-actualizar-logo`. La rama remota existe con el commit base, pero estos documentos siguen locales y sin commit. Commit, push de cambios, integración en `main` y publicación autorizados para esta entrega. No cambiar el estado publicado ni presentar las comprobaciones futuras como realizadas.
+Trabajo realizado en `codex/011-actualizar-logo`, integrado por avance rápido en `main` y subido a GitHub. Publicación completada con el commit `8bd2304`; el cierre documental posterior no cambia el paquete publicado. No se han modificado datos ni migraciones.
