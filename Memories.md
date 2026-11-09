@@ -4,6 +4,7 @@
 Síntesis del estado vigente y de las decisiones necesarias para continuar. Las reglas estables están en `AGENTS.md`; el detalle funcional y las evidencias están en `specs/`. Git conserva las versiones anteriores. Esta memoria es una convención del proyecto, no un mecanismo automático.
 
 ## Estado y alcance actuales
+- 012 Mascotería está en especificación en `codex/012-mascoteria`. Se ha redactado el borrador y contrastado el Excel con el registro activo. Quedan por aclarar los vínculos de propietario, las filas parciales y el alcance de la edición. Planificación, implementación e importación pendientes. El Excel original se conserva en `.local/imports/012-mascoteria/La-Mascoteria.xlsx`, excluido de Git y del paquete público.
 - Las funcionalidades hasta 011, incluidos alta, eliminación lógica, edición adaptable en dos líneas y nuevo logo/favicon, están implementadas e integradas en `main`. La spec 011 está aceptada y cerrada; evidencia en `specs/011-actualizar-logo/tasks.md`.
 - Última publicación verificada: 16 de octubre de 2026, código `8bd2304`, despliegue `5c95cb28.nido-del-cuervo.pages.dev`, URL estable https://nido-del-cuervo.pages.dev. Recursos PNG remotos idénticos, API GET con 204 activos, seis vistas claro/oscuro a 1440/390/320 px y teclado correctos, rutas privadas 404, sin errores JavaScript ni escrituras de prueba. Evidencia y límites en `specs/011-actualizar-logo/tasks.md`.
 - El bug documental de memoria vigente está corregido, integrado en `main` y subido a GitHub mediante merge `eec6c4c`. Sus informes están en `.specify/bugs/memoria-estado-vigente/`: `assessment.md`, `fix.md` y `test.md`; flujo aplicado manualmente, sin instalar Spec Kit. La regla de proporcionalidad está incorporada a `AGENTS.md` en `9a93150`, base comprobada de este worktree y de `main` remoto al iniciar 011.
@@ -39,6 +40,7 @@ Consultar solo las funcionalidades afectadas; cada carpeta contiene `spec.md`, `
 - `specs/009-anadir-personajes/`: especificación canónica de alta; el borrador `008-anadir-personajes` de otro worktree no debe usarse como alternativa.
 - `specs/010-eliminar-personajes/`: eliminación lógica y ajuste posterior de edición en dos líneas.
 - `specs/011-actualizar-logo/`: sustitución de logo y favicon; cerrada, aceptada, integrada y publicada; evidencia local y remota en tasks.md.
+- `specs/012-mascoteria/`: navegación compartida y segunda tabla con ubicación y vínculo a personajes. Borrador con clarificaciones abiertas en `spec.md`.
 
 ## Entorno y publicación
 - Repositorio: https://github.com/catirito/NidoDelCuervo. La rama de integración actual es `main`; comprobar el estado real de Git al retomar. Los problemas antiguos de credenciales no deben asumirse vigentes: publicaciones posteriores registran push normal correcto.
