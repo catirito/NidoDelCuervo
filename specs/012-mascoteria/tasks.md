@@ -1,6 +1,6 @@
 # Tareas — 012: Mascotería
 
-Implementación y validación local y en el entorno de pruebas completadas. Aceptada por el usuario y autorizada para integrar y publicar en producción. El [plan](plan.md) recoge el diseño y la [especificación](spec.md) contiene los criterios de aceptación.
+Especificación cerrada. Aceptación, integración y publicación en producción verificadas. El [plan](plan.md) recoge el diseño y la [especificación](spec.md) contiene los criterios de aceptación.
 
 ## Orden de ejecución
 
@@ -54,12 +54,12 @@ Alcance de las pruebas de navegador limitado a Chrome. No se ejecutó `tests/ui.
 - Verificado en la configuración remota: `DB` enlaza a `nido-mascoteria-012-test` (`8274a085-4ef0-4db5-863a-5961ac6c3f8a`). Producción usa `nido-personajes` (`3107c487-41dd-4cb0-a4e6-6e46027d9c40`). Las comprobaciones de datos por CLI se validaron con nombre y UUID explícitos, ya que la consulta por alias `DB` con la configuración descargada resolvió la D1 de pruebas.
 - Aplicadas las migraciones 0001–0007 en test. La semilla de personajes y catálogos procede de D1 local y se validó contra las migraciones en SQLite con integridad y claves foráneas. La carga de mascotas se regeneró con `readPetSource` y `planPetImport`: 55 filas, cuatro exclusiones y cero propietarios sin resolver. Regenerar desde el libro preservó las 55 entradas iniciales, incluida A24, que estaba dada de baja en la copia local. D1 remota y API confirmaron 203 personajes y 55 mascotas activas, seis sin dueño, Tinka con sus tres propietarios y prioridad de Mascotería seguida del orden por Animal. La distribución de la semilla es 24/7/4/20.
 - Repetidas las 12 suites de Node con `node --test --test-concurrency=1 tests/*.test.mjs`, todas correctas. Pasó `node tests/mascoteria-ui.test.cjs` en local. En remoto pasó el mismo recorrido con una copia temporal del test, limitada por URL al proyecto aislado y con un nombre de prueba identificable. Chrome comprobó navegación con teclado, 1440 y 320 px, ambos temas, filtros, exportación de 55 filas, select acumulativo, nuevos valores en Animal y Ubicación, cuatro botones a 13 px, borradores, recuperación ante fallo, alta, edición y baja.
-- D1 confirmó la baja lógica de la única mascota de prueba, con versión 2 y 55 activas al terminar. La D1 de producción carece de tablas de mascotas y de migración 0007. El despliegue productivo seguía siendo `5c95cb28-e4ee-4318-98b9-32a2a628b5d3` antes y después. No se ejecutaron escrituras en producción.
+- D1 confirmó la baja lógica de la única mascota de prueba, con versión 2 y 55 activas al terminar. Durante esta revisión en staging, la D1 de producción aún carecía de tablas de mascotas y de migración 0007. El despliegue productivo seguía siendo `5c95cb28-e4ee-4318-98b9-32a2a628b5d3` antes y después. No se ejecutaron escrituras en producción.
 - Los dos libros, documentación, SQL y configuración quedaron fuera del paquete público. Ocho rutas privadas devolvieron 404. Git ignora el Excel de Mascotería. El Excel histórico de personajes ya estaba versionado y queda fuera de los cambios de 012. La verificación de navegador se limita a Chrome.
 
-### URL de revisión vigente
+### URL del entorno de pruebas
 
-La URL de revisión es [nido-del-cuervo-test.pages.dev/mascoteria](https://nido-del-cuervo-test.pages.dev/mascoteria). El proyecto Pages `nido-del-cuervo-test` publica el mismo commit `4fe546b` en el despliegue `dc3c7405`. Verificados el binding remoto a la D1 de pruebas existente, la respuesta idéntica de la API con 55 mascotas y 203 personajes, la fila A10 y las respuestas 404 del Excel histórico y la especificación. La URL anterior sigue disponible y ambos proyectos de pruebas comparten esa D1.
+La URL del entorno de pruebas es [nido-del-cuervo-test.pages.dev/mascoteria](https://nido-del-cuervo-test.pages.dev/mascoteria). El proyecto Pages `nido-del-cuervo-test` publica el mismo commit `4fe546b` en el despliegue `dc3c7405`. Verificados el binding remoto a la D1 de pruebas existente, la respuesta idéntica de la API con 55 mascotas y 203 personajes, la fila A10 y las respuestas 404 del Excel histórico y la especificación. La URL anterior sigue disponible y ambos proyectos de pruebas comparten esa D1.
 
 ### Reproducir la corrección de A10 en una semilla nueva
 
@@ -76,3 +76,12 @@ WHERE source_cell = 'A10'
     WHERE pet_id = pets.id AND PERSONAJE = 'Regor'
   );
 ```
+
+
+## Cierre y publicación del 10 de noviembre de 2026
+
+- El usuario aceptó la revisión y autorizó el cierre, commit, push, merge y publicación. La rama `codex/012-mascoteria` se subió a GitHub y se integró por avance rápido en `main` mediante `16391a1`.
+- Antes de publicar se repitieron las 12 suites de Node y el recorrido local de Chrome, con resultado correcto. Se exportó una copia privada de D1, se restauró en SQLite en memoria y se ensayaron la migración y la carga. Se verificaron la integridad, las claves foráneas, la conservación de todas las filas de personajes y el rechazo de una segunda carga. La copia previa está en `.local/backups/012-mascoteria/pre-012-production.sql`, fuera de Git y del paquete público.
+- En la D1 productiva `nido-personajes` se aplicó únicamente `0007_mascoteria.sql`. La carga transaccional se preparó desde el Excel privado con el importador y los 206 personajes activos de producción. Se comprobó dentro de la carga que los propietarios seguían activos y conservaban sus nombres, y que el ajuste de A10 afectaba a una sola fila. El marcador de importación se guardó con las 55 mascotas y sus vínculos. La lectura posterior verificó el marcador, la distribución 24/7/4/20, seis mascotas sin propietario, A10 y 206 personajes activos.
+- Publicado `16391a1` mediante Direct Upload en el proyecto Pages `nido-del-cuervo`, rama de Pages `codex/003-selector-tema`, despliegue `9ff00899-1b79-4262-bb16-1e6c8331cabc`. URL estable [Mascotería](https://nido-del-cuervo.pages.dev/mascoteria).
+- Comprobación remota de solo lectura: 55 mascotas, 206 personajes, orden por ubicación y Animal, Tinka con tres vínculos y «25 ovejas» con Oveja, Regor y Mascotería. Cinco recursos coincidieron byte a byte con el paquete y ocho rutas privadas devolvieron 404. Chrome a 1440 y 320 px verificó navegación entre las dos páginas, teclado, búsqueda y descarga de las 55 mascotas con filtro activo. Cero errores JavaScript y cero peticiones de escritura de prueba. Las escrituras funcionales se comprobaron en local y pruebas. La validación de navegador se limitó a Chrome.
