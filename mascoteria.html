@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#16161d">
+  <title>Nido del Cuervo · Mascotería</title>
+  <link rel="icon" href="assets/favicon-cuervo-011-16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="assets/favicon-cuervo-011-32.png" type="image/png" sizes="32x32">
+  <link rel="stylesheet" href="styles.css">
+  <script src="theme.js"></script>
+  <script src="vendor/xlsx.full.min.js" defer></script>
+  <script type="module" src="mascoteria.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#mascoteria">Saltar a Mascotería</a>
+  <header class="masthead">
+    <div class="brand">
+      <img src="assets/logo-cuervo-011.png" width="70" height="70" alt="" aria-hidden="true">
+      <div><p class="eyebrow">Dungeons &amp; Dragons</p><h1>Nido del Cuervo</h1></div>
+    </div>
+    <button id="theme-toggle" type="button" hidden>
+      <svg data-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"></path></svg>
+      <svg data-theme-icon="dark" viewBox="0 0 24 24" aria-hidden="true" focusable="false" hidden><path d="M20 14a8.5 8.5 0 0 1-10-10 8.5 8.5 0 1 0 10 10Z"></path></svg>
+      <span class="sr-only" data-theme-label>Tema claro</span>
+    </button>
+  </header>
+  <nav class="site-nav" aria-label="Secciones del Nido">
+    <a href="/">Registro de personajes</a>
+    <a href="/mascoteria" aria-current="page">Mascotería</a>
+  </nav>
+  <main id="mascoteria" tabindex="-1">
+    <section class="intro" aria-labelledby="registry-title"><h2 id="registry-title">Mascotería</h2></section>
+    <section class="filters" aria-labelledby="filters-title">
+      <div class="section-line"><h3 id="filters-title">Buscar y filtrar</h3><button id="reset-filters" type="button">Limpiar filtros <span aria-hidden="true">↗</span></button></div>
+      <form id="filter-form" role="search" aria-label="Buscar mascotas">
+        <fieldset>
+          <legend class="sr-only">Filtros de mascotas</legend>
+          <div class="search-field"><label for="name-search">Nombre de la mascota</label><input id="name-search" type="search" placeholder="Escribe parte de un nombre…" autocomplete="off"></div>
+          <div class="category-filters pet-filters">
+            <div><label for="filter-owner">Propietario</label><select id="filter-owner"><option value="">Todos los propietarios</option></select></div>
+            <div><label for="filter-animal">Animal</label><select id="filter-animal"><option value="">Todos los animales</option></select></div>
+            <div><label for="filter-location">Ubicación</label><select id="filter-location"><option value="">Todas las ubicaciones</option></select></div>
+          </div>
+        </fieldset>
+      </form>
+    </section>
+    <section class="results" aria-labelledby="results-title" aria-busy="true">
+      <div class="results-bar">
+        <h3 id="results-title">Mascotas</h3>
+        <div class="edit-actions pet-edit-actions">
+          <button id="export-button" type="button" disabled>Exportar Excel</button>
+          <button id="create-button" type="button" disabled>Añadir mascota</button>
+          <button id="edit-button" type="button" disabled>Editar</button>
+          <button id="cancel-edit" type="button" hidden>Cancelar edición</button>
+        </div>
+      </div>
+      <p id="pet-message" role="status"></p>
+      <p id="result-status" role="status">Cargando mascotas…</p>
+      <div class="table-scroll" role="region" aria-label="Tabla de mascotas, desplazamiento horizontal" tabindex="0">
+        <table class="pet-table">
+          <caption class="sr-only">Mascotas de Nido del Cuervo</caption>
+          <thead><tr><th scope="col">Nombre</th><th scope="col">Propietario</th><th scope="col">Animal</th><th scope="col">Ubicación</th><th scope="col" id="pet-actions" hidden>Acciones</th></tr></thead>
+          <tbody id="pets-body"></tbody>
+        </table>
+      </div>
+      <nav class="pagination" aria-label="Paginación de Mascotería">
+        <div class="page-navigation"><button id="previous-page" type="button" disabled>Anterior</button><span id="page-status">Página 1 de 1</span><button id="next-page" type="button" disabled>Siguiente</button></div>
+        <div class="page-size"><label for="page-size">Registros por página</label><select id="page-size"><option value="20">20</option><option value="50">50</option><option value="100">100</option><option value="all">Todos</option></select></div>
+      </nav>
+      <div id="empty-state" class="empty-state" hidden><h4>No hay coincidencias</h4><p>Prueba otro nombre o cambia los filtros.</p></div>
+      <div id="error-state" class="error-state" role="alert" hidden><h4>No se pudo cargar Mascotería</h4><button id="retry-load" type="button">Volver a intentar</button></div>
+    </section>
+  </main>
+  <dialog id="create-dialog" aria-labelledby="create-title">
+    <form id="create-form">
+      <h3 id="create-title">Añadir mascota</h3>
+      <fieldset id="pet-form-fields">
+        <div id="create-fields">
+          <div><label for="pet-name">Nombre</label><input id="pet-name" required maxlength="250" autofocus></div>
+          <div><label for="pet-animal">Animal</label><select id="pet-animal"></select><input id="new-animal" class="new-option" aria-label="Nuevo animal" placeholder="Nuevo animal" maxlength="250" hidden></div>
+          <div><label for="pet-location">Ubicación</label><select id="pet-location"></select><input id="new-location" class="new-option" aria-label="Nueva ubicación" placeholder="Nueva ubicación" maxlength="250" hidden></div>
+          <div class="pet-owners">
+            <label for="owner-picker">Propietarios</label>
+            <select id="owner-picker"></select>
+            <ul id="selected-owners" aria-label="Propietarios seleccionados"></ul>
+          </div>
+        </div>
+      </fieldset>
+      <p id="create-message" role="status"></p>
+      <div class="create-actions"><button id="cancel-create" type="button">Cancelar</button><button id="submit-create" type="submit">Guardar mascota</button></div>
+    </form>
+  </dialog>
+  <footer><span>Nido del Cuervo</span><span>Mascotería</span></footer>
+  <noscript><p>Activa JavaScript para consultar Mascotería.</p></noscript>
+</body>
+</html>

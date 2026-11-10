@@ -1,6 +1,6 @@
 # 012 — Mascotería
 
-**Estado (9 de noviembre de 2026).** Borrador de especificación con clarificaciones abiertas. Alcance autorizado: definir la funcionalidad, inspeccionar las fuentes en lectura y ubicar el Excel original. Planificación, implementación, importación y publicación pendientes de su etapa.
+**Estado (9 de noviembre de 2026).** Implementación e importación validadas en local. Pendiente de revisión del usuario. Evidencia en [tareas](tasks.md).
 
 ## Objetivo
 
@@ -9,31 +9,55 @@ Añadir una página «Mascotería» a Nido del Cuervo. Desde el mismo menú se p
 ## Requisitos
 
 - **RF-01. Navegación.** Las dos páginas comparten un menú breve con enlaces a «Registro de personajes» y «Mascotería» e identificación de la página activa. El registro conserva su acceso desde la raíz. El menú se puede usar con teclado y en móvil.
-- **RF-02. Listado.** Mostrar una única tabla adaptable con Nombre, Propietario, Animal, Imagen y Ubicación. Mantener la identidad, los temas y los patrones de consulta del registro. Se propone buscar por nombre y combinar los filtros desplegables de propietario, animal y ubicación. Una ubicación vacía se puede filtrar con «Sin ubicación» sin convertirla en una ubicación guardada.
-- **RF-03. Edición.** Replicar el modo de edición y guardado del registro, con controles adaptados a la nueva tabla. El selector de propietario ofrece personajes existentes del registro y muestra sus nombres. Se propone un desplegable de ubicación que permita dejarla vacía. Los campos editables restantes y el alcance de otras acciones se cierran en clarificación.
-- **RF-04. Vínculo de propietario.** Vincular a los personajes por su identificador estable para que un cambio de nombre se refleje en Mascotería. Contrastar cada nombre del Excel con los personajes activos. Las coincidencias únicas literales tras normalizar Unicode, espacios y capitalización se pueden resolver automáticamente. Las abreviaturas, variantes, faltantes y ambigüedades requieren revisión. La regla solicitada es que el propietario sea un personaje; las excepciones presentes en el Excel quedan pendientes de decisión.
+- **RF-02. Listado.** Mostrar una única tabla adaptable con Nombre, Propietario, Animal y Ubicación. Mantener la identidad, los temas y los patrones de consulta del registro. La búsqueda por nombre y los filtros desplegables de propietario, animal y ubicación se combinan. Filtrar por un propietario incluye las mascotas que lo tienen entre sus propietarios. «Sin propietario» y «Sin ubicación» filtran campos vacíos. El listado prioriza la ubicación «Mascotería». Dentro de ese grupo y del resto, ordena por Animal de la A a la Z, con los valores vacíos al final y desempate por Nombre.
+- **RF-03. Edición pública.** Replicar el acceso público y el modo de edición y guardado del registro. En el alta y la edición, un selector múltiple permite elegir cero, uno o varios personajes activos por mascota. Se puede quitar cualquier propietario, incluido el último. La tabla muestra juntos sus nombres oficiales y deja la celda vacía cuando no hay propietarios. En las altas, el nombre es el único campo obligatorio. En alta y edición, Animal y Ubicación son desplegables que permiten elegir un valor existente, dejarlo vacío o añadir otro. Propietarios usa un select de personajes del Registro. Cada elección se añade a la lista y el select se restablece para elegir otro. Su etiqueta usa el mismo estilo que las de Animal y Ubicación.
+- **RF-04. Vínculo de propietario.** Durante la importación, resolver cada propietario individual del Excel mediante coincidencia única normalizada o las equivalencias confirmadas. Guardar cada vínculo por identificador estable, una sola vez por mascota. Consultar el nombre oficial directamente del Registro de personajes para mostrarlo en la tabla y los desplegables de Mascotería. Un cambio de nombre en el registro se refleja en ambas páginas. La baja lógica de un personaje conserva su vínculo y su nombre visible en Mascotería, incluso al editar otros campos. El selector ofrece personajes activos para nuevas asignaciones. La mascota se puede dar de baja manualmente.
 - **RF-05. Ubicación inicial.** Los dos grupos de columnas bajo «Mascotería» comparten esa ubicación. El resto del bloque superior usa «Fuera del gremio» o «Establos» según su encabezado. Las entradas del bloque inferior quedan con ubicación vacía.
-- **RF-06. Importación inicial.** Conservar los valores de origen y sus ausencias. Identificar cada entrada por grupo de columnas y fila, de forma que nombres repetidos o filas parciales puedan reconciliarse individualmente. Revisar las incidencias antes de incorporar filas con dueño sin resolver. Excluir encabezados, separadores y notas fuera de las columnas de datos. Mantener separadas la importación inicial y la edición posterior. D1 es la fuente activa prevista, de acuerdo con el registro actual.
-- **RF-07. Imágenes.** Mostrar la imagen asociada a cada entrada cuando exista y se haya podido validar su correspondencia. Admitir filas sin imagen. Conservar las imágenes de origen durante la revisión y comprobar las que están dentro de celdas y las que están superpuestas. Las celdas que un lector genérico devuelve como `#VALUE!` pueden referenciar imágenes embebidas.
-- **RF-08. Fuente privada.** Conservar el libro original intacto y fuera de Git y del paquete público. Solo los datos e imágenes de las entradas confirmadas forman parte de la entrega futura. La navegación y consulta de personajes conservan su comportamiento actual.
+- **RF-06. Importación inicial.** Conservar los valores de origen y sus ausencias según las reglas confirmadas de ubicación y propietario. Identificar cada entrada por grupo de columnas y fila, de forma que nombres repetidos o filas parciales puedan reconciliarse individualmente. Importar únicamente las entradas con nombre y conservar los demás campos vacíos cuando falten. Excluir encabezados, separadores y notas fuera de las columnas de datos. Mantener separadas la importación inicial y la edición posterior. D1 es la fuente activa, de acuerdo con el registro actual.
+- **RF-07. Alcance de imágenes.** Las imágenes se aplazan. Esta versión utiliza únicamente Nombre, Propietario, Animal y Ubicación en la importación, el almacenamiento, la web y la exportación. Las escrituras públicas rechazan archivos y campos de imagen.
+- **RF-08. Fuente privada.** Conservar el libro original intacto y fuera de Git y del paquete público. La entrega contiene los datos confirmados de las entradas incluidas. La navegación y consulta de personajes conservan su comportamiento actual.
+- **RF-09. Altas y bajas.** Permitir añadir mascotas y tramitar su baja lógica con los mismos patrones del registro. Confirmar la baja al guardar y excluir las mascotas dadas de baja de las consultas y la exportación.
+- **RF-10. Exportación.** Descargar un Excel con todas las mascotas activas guardadas, incluidas las de otras páginas y las que quedan fuera de la búsqueda o los filtros. Exportar los nombres oficiales de todos los propietarios de cada mascota y dejar vacío el campo cuando no tenga. El Excel contiene únicamente los cuatro campos de datos.
 
 ## Inventario comprobado
 
 - `Hoja1` contiene 58 entradas candidatas con algún dato. En las filas 3–14 hay 24 en Mascotería, 8 en Fuera del gremio y 4 en Establos. Las filas 18–34 contienen 22 sin ubicación. La fila 17 repite los encabezados. Establos solo proporciona nombre y propietario.
-- Se han observado 40 celdas con referencias a imágenes, 39 archivos de imagen dentro del libro y 2 anclajes gráficos superpuestos. Las celdas `N7` y `D26` comparten la misma referencia. Los objetos superpuestos se anclan a `N7` y al área `C26:D27`. Queda por validar qué imágenes corresponden a esas entradas.
-- Contrastadas 58 entradas con los 206 personajes activos devueltos por la API pública el 9 de noviembre. 31 entradas tienen un propietario único con coincidencia literal normalizada. Las demás requieren confirmar equivalencias o decidir cómo representar los casos especiales. Este recuento es de inspección, no de importación.
+- Contrastadas 58 entradas con los 206 personajes activos devueltos por la API pública el 9 de noviembre. 31 entradas tienen un propietario único con coincidencia literal normalizada. Otras 20 se resuelven mediante las equivalencias confirmadas. Las 7 restantes corresponden a titularidades especiales. Recuento previo a la importación.
 - Original disponible localmente en `.local/imports/012-mascoteria/La-Mascoteria.xlsx`, con SHA-256 idéntico antes y después del traslado.
 
-## Clarificaciones pendientes
+## Clarificaciones confirmadas
 
-1. Confirmar equivalencias de nombres y cómo representar las cinco entradas a nombre del Nido (`Q3:Q6` y `L18`), una con tres copropietarios (`L10`) y una sin propietario (`B24`). Revisar también las filas parciales y las referencias de imagen de `N7` y `D26`.
-2. Confirmar si la edición pública actual del registro se extiende a Mascotería. Acordar qué campos se pueden cambiar, cómo se gestionan las imágenes y si entran en esta entrega las altas, las bajas o la exportación.
-3. Definir qué se muestra y qué se puede guardar si un personaje ya vinculado se elimina del registro. Conservar la trazabilidad del vínculo y evitar reasignaciones automáticas.
+El usuario confirma las siguientes equivalencias para la importación. Mascotería muestra la grafía oficial del Registro de personajes.
+
+| Nombre en el Excel | Nombre oficial en el registro |
+| --- | --- |
+| Alonso | Alonso Fernandez |
+| Azura | Azura Vylara |
+| Cándido | Cándido Fairyring |
+| Chispas | Francis "Chispas" |
+| Eldra | Eldra González |
+| Fayl´en | Fayl'en Estela Brillante |
+| Fungencio | Fungencio Pensativus |
+| Gr-00-T y Groot | Stroheim Gr00t |
+| Hopper | Harrison Hopper |
+| Kyu | Kyū Taigen |
+| Plumas | Plumas/Nevi |
+| Regor (pastor) | Regor |
+| Sam | Samael |
+| Thaldis | Thaldris Zirthalon |
+
+- Las cinco entradas cuyo propietario en el Excel es `Nido` (`Q3:Q6` y `L18`) se importarán sin propietario. La entrada con propietario vacío (`B24`) también quedará sin propietario.
+- Tinka del clan Pirrika (`L10`) se importará como una sola mascota con tres vínculos de propietario a **Kekai**, **Francis "Chispas"** y **Gorluk**.
+- Mascotería tendrá edición pública, altas, bajas, exportación y filtros, siguiendo los flujos del Registro de personajes.
+
+- Se importarán 55 entradas. Se excluyen las tres sin nombre (`K8`, `A25` y `A26`) y la nota de los cebos situada fuera de la tabla (`S18`).
 
 ## Criterios de aceptación
 
 1. **CA-01 / RF-01.** Las dos páginas enlazan entre sí, indican dónde está el visitante y se pueden recorrer con teclado y en móvil.
-2. **CA-02 / RF-02–RF-03.** Se puede consultar y editar la tabla con el conjunto de controles acordado. Los filtros aprobados se combinan y muestran correctamente las entradas con ubicación vacía. Un guardado correcto persiste al recargar y un error conserva los cambios pendientes.
-3. **CA-03 / RF-03–RF-04.** Los dueños resueltos se guardan como referencias a personajes existentes. Renombrar un personaje actualiza su nombre visible en Mascotería. El tratamiento de titularidades excepcionales y personajes eliminados coincide con las decisiones de clarificación.
-4. **CA-04 / RF-05–RF-07.** El resultado se reconcilia fila a fila con las 58 entradas candidatas. Toda exclusión o corrección tiene motivo registrado. Se comprueban ubicaciones, valores ausentes y asociación de imágenes, incluidas las imágenes superpuestas.
+2. **CA-02 / RF-02–RF-03.** Se puede consultar y editar la tabla con el conjunto de controles acordado. Los filtros se combinan y distinguen entradas sin propietario o sin ubicación. Tinka aparece al filtrar por cualquiera de sus tres propietarios. Un guardado correcto persiste al recargar y un error conserva los cambios pendientes.
+3. **CA-03 / RF-03–RF-04.** El alta y la edición permiten guardar cero, uno o varios propietarios distintos. Tinka tiene tres vínculos. Las cinco entradas del Nido y la que carece de propietario quedan con el campo vacío. Renombrar un personaje actualiza su nombre visible en Mascotería. La baja lógica de un propietario conserva su nombre visible y la mascota sigue activa. Es posible darla de baja manualmente.
+4. **CA-04 / RF-05–RF-07.** Se importan 55 de las 58 entradas candidatas. Se excluyen las tres sin nombre y la nota de los cebos. Toda exclusión o corrección tiene motivo registrado. Se comprueban ubicaciones y valores ausentes.
 5. **CA-05 / RF-08.** El Excel no figura en Git ni en el paquete público. Las comprobaciones del registro y sus flujos vigentes pasan. Se valida en local y sin escrituras de prueba en producción.
+6. **CA-06 / RF-09–RF-10.** Las altas guardadas aparecen en el listado. Las bajas confirmadas quedan excluidas del listado y del Excel. La exportación incluye todas las mascotas activas con todos sus propietarios oficiales, aunque haya filtros aplicados. El Excel carece de imágenes incrustadas y de enlaces a las imágenes internas.
+7. **CA-07 / RF-03 y RF-07.** El alta pública funciona con solo el nombre y rechaza un nombre vacío. La tabla y el Excel contienen los cuatro campos de datos. Las peticiones directas a la API con archivos, URLs de imagen o referencias de imagen son rechazadas y no producen escrituras.

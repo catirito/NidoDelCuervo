@@ -132,7 +132,7 @@ button {
   transform: none;
 }
 
-.masthead,main,footer {
+.masthead,main,footer,.site-nav {
   width: min(1440px,calc(100% - 96px));
   margin-inline: auto;
 }
@@ -514,7 +514,7 @@ noscript p {
 }
 
 @media(max-width:760px) {
-  .masthead,main,footer {
+  .masthead,main,footer,.site-nav {
     width: calc(100% - 40px);
   }
   .masthead {
@@ -696,3 +696,35 @@ td[data-field="CLASS"], td[data-field="SUBCLASS"], td[data-field="SPECIE"] { min
 }
 
 .results.is-editing .table-help span { display: none; }
+
+.site-nav {
+  margin-block: 0 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+.site-nav a {
+  color: var(--ink);
+  text-underline-offset: 5px;
+  padding: 8px 0;
+}
+.site-nav a[aria-current="page"] { font-weight: 700; }
+.pet-filters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.pet-table { min-width: 590px; }
+.pet-table td { overflow-wrap: anywhere; }
+.pet-table tr.pending td { background: #a17ac51a; }
+.pet-row-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.pet-row-actions button, .pet-owners button, #cancel-edit {
+  border: 1px solid var(--line);
+  background: var(--white);
+  color: var(--ink);
+  border-radius: 6px;
+  padding: 6px 10px;
+}
+.pet-edit-actions > :is(#export-button, #create-button, #edit-button, #cancel-edit) { font-size: 13px; }
+#pet-message:empty { display: none; }
+.pet-owners ul { list-style: none; margin: 8px 0; padding: 0; }
+.pet-owners li { margin: 4px 0; }
+@media (max-width: 760px) {
+  .pet-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
