@@ -1,6 +1,6 @@
 # Tareas — 012: Mascotería
 
-Implementación y validación locales completadas. El [plan](plan.md) recoge el diseño y la [especificación](spec.md) contiene los criterios de aceptación.
+Implementación y validación local y en el entorno de pruebas completadas. Pendiente de aceptación del usuario y de autorización para publicar en producción. El [plan](plan.md) recoge el diseño y la [especificación](spec.md) contiene los criterios de aceptación.
 
 ## Orden de ejecución
 
@@ -38,7 +38,7 @@ Pruebas de Mascotería escritas antes de cada bloque. Se observaron fallos inici
 
 Servidor de revisión levantado con `wrangler pages dev .local/public --ip 127.0.0.1 --port 8788`. Mascotería está en `http://127.0.0.1:8788/mascoteria`. Captura de escritorio en `.local/mascoteria-012.png`.
 
-Alcance de las pruebas de navegador limitado a Chrome. No se ejecutó `tests/ui.test.cjs`, que espera las 203 filas en la carga inicial, un contrato anterior a la paginación vigente. Las altas de la prueba de navegador se dieron de baja en D1 local. La importación y la revisión se hicieron en local. La publicación y la revisión en otros navegadores quedan pendientes.
+Alcance de las pruebas de navegador limitado a Chrome. No se ejecutó `tests/ui.test.cjs`, que espera las 203 filas en la carga inicial, un contrato anterior a la paginación vigente. Las altas de la prueba de navegador se dieron de baja en D1 local. La importación y la revisión se hicieron en local. La revisión en otros navegadores queda pendiente. El despliegue posterior de pruebas se documenta más abajo.
 
 ## Ajuste local del 10 de noviembre de 2026
 
@@ -46,3 +46,29 @@ Alcance de las pruebas de navegador limitado a Chrome. No se ejecutó `tests/ui.
 - La prueba de Chrome verifica que el alta admite un Animal y una Ubicación nuevos y que en edición se puede elegir una ubicación existente y seleccionar varios propietarios del Registro. También vuelve a recorrer guardado, exportación y baja.
 - En Chrome local, el selector nativo añadió dos personajes consecutivos, volvió a la opción inicial después de cada elección y retiró las opciones ya seleccionadas. El guardado conservó ambos vínculos al recargar.
 - En Chrome local, los cuatro botones de la cabecera en modo de edición tienen un tamaño de letra de 13 px. La prueba reproducía antes la diferencia entre 13 y 16 px.
+
+
+## Entorno de pruebas del 10 de noviembre de 2026
+
+- URL compartible con edición pública y cabecera `noindex`: [Mascotería](https://nido-del-cuervo-012-test.pages.dev/mascoteria). Proyecto Pages independiente `nido-del-cuervo-012-test`, rama de Pages `staging`, Direct Upload con Wrangler 4.147.0. Despliegue `a7947c0d-7beb-414a-95bc-d26862917664` desde el commit local `4fe546b`.
+- Verificado en la configuración remota: `DB` enlaza a `nido-mascoteria-012-test` (`8274a085-4ef0-4db5-863a-5961ac6c3f8a`). Producción usa `nido-personajes` (`3107c487-41dd-4cb0-a4e6-6e46027d9c40`). Las comprobaciones de datos por CLI se validaron con nombre y UUID explícitos, ya que la consulta por alias `DB` con la configuración descargada resolvió la D1 de pruebas.
+- Aplicadas las migraciones 0001–0007 en test. La semilla de personajes y catálogos procede de D1 local y se validó contra las migraciones en SQLite con integridad y claves foráneas. La carga de mascotas se regeneró con `readPetSource` y `planPetImport`: 55 filas, cuatro exclusiones y cero propietarios sin resolver. Regenerar desde el libro preservó las 55 entradas iniciales, incluida A24, que estaba dada de baja en la copia local. D1 remota y API confirmaron 203 personajes y 55 mascotas activas, seis sin dueño, Tinka con sus tres propietarios y prioridad de Mascotería seguida del orden por Animal. La distribución de la semilla es 24/7/4/20.
+- Repetidas las 12 suites de Node con `node --test --test-concurrency=1 tests/*.test.mjs`, todas correctas. Pasó `node tests/mascoteria-ui.test.cjs` en local. En remoto pasó el mismo recorrido con una copia temporal del test, limitada por URL al proyecto aislado y con un nombre de prueba identificable. Chrome comprobó navegación con teclado, 1440 y 320 px, ambos temas, filtros, exportación de 55 filas, select acumulativo, nuevos valores en Animal y Ubicación, cuatro botones a 13 px, borradores, recuperación ante fallo, alta, edición y baja.
+- D1 confirmó la baja lógica de la única mascota de prueba, con versión 2 y 55 activas al terminar. La D1 de producción carece de tablas de mascotas y de migración 0007. El despliegue productivo seguía siendo `5c95cb28-e4ee-4318-98b9-32a2a628b5d3` antes y después. No se ejecutaron escrituras en producción.
+- Los dos libros, documentación, SQL y configuración quedaron fuera del paquete público. Ocho rutas privadas devolvieron 404. Git ignora el Excel de Mascotería. El Excel histórico de personajes ya estaba versionado y queda fuera de los cambios de 012. La verificación de navegador se limita a Chrome.
+
+### Reproducir la corrección de A10 en una semilla nueva
+
+Después de cargar las mascotas, confirmar que A10 conserva la ubicación Mascotería y un único vínculo a Regor. Si el nombre y el animal tienen los valores del Excel, ejecutar este ajuste únicamente contra la D1 de pruebas identificada arriba. Comprobar que cambia una fila y que el listado devuelve «25 ovejas», «Oveja», «Regor» y «Mascotería». Los vínculos y el Excel original se conservan.
+
+```sql
+UPDATE pets
+SET name = '25 ovejas', animal = 'Oveja', version = version + 1
+WHERE source_cell = 'A10'
+  AND name = 'Ovejas 25' AND animal = 'Ovejas' AND location = 'Mascotería'
+  AND EXISTS (
+    SELECT 1 FROM pet_owners
+    JOIN characters ON characters.id = character_id
+    WHERE pet_id = pets.id AND PERSONAJE = 'Regor'
+  );
+```

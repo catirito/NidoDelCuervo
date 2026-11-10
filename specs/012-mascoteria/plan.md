@@ -1,6 +1,6 @@
 # Plan de implementación — 012 Mascotería
 
-> Plan ejecutado y validado en local. Las comprobaciones, los comandos y los límites constan en [tareas](tasks.md).
+> Plan ejecutado y validado en local y en el entorno de pruebas aislado. Las comprobaciones, los comandos y los límites constan en [tareas](tasks.md).
 
 **Objetivo.** Añadir una página de Mascotería con navegación compartida, consulta, edición pública y exportación.
 
@@ -34,7 +34,7 @@
 
 - Por bloque, escribir la prueba de comportamiento, comprobar que falla por la ausencia de la funcionalidad, implementar y repetir la comprobación. Usar los mecanismos de Node, Miniflare y Playwright ya establecidos en el repositorio. Registrar los comandos reales y sus resultados en `tasks.md`.
 - Ejecutar la migración e importación en D1 local y cotejar el informe con el Excel. Revisar los criterios CA-01 a CA-07. Comprobar claro y oscuro, móvil y escritorio, teclado y flujos de edición y exportación del registro existente.
-- Generar e inspeccionar el paquete con `scripts/build-cloudflare.mjs`. Verificar la inclusión de los recursos necesarios y la exclusión del libro y la documentación interna. Trabajar en la rama de la especificación y separar la validación local de una futura publicación autorizada.
+- Generar e inspeccionar el paquete con `scripts/build-cloudflare.mjs`. Verificar la inclusión de los recursos necesarios y la exclusión del libro y la documentación interna. Trabajar en la rama de la especificación y desplegar la revisión mediante Direct Upload en un proyecto Pages separado con D1 propia. Verificar el binding remoto y probar escrituras exclusivamente en esa D1. La publicación en producción se autoriza aparte.
 
 
 ## Decisiones de implementación

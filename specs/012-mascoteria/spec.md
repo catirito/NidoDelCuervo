@@ -1,6 +1,6 @@
 # 012 — Mascotería
 
-**Estado (9 de noviembre de 2026).** Implementación e importación validadas en local. Pendiente de revisión del usuario. Evidencia en [tareas](tasks.md).
+**Estado (10 de noviembre de 2026).** Implementación validada en local y en un entorno de pruebas aislado. Pendiente de aceptación del usuario y de autorización para publicar en producción. Evidencia en [tareas](tasks.md).
 
 ## Objetivo
 
@@ -50,6 +50,7 @@ El usuario confirma las siguientes equivalencias para la importación. Mascoter�
 - Tinka del clan Pirrika (`L10`) se importará como una sola mascota con tres vínculos de propietario a **Kekai**, **Francis "Chispas"** y **Gorluk**.
 - Mascotería tendrá edición pública, altas, bajas, exportación y filtros, siguiendo los flujos del Registro de personajes.
 
+- Tras la importación, corregir la fila A10 a **25 ovejas**, Animal **Oveja**, con Regor y ubicación Mascotería. La corrección se realiza en D1 y conserva el libro original.
 - Se importarán 55 entradas. Se excluyen las tres sin nombre (`K8`, `A25` y `A26`) y la nota de los cebos situada fuera de la tabla (`S18`).
 
 ## Criterios de aceptación
@@ -58,6 +59,6 @@ El usuario confirma las siguientes equivalencias para la importación. Mascoter�
 2. **CA-02 / RF-02–RF-03.** Se puede consultar y editar la tabla con el conjunto de controles acordado. Los filtros se combinan y distinguen entradas sin propietario o sin ubicación. Tinka aparece al filtrar por cualquiera de sus tres propietarios. Un guardado correcto persiste al recargar y un error conserva los cambios pendientes.
 3. **CA-03 / RF-03–RF-04.** El alta y la edición permiten guardar cero, uno o varios propietarios distintos. Tinka tiene tres vínculos. Las cinco entradas del Nido y la que carece de propietario quedan con el campo vacío. Renombrar un personaje actualiza su nombre visible en Mascotería. La baja lógica de un propietario conserva su nombre visible y la mascota sigue activa. Es posible darla de baja manualmente.
 4. **CA-04 / RF-05–RF-07.** Se importan 55 de las 58 entradas candidatas. Se excluyen las tres sin nombre y la nota de los cebos. Toda exclusión o corrección tiene motivo registrado. Se comprueban ubicaciones y valores ausentes.
-5. **CA-05 / RF-08.** El Excel no figura en Git ni en el paquete público. Las comprobaciones del registro y sus flujos vigentes pasan. Se valida en local y sin escrituras de prueba en producción.
+5. **CA-05 / RF-08.** El Excel de Mascotería no figura en Git. Los dos libros quedan fuera del paquete público. Las comprobaciones del registro y sus flujos vigentes pasan. Se valida en local y sin escrituras de prueba en producción.
 6. **CA-06 / RF-09–RF-10.** Las altas guardadas aparecen en el listado. Las bajas confirmadas quedan excluidas del listado y del Excel. La exportación incluye todas las mascotas activas con todos sus propietarios oficiales, aunque haya filtros aplicados. El Excel carece de imágenes incrustadas y de enlaces a las imágenes internas.
 7. **CA-07 / RF-03 y RF-07.** El alta pública funciona con solo el nombre y rechaza un nombre vacío. La tabla y el Excel contienen los cuatro campos de datos. Las peticiones directas a la API con archivos, URLs de imagen o referencias de imagen son rechazadas y no producen escrituras.
