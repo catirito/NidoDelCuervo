@@ -1,6 +1,6 @@
 # 012 — Mascotería
 
-**Estado (10 de noviembre de 2026).** Implementación validada en local y en un entorno de pruebas aislado. Pendiente de aceptación del usuario y de autorización para publicar en producción. Evidencia en [tareas](tasks.md).
+**Estado (10 de noviembre de 2026).** Implementación validada en local y en un entorno de pruebas aislado. Aceptada por el usuario y autorizada para integrar y publicar en producción. Evidencia en [tareas](tasks.md).
 
 ## Objetivo
 

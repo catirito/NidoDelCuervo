@@ -1,6 +1,6 @@
 # Tareas — 012: Mascotería
 
-Implementación y validación local y en el entorno de pruebas completadas. Pendiente de aceptación del usuario y de autorización para publicar en producción. El [plan](plan.md) recoge el diseño y la [especificación](spec.md) contiene los criterios de aceptación.
+Implementación y validación local y en el entorno de pruebas completadas. Aceptada por el usuario y autorizada para integrar y publicar en producción. El [plan](plan.md) recoge el diseño y la [especificación](spec.md) contiene los criterios de aceptación.
 
 ## Orden de ejecución
 
@@ -57,6 +57,10 @@ Alcance de las pruebas de navegador limitado a Chrome. No se ejecutó `tests/ui.
 - D1 confirmó la baja lógica de la única mascota de prueba, con versión 2 y 55 activas al terminar. La D1 de producción carece de tablas de mascotas y de migración 0007. El despliegue productivo seguía siendo `5c95cb28-e4ee-4318-98b9-32a2a628b5d3` antes y después. No se ejecutaron escrituras en producción.
 - Los dos libros, documentación, SQL y configuración quedaron fuera del paquete público. Ocho rutas privadas devolvieron 404. Git ignora el Excel de Mascotería. El Excel histórico de personajes ya estaba versionado y queda fuera de los cambios de 012. La verificación de navegador se limita a Chrome.
 
+### URL de revisión vigente
+
+La URL de revisión es [nido-del-cuervo-test.pages.dev/mascoteria](https://nido-del-cuervo-test.pages.dev/mascoteria). El proyecto Pages `nido-del-cuervo-test` publica el mismo commit `4fe546b` en el despliegue `dc3c7405`. Verificados el binding remoto a la D1 de pruebas existente, la respuesta idéntica de la API con 55 mascotas y 203 personajes, la fila A10 y las respuestas 404 del Excel histórico y la especificación. La URL anterior sigue disponible y ambos proyectos de pruebas comparten esa D1.
+
 ### Reproducir la corrección de A10 en una semilla nueva
 
 Después de cargar las mascotas, confirmar que A10 conserva la ubicación Mascotería y un único vínculo a Regor. Si el nombre y el animal tienen los valores del Excel, ejecutar este ajuste únicamente contra la D1 de pruebas identificada arriba. Comprobar que cambia una fila y que el listado devuelve «25 ovejas», «Oveja», «Regor» y «Mascotería». Los vínculos y el Excel original se conservan.
@@ -65,7 +69,7 @@ Después de cargar las mascotas, confirmar que A10 conserva la ubicación Mascot
 UPDATE pets
 SET name = '25 ovejas', animal = 'Oveja', version = version + 1
 WHERE source_cell = 'A10'
-  AND name = 'Ovejas 25' AND animal = 'Ovejas' AND location = 'Mascotería'
+  AND name = 'Ovejas' AND animal = '25 Ovejas' AND location = 'Mascotería'
   AND EXISTS (
     SELECT 1 FROM pet_owners
     JOIN characters ON characters.id = character_id
